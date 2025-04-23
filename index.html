@@ -841,119 +841,81 @@
             position: relative;
         }
 
-        /* Styles pour le conteneur de code */
-        #code-output-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .code-modal-content {
-            background-color: #fff;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body.dark .code-modal-content {
-            background-color: #1F2937;
-            color: #F5F5F5;
-        }
-
-        .code-modal-header {
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        body.dark .code-modal-header {
-            border-bottom: 1px solid #374151;
-        }
-
-        .code-modal-body {
-            padding: 15px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        #code-content {
-            background-color: #f7fafc;
-            border-radius: 6px;
-            padding: 15px;
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 14px;
-            overflow-x: auto;
-        }
-
-        body.dark #code-content {
-            background-color: #2D3748;
-        }
-
-        .code-modal-footer {
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        body.dark .code-modal-footer {
-            border-top: 1px solid #374151;
-        }
-
-        .copy-button {
-            background-color: #5D5CDE;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 4px;
-            margin-left: 10px;
-        }
-
-        .close-button {
-            background-color: #cbd5e0;
-            color: #1a202c;
-            padding: 8px 15px;
-            border-radius: 4px;
-        }
-
-        body.dark .close-button {
-            background-color: #4A5568;
-            color: #E2E8F0;
-        }
-
-        /* Styles pour le bouton d'export */
-        #export-button {
+        /* Styles pour les notifications */
+        .notification {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background-color: #5D5CDE;
             color: white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             z-index: 90;
+            animation: slide-in 0.3s ease-out forwards;
+            max-width: 300px;
         }
-
-        body.dark #export-button {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        
+        @keyframes slide-in {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slide-out {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100px); opacity: 0; }
+        }
+        
+        .notification.hide {
+            animation: slide-out 0.3s ease-out forwards;
+        }
+        
+        /* Styles pour l'indicateur de statut en ligne */
+        .online-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: 2px solid white;
+        }
+        
+        body.dark .online-indicator {
+            border-color: #1F2937;
+        }
+        
+        /* Styles pour l'indicateur de typing */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: #E5E7EB;
+            padding: 6px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        
+        body.dark .typing-indicator {
+            background-color: #374151;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #6B7280;
+            margin: 0 2px;
+            animation: typing-dot 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
         }
     </style>
 </head>
@@ -998,14 +960,17 @@
                         <!-- Formulaire de connexion -->
                         <form id="login-form" class="space-y-4">
                             <div>
-                                <label for="login-username">Nom d'utilisateur</label>
-                                <input type="text" id="login-username" required>
+                                <label for="login-email">Email</label>
+                                <input type="email" id="login-email" required>
                             </div>
                             <div>
                                 <label for="login-password">Mot de passe</label>
                                 <input type="password" id="login-password" required>
                             </div>
                             <button type="submit" class="w-full bg-primary text-white font-medium py-2 px-4 rounded-lg">Se connecter</button>
+                            <div class="text-center mt-3">
+                                <a href="#" id="forgot-password" class="text-primary text-sm">Mot de passe oublié ?</a>
+                            </div>
                         </form>
                         
                         <!-- Formulaire d'inscription -->
@@ -1043,6 +1008,11 @@
             <div id="conversations-screen" class="flex-1 overflow-hidden flex flex-col screen-transition">
                 <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                     <h1 class="text-xl font-bold">Discussions</h1>
+                    <button id="refresh-conversations" class="p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
                 </div>
                 <div id="conversations-list" class="flex-1 overflow-y-auto hide-scrollbar p-2">
                     <!-- Les conversations seront ajoutées ici -->
@@ -1051,8 +1021,13 @@
 
             <!-- Écran des utilisateurs -->
             <div id="users-screen" class="hidden flex-1 overflow-hidden flex flex-col screen-transition">
-                <div class="p-4 border-b border-gray-200">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                     <h1 class="text-xl font-bold">Utilisateurs</h1>
+                    <button id="refresh-users" class="p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
                 </div>
                 <div id="users-list" class="flex-1 overflow-y-auto hide-scrollbar p-2">
                     <!-- Les utilisateurs seront ajoutés ici -->
@@ -1068,10 +1043,16 @@
                         </svg>
                     </button>
                     <div class="flex items-center">
-                        <div id="chat-contact-avatar" class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold mr-3">
-                            <!-- Avatar du contact sera ajouté ici -->
+                        <div id="chat-contact-avatar" class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold relative mr-3">
+                            <!-- Avatar du contact et statut en ligne -->
+                            <div id="online-status" class="online-indicator hidden"></div>
                         </div>
-                        <div id="chat-contact" class="font-medium"></div>
+                        <div>
+                            <div id="chat-contact" class="font-medium"></div>
+                            <div id="typing-status" class="text-xs text-gray-500 hidden">
+                                En train d'écrire...
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="chat-messages" class="flex-1 overflow-y-auto hide-scrollbar p-4 bg-gray-100">
@@ -1079,6 +1060,12 @@
                 </div>
                 <div class="message-input-container p-3">
                     <div class="flex items-center">
+                        <button id="attach-file" class="w-10 h-10 flex items-center justify-center mr-2 text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                        </button>
+                        <input type="file" id="file-upload" class="hidden" accept="image/*">
                         <input type="text" id="message-input" class="message-input flex-1 py-3 border border-gray-300 text-base" placeholder="Écrire un message...">
                         <button id="send-message" class="send-button ml-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1181,7 +1168,7 @@
                     <!-- Boutons d'action -->
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <div class="space-y-3">
-                            <button id="export-code-button" class="w-full bg-primary text-white font-medium py-2 px-4 rounded-lg">Exporter le code</button>
+                            <button id="status-toggle" class="w-full bg-primary text-white font-medium py-2 px-4 rounded-lg">Passer hors ligne</button>
                             <button id="logout-button" class="w-full bg-primary text-white font-medium py-2 px-4 rounded-lg">Se déconnecter</button>
                             <button id="delete-account-button" class="w-full bg-red-500 text-white font-medium py-2 px-4 rounded-lg">Supprimer mon compte</button>
                         </div>
@@ -1189,7 +1176,7 @@
                 </div>
             </div>
 
-            <!-- Barre de navigation (masquée pendant les discussions) -->
+            <!-- Barre de navigation -->
             <div id="navigation-bar" class="bg-white border-t border-gray-200">
                 <div class="flex justify-around">
                     <button class="nav-btn active" data-screen="conversations-screen">
@@ -1214,37 +1201,35 @@
             </div>
         </div>
 
-        <!-- Modal pour afficher le code exporté -->
-        <div id="code-output-modal" class="hidden">
-            <div class="code-modal-content">
-                <div class="code-modal-header">
-                    <h2 class="text-lg font-bold">Code de l'application</h2>
-                    <button id="close-modal" class="h-6 w-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="code-modal-body">
-                    <pre id="code-content"></pre>
-                </div>
-                <div class="code-modal-footer">
-                    <button id="close-code-button" class="close-button">Fermer</button>
-                    <button id="copy-code-button" class="copy-button">Copier le code</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bouton d'export flottant -->
-        <button id="export-button" class="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-            </svg>
-        </button>
+        <!-- Zone de notification -->
+        <div id="notification-area"></div>
     </div>
 
-    <!-- Script JavaScript -->
-    <script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser, updateProfile } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js';
+
+        // Firebase configuration - utilizing the provided config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHkI_ZfUX0jheLQyYy49iYLh1LUwxw26Y",
+            authDomain: "nlp-9057d.firebaseapp.com",
+            projectId: "nlp-9057d",
+            storageBucket: "nlp-9057d.firebaseapp.com",
+            messagingSenderId: "713755293336",
+            appId: "1:713755293336:web:89638ccb2839975f2802ed",
+            measurementId: "G-4HVY16QT8M"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
         // Polyfill pour Array.from pour iOS 12
         if (!Array.from) {
             Array.from = function(iterable) {
@@ -1278,140 +1263,20 @@
             };
         }
 
-        // Polyfill pour find pour iOS 12
-        if (!Array.prototype.find) {
-            Array.prototype.find = function(predicate) {
-                if (this == null) {
-                    throw new TypeError('Array.prototype.find called on null or undefined');
-                }
-                if (typeof predicate !== 'function') {
-                    throw new TypeError('predicate must be a function');
-                }
-                var list = Object(this);
-                var length = list.length >>> 0;
-                var thisArg = arguments[1];
-                var value;
-                
-                for (var i = 0; i < length; i++) {
-                    value = list[i];
-                    if (predicate.call(thisArg, value, i, list)) {
-                        return value;
-                    }
-                }
-                return undefined;
-            };
-        }
-
-        // Polyfill pour findIndex pour iOS 12
-        if (!Array.prototype.findIndex) {
-            Array.prototype.findIndex = function(predicate) {
-                if (this == null) {
-                    throw new TypeError('Array.prototype.findIndex called on null or undefined');
-                }
-                if (typeof predicate !== 'function') {
-                    throw new TypeError('predicate must be a function');
-                }
-                var list = Object(this);
-                var length = list.length >>> 0;
-                var thisArg = arguments[1];
-                var value;
-                
-                for (var i = 0; i < length; i++) {
-                    value = list[i];
-                    if (predicate.call(thisArg, value, i, list)) {
-                        return i;
-                    }
-                }
-                return -1;
-            };
-        }
-
-        // Polyfill pour Object.assign pour iOS 12
-        if (typeof Object.assign !== 'function') {
-            Object.assign = function(target) {
-                if (target == null) {
-                    throw new TypeError('Cannot convert undefined or null to object');
-                }
-                
-                var to = Object(target);
-                
-                for (var index = 1; index < arguments.length; index++) {
-                    var nextSource = arguments[index];
-                    
-                    if (nextSource != null) {
-                        for (var nextKey in nextSource) {
-                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                                to[nextKey] = nextSource[nextKey];
-                            }
-                        }
-                    }
-                }
-                return to;
-            };
-        }
-
-        // Données utilisateurs et conversations intégrées au code avec wrapper pour rendu JSON
-        var INITIAL_DATA = {
-            users: [
-                { 
-                    id: 1, 
-                    username: 'alice', 
-                    password: 'pass123', 
-                    email: 'alice@example.com', 
-                    phone: '0612345678', 
-                    avatar: null
-                },
-                { 
-                    id: 2, 
-                    username: 'bob', 
-                    password: 'pass123', 
-                    email: 'bob@example.com', 
-                    phone: '0687654321', 
-                    avatar: null
-                },
-                { 
-                    id: 3, 
-                    username: 'charlie', 
-                    password: 'pass123', 
-                    email: 'charlie@example.com', 
-                    phone: '0611223344',
-                    avatar: null
-                }
-            ],
-            conversations: [
-                {
-                    id: 1,
-                    participants: [1, 2],
-                    messages: [
-                        { id: 101, senderId: 1, text: 'Salut Bob, comment ça va ?', timestamp: '2023-04-10T10:30:00' },
-                        { id: 102, senderId: 2, text: 'Très bien Alice, et toi ?', timestamp: '2023-04-10T10:32:00' },
-                        { id: 103, senderId: 1, text: 'Bien merci !', timestamp: '2023-04-10T10:33:00' }
-                    ]
-                },
-                {
-                    id: 2,
-                    participants: [1, 3],
-                    messages: [
-                        { id: 201, senderId: 3, text: 'Bonjour Alice !', timestamp: '2023-04-09T15:10:00' },
-                        { id: 202, senderId: 1, text: 'Bonjour Charlie, comment vas-tu ?', timestamp: '2023-04-09T15:15:00' }
-                    ]
-                }
-            ]
-        };
-
         // Variables globales pour les données de l'application
         var appData = {
-            users: INITIAL_DATA.users.slice(),
-            conversations: INITIAL_DATA.conversations.slice(),
             currentUser: null,
-            sessionId: null,
             theme: {
                 mode: 'light',
                 color: 'default'
-            }
+            },
+            isOnline: true,
+            typingTimeout: null,
+            currentChatUser: null,
+            currentFile: null
         };
 
-        // Éléments DOM
+        // Elements DOM
         var elements = {
             splashScreen: document.getElementById('splash-screen'),
             loadingOverlay: document.getElementById('loading-overlay'),
@@ -1421,13 +1286,14 @@
             registerTab: document.getElementById('register-tab'),
             loginForm: document.getElementById('login-form'),
             registerForm: document.getElementById('register-form'),
-            loginUsername: document.getElementById('login-username'),
+            loginEmail: document.getElementById('login-email'),
             loginPassword: document.getElementById('login-password'),
             registerUsername: document.getElementById('register-username'),
             registerEmail: document.getElementById('register-email'),
             registerPhone: document.getElementById('register-phone'),
             registerPassword: document.getElementById('register-password'),
             registerConfirmPassword: document.getElementById('register-confirm-password'),
+            forgotPassword: document.getElementById('forgot-password'),
             appContainer: document.getElementById('app-container'),
             conversationsList: document.getElementById('conversations-list'),
             usersList: document.getElementById('users-list'),
@@ -1437,6 +1303,8 @@
             profileScreen: document.getElementById('profile-screen'),
             chatContact: document.getElementById('chat-contact'),
             chatContactAvatar: document.getElementById('chat-contact-avatar'),
+            onlineStatus: document.getElementById('online-status'),
+            typingStatus: document.getElementById('typing-status'),
             chatMessages: document.getElementById('chat-messages'),
             messageInput: document.getElementById('message-input'),
             sendMessage: document.getElementById('send-message'),
@@ -1447,450 +1315,1180 @@
             profileAvatar: document.getElementById('profile-avatar'),
             changeAvatar: document.getElementById('change-avatar'),
             avatarUpload: document.getElementById('avatar-upload'),
+            attachFile: document.getElementById('attach-file'),
+            fileUpload: document.getElementById('file-upload'),
             logoutButton: document.getElementById('logout-button'),
             deleteAccountButton: document.getElementById('delete-account-button'),
+            statusToggle: document.getElementById('status-toggle'),
             navButtons: document.querySelectorAll('.nav-btn'),
             navigationBar: document.getElementById('navigation-bar'),
             lightMode: document.getElementById('light-mode'),
             darkMode: document.getElementById('dark-mode'),
             themeColors: document.querySelectorAll('input[name="theme-color"]'),
-            exportButton: document.getElementById('export-button'),
-            exportCodeButton: document.getElementById('export-code-button'),
-            codeOutputModal: document.getElementById('code-output-modal'),
-            codeContent: document.getElementById('code-content'),
-            closeModalButton: document.getElementById('close-modal'),
-            closeCodeButton: document.getElementById('close-code-button'),
-            copyCodeButton: document.getElementById('copy-code-button')
+            refreshConversations: document.getElementById('refresh-conversations'),
+            refreshUsers: document.getElementById('refresh-users'),
+            notificationArea: document.getElementById('notification-area')
         };
 
-        // Module de gestion du code source
-        var CodeManager = {
-            // Cette fonction génère un code HTML complet incluant les dernières données
-            generateCode: function() {
-                var currentCode = document.documentElement.outerHTML;
-                
-                // Remplacer les données initiales par les données actuelles
-                var dataPattern = /var INITIAL_DATA = \{[\s\S]*?\};/;
-                var newDataBlock = 'var INITIAL_DATA = ' + this.formatJSONForCode(appData) + ';';
-                
-                var updatedCode = currentCode.replace(dataPattern, newDataBlock);
-                
-                return updatedCode;
-            },
-            
-            // Formatte l'objet JSON pour l'inclusion dans le code source
-            formatJSONForCode: function(appData) {
-                // Créer une copie des données à utiliser dans le code source
-                var codeData = {
-                    users: appData.users.map(function(user) {
-                        // Inclure uniquement les données essentielles de l'utilisateur
-                        return {
-                            id: user.id,
-                            username: user.username,
-                            password: user.password,
-                            email: user.email,
-                            phone: user.phone,
-                            avatar: user.avatar
-                        };
-                    }),
-                    conversations: appData.conversations
-                };
-                
-                // Formatter avec indentation pour une meilleure lisibilité
-                return JSON.stringify(codeData, null, 4)
-                    .replace(/^/gm, '    ')  // Ajouter une indentation pour chaque ligne
-                    .replace(/    \}/g, '}') // Corriger l'indentation de la dernière accolade
-                    .replace(/^    /g, '');  // Retirer l'indentation de la première ligne
-            },
-            
-            // Montre le code dans une fenêtre modale
-            showCodeModal: function() {
-                var codeString = this.generateCode();
-                elements.codeContent.textContent = codeString;
-                elements.codeOutputModal.classList.remove('hidden');
-            },
-            
-            // Copie le code dans le presse-papier
-            copyCodeToClipboard: function() {
-                try {
-                    var range = document.createRange();
-                    range.selectNode(elements.codeContent);
-                    window.getSelection().removeAllRanges();
-                    window.getSelection().addRange(range);
-                    document.execCommand('copy');
-                    window.getSelection().removeAllRanges();
-                    alert('Code copié dans le presse-papier !');
-                } catch (err) {
-                    console.error('Erreur lors de la copie du code:', err);
-                    alert('Impossible de copier le code. Veuillez le sélectionner manuellement.');
-                }
-            }
-        };
-
-        // Module de gestion des utilisateurs
+        // Module de gestion d'authentification et de profil
         var UserManager = {
-            login: function(username, password) {
-                var user = null;
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].username === username && appData.users[i].password === password) {
-                        user = appData.users[i];
-                        break;
+            // Créer un compte
+            register: async function(username, email, phone, password) {
+                try {
+                    // Vérifier si l'utilisateur existe déjà
+                    const usernameExists = await this.checkUsernameExists(username);
+                    if (usernameExists) {
+                        return { success: false, message: "Ce nom d'utilisateur est déjà pris" };
                     }
+
+                    // Créer l'utilisateur dans Firebase Auth
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Créer le profil dans Firestore
+                    await setDoc(doc(db, "users", user.uid), {
+                        username: username,
+                        email: email,
+                        phone: phone,
+                        avatar: null,
+                        online: true,
+                        lastSeen: serverTimestamp(),
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Mettre à jour le profil dans Auth
+                    await updateProfile(user, {
+                        displayName: username
+                    });
+
+                    // Stocker l'utilisateur courant
+                    appData.currentUser = {
+                        uid: user.uid,
+                        username: username,
+                        email: email,
+                        phone: phone,
+                        avatar: null
+                    };
+
+                    return { success: true, user: appData.currentUser };
+                } catch (error) {
+                    console.error("Erreur d'inscription:", error);
+                    let message = "Une erreur s'est produite lors de l'inscription.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        message = "Cette adresse email est déjà utilisée.";
+                    }
+                    return { success: false, message: message };
                 }
-                
-                if (user) {
-                    appData.currentUser = user;
-                    appData.sessionId = user.id; // Garder l'ID de session
-                    return { success: true, user: user };
-                }
-                return { success: false, message: 'Identifiants incorrects' };
             },
 
-            register: function(username, email, phone, password) {
-                // Vérification si l'utilisateur existe déjà
-                var usernameExists = false;
-                var emailExists = false;
-                var phoneExists = false;
-                
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].username === username) {
-                        usernameExists = true;
-                    }
-                    if (appData.users[i].email === email) {
-                        emailExists = true;
-                    }
-                    if (appData.users[i].phone === phone) {
-                        phoneExists = true;
-                    }
+            // Vérifier si un nom d'utilisateur existe déjà
+            checkUsernameExists: async function(username) {
+                try {
+                    const q = query(collection(db, "users"), where("username", "==", username));
+                    const querySnapshot = await getDocs(q);
+                    return !querySnapshot.empty;
+                } catch (error) {
+                    console.error("Erreur lors de la vérification du nom d'utilisateur:", error);
+                    return false;
                 }
-                
-                if (usernameExists) {
-                    return { success: false, message: 'Ce nom d\'utilisateur est déjà pris' };
-                }
-                if (emailExists) {
-                    return { success: false, message: 'Cette adresse email est déjà utilisée' };
-                }
-                if (phoneExists) {
-                    return { success: false, message: 'Ce numéro de téléphone est déjà utilisé' };
-                }
-
-                // Création du nouvel utilisateur
-                var newUser = {
-                    id: this.getNextUserId(),
-                    username: username,
-                    email: email,
-                    phone: phone,
-                    password: password,
-                    avatar: null
-                };
-
-                // Ajouter l'utilisateur à appData et INITIAL_DATA
-                appData.users.push(newUser);
-                INITIAL_DATA.users.push(newUser);
-                
-                appData.currentUser = newUser;
-                appData.sessionId = newUser.id;
-                
-                // Afficher le bouton d'export lorsqu'il y a de nouvelles données
-                elements.exportButton.classList.remove('hidden');
-                
-                return { success: true, user: newUser };
             },
 
-            getNextUserId: function() {
-                var maxId = 0;
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].id > maxId) {
-                        maxId = appData.users[i].id;
+            // Connexion
+            login: async function(email, password) {
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Récupérer les données du profil
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        
+                        // Mettre à jour le statut en ligne
+                        await updateDoc(doc(db, "users", user.uid), {
+                            online: true,
+                            lastSeen: serverTimestamp()
+                        });
+                        
+                        appData.currentUser = {
+                            uid: user.uid,
+                            username: userData.username,
+                            email: userData.email,
+                            phone: userData.phone,
+                            avatar: userData.avatar
+                        };
+                        
+                        return { success: true, user: appData.currentUser };
+                    } else {
+                        await signOut(auth);
+                        return { success: false, message: "Profil utilisateur introuvable." };
                     }
+                } catch (error) {
+                    console.error("Erreur de connexion:", error);
+                    let message = "Identifiants incorrects";
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        message = "Email ou mot de passe incorrect";
+                    }
+                    return { success: false, message: message };
                 }
-                return maxId + 1;
             },
 
-            updateAvatar: function(userId, avatarData) {
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].id === userId) {
-                        appData.users[i].avatar = avatarData;
-                        
-                        // Mettre à jour INITIAL_DATA
-                        for (var j = 0; j < INITIAL_DATA.users.length; j++) {
-                            if (INITIAL_DATA.users[j].id === userId) {
-                                INITIAL_DATA.users[j].avatar = avatarData;
-                                break;
-                            }
-                        }
-                        
-                        if (appData.currentUser && appData.currentUser.id === userId) {
-                            appData.currentUser.avatar = avatarData;
-                        }
-                        
-                        // Afficher le bouton d'export lorsqu'il y a de nouvelles données
-                        elements.exportButton.classList.remove('hidden');
-                        
-                        return true;
+            // Déconnexion
+            logout: async function() {
+                try {
+                    if (auth.currentUser) {
+                        // Mettre à jour le statut hors ligne
+                        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                            online: false,
+                            lastSeen: serverTimestamp()
+                        });
                     }
+                    await signOut(auth);
+                    appData.currentUser = null;
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de déconnexion:", error);
+                    return { success: false, message: "Erreur lors de la déconnexion" };
                 }
-                return false;
             },
 
-            deleteAccount: function(userId) {
-                var index = -1;
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].id === userId) {
-                        index = i;
-                        break;
-                    }
-                }
-                
-                if (index !== -1) {
-                    appData.users.splice(index, 1);
+            // Changement de statut en ligne
+            toggleOnlineStatus: async function() {
+                try {
+                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
                     
-                    // Mettre à jour INITIAL_DATA
-                    for (var i = 0; i < INITIAL_DATA.users.length; i++) {
-                        if (INITIAL_DATA.users[i].id === userId) {
-                            INITIAL_DATA.users.splice(i, 1);
-                            break;
-                        }
-                    }
+                    appData.isOnline = !appData.isOnline;
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        online: appData.isOnline,
+                        lastSeen: serverTimestamp()
+                    });
                     
-                    // Supprimer les conversations associées
-                    var conversationsToRemove = [];
-                    for (var i = 0; i < appData.conversations.length; i++) {
-                        if (appData.conversations[i].participants.includes(userId)) {
-                            conversationsToRemove.push(appData.conversations[i].id);
-                        }
-                    }
+                    UI.showNotification(appData.isOnline ? "Vous êtes en ligne" : "Vous êtes hors ligne");
+                    elements.statusToggle.textContent = appData.isOnline ? "Passer hors ligne" : "Passer en ligne";
                     
-                    for (var i = 0; i < conversationsToRemove.length; i++) {
-                        this.removeConversationById(conversationsToRemove[i]);
-                    }
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de changement de statut:", error);
+                    return { success: false, message: "Erreur lors du changement de statut" };
+                }
+            },
+
+            // Supprimer le compte
+            deleteAccount: async function() {
+                try {
+                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
+                    
+                    const userId = auth.currentUser.uid;
+                    
+                    // Supprimer les conversations
+                    await ConversationManager.deleteAllUserConversations(userId);
+                    
+                    // Supprimer le document utilisateur dans Firestore
+                    await deleteDoc(doc(db, "users", userId));
+                    
+                    // Supprimer l'utilisateur dans Firebase Auth
+                    await deleteUser(auth.currentUser);
                     
                     appData.currentUser = null;
-                    appData.sessionId = null;
                     
-                    // Afficher le bouton d'export lorsqu'il y a de nouvelles données
-                    elements.exportButton.classList.remove('hidden');
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de suppression de compte:", error);
+                    return { success: false, message: "Erreur lors de la suppression du compte" };
+                }
+            },
+
+            // Mettre à jour l'avatar de l'utilisateur
+            updateAvatar: async function(file) {
+                try {
+                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
                     
-                    return true;
-                }
-                return false;
-            },
-            
-            removeConversationById: function(convId) {
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    if (appData.conversations[i].id === convId) {
-                        appData.conversations.splice(i, 1);
-                        break;
+                    // Compresser l'image avant l'upload
+                    const compressedFile = await this.compressImage(file);
+                    
+                    // Créer une référence dans le stockage
+                    const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+                    
+                    // Uploader l'image
+                    const snapshot = await uploadBytes(storageRef, compressedFile);
+                    
+                    // Récupérer l'URL de téléchargement
+                    const downloadURL = await getDownloadURL(storageRef);
+                    
+                    // Mettre à jour le document utilisateur dans Firestore
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        avatar: downloadURL
+                    });
+                    
+                    // Mettre à jour le profil dans Auth
+                    await updateProfile(auth.currentUser, {
+                        photoURL: downloadURL
+                    });
+                    
+                    // Mettre à jour l'état local
+                    if (appData.currentUser) {
+                        appData.currentUser.avatar = downloadURL;
                     }
-                }
-                
-                // Mettre à jour INITIAL_DATA
-                for (var i = 0; i < INITIAL_DATA.conversations.length; i++) {
-                    if (INITIAL_DATA.conversations[i].id === convId) {
-                        INITIAL_DATA.conversations.splice(i, 1);
-                        break;
-                    }
+                    
+                    return { success: true, url: downloadURL };
+                } catch (error) {
+                    console.error("Erreur de mise à jour de l'avatar:", error);
+                    return { success: false, message: "Erreur lors de la mise à jour de l'avatar" };
                 }
             },
 
-            logout: function() {
-                appData.currentUser = null;
-                appData.sessionId = null;
-            },
-
-            getAllUsers: function() {
-                return appData.users.slice();
-            },
-
-            getOtherUsers: function() {
-                var result = [];
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.currentUser && appData.users[i].id !== appData.currentUser.id) {
-                        result.push(appData.users[i]);
-                    }
+            // Obtenir tous les utilisateurs
+            getAllUsers: async function() {
+                try {
+                    const usersSnapshot = await getDocs(collection(db, "users"));
+                    const users = [];
+                    
+                    usersSnapshot.forEach((doc) => {
+                        if (auth.currentUser && doc.id !== auth.currentUser.uid) {
+                            const userData = doc.data();
+                            users.push({
+                                uid: doc.id,
+                                username: userData.username,
+                                email: userData.email,
+                                phone: userData.phone,
+                                avatar: userData.avatar,
+                                online: userData.online,
+                                lastSeen: userData.lastSeen
+                            });
+                        }
+                    });
+                    
+                    return users;
+                } catch (error) {
+                    console.error("Erreur de récupération des utilisateurs:", error);
+                    throw error;
                 }
-                return result;
             },
 
-            getUserById: function(userId) {
-                for (var i = 0; i < appData.users.length; i++) {
-                    if (appData.users[i].id === userId) {
-                        return appData.users[i];
+            // Obtenir un utilisateur par ID
+            getUserById: async function(userId) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", userId));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        return {
+                            uid: userId,
+                            username: userData.username,
+                            email: userData.email,
+                            phone: userData.phone,
+                            avatar: userData.avatar,
+                            online: userData.online,
+                            lastSeen: userData.lastSeen
+                        };
                     }
+                    return null;
+                } catch (error) {
+                    console.error("Erreur de récupération de l'utilisateur:", error);
+                    throw error;
                 }
-                return null;
+            },
+
+            // Écouter les changements d'un utilisateur
+            listenToUserChanges: function(userId, callback) {
+                return onSnapshot(doc(db, "users", userId), (doc) => {
+                    if (doc.exists()) {
+                        const userData = doc.data();
+                        callback({
+                            uid: userId,
+                            username: userData.username,
+                            email: userData.email,
+                            phone: userData.phone,
+                            avatar: userData.avatar,
+                            online: userData.online,
+                            lastSeen: userData.lastSeen
+                        });
+                    }
+                });
+            },
+
+            // Compresser une image
+            compressImage: function(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.src = event.target.result;
+                        img.onload = function() {
+                            // Redimensionner si l'image est trop grande
+                            const MAX_WIDTH = 800;
+                            const MAX_HEIGHT = 800;
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                                const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+                                width = Math.floor(width * ratio);
+                                height = Math.floor(height * ratio);
+                            }
+
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            // Convertir en JPEG avec compression
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    // Créer un nouveau fichier avec un nom significatif
+                                    const compressedFile = new File([blob], file.name, {
+                                        type: 'image/jpeg',
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                } else {
+                                    // Fallback - utiliser le fichier original
+                                    resolve(file);
+                                }
+                            }, 'image/jpeg', 0.8);
+                        };
+                        img.onerror = function() {
+                            reject(new Error("Impossible de charger l'image"));
+                        };
+                    };
+                    reader.onerror = function() {
+                        reject(new Error("Impossible de lire le fichier"));
+                    };
+                });
             }
         };
 
         // Module de gestion des conversations
         var ConversationManager = {
-            getConversation: function(userId1, userId2) {
-                // Rechercher une conversation existante
-                var conversation = null;
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    var conv = appData.conversations[i];
-                    if (conv.participants.includes(userId1) && conv.participants.includes(userId2)) {
-                        conversation = conv;
-                        break;
+            // Créer ou récupérer une conversation entre deux utilisateurs
+            getOrCreateConversation: async function(user1Id, user2Id) {
+                try {
+                    // Trier les IDs pour avoir un ID de conversation consistant
+                    const sortedIds = [user1Id, user2Id].sort();
+                    const conversationId = sortedIds.join('_');
+                    
+                    // Vérifier si la conversation existe
+                    const conversationDoc = await getDoc(doc(db, "conversations", conversationId));
+                    
+                    if (!conversationDoc.exists()) {
+                        // Créer une nouvelle conversation
+                        await setDoc(doc(db, "conversations", conversationId), {
+                            participants: sortedIds,
+                            lastMessage: null,
+                            lastMessageTimestamp: serverTimestamp(),
+                            createdAt: serverTimestamp()
+                        });
                     }
-                }
-
-                // Si aucune conversation n'existe, en créer une
-                if (!conversation) {
-                    conversation = {
-                        id: this.getNextConversationId(),
-                        participants: [userId1, userId2],
-                        messages: []
-                    };
                     
-                    // Ajouter la conversation à appData et INITIAL_DATA
-                    appData.conversations.push(conversation);
-                    INITIAL_DATA.conversations.push(conversation);
-                    
-                    // Afficher le bouton d'export lorsqu'il y a de nouvelles données
-                    elements.exportButton.classList.remove('hidden');
+                    return conversationId;
+                } catch (error) {
+                    console.error("Erreur de création/récupération de conversation:", error);
+                    throw error;
                 }
-
-                return this.processConversation(conversation);
             },
 
-            processConversation: function(conversation) {
-                // Cloner l'objet conversation
-                var result = {
-                    id: conversation.id,
-                    participants: conversation.participants.slice(),
-                    messages: []
-                };
-                
-                // Convertir les timestamps en objets Date
-                for (var i = 0; i < conversation.messages.length; i++) {
-                    var msg = conversation.messages[i];
-                    result.messages.push({
-                        id: msg.id,
-                        senderId: msg.senderId,
-                        text: msg.text,
-                        timestamp: new Date(msg.timestamp)
+            // Envoyer un message
+            sendMessage: async function(senderId, receiverId, text, fileURL = null) {
+                try {
+                    // Obtenir l'ID de conversation
+                    const conversationId = await this.getOrCreateConversation(senderId, receiverId);
+                    
+                    // Créer le message
+                    const messageRef = await addDoc(collection(db, "messages"), {
+                        conversationId: conversationId,
+                        senderId: senderId,
+                        text: text,
+                        fileURL: fileURL,
+                        timestamp: serverTimestamp(),
+                        read: false
                     });
+                    
+                    // Mettre à jour la conversation avec le dernier message
+                    await updateDoc(doc(db, "conversations", conversationId), {
+                        lastMessage: text,
+                        lastMessageTimestamp: serverTimestamp(),
+                        lastMessageSenderId: senderId
+                    });
+                    
+                    return { success: true, messageId: messageRef.id };
+                } catch (error) {
+                    console.error("Erreur d'envoi de message:", error);
+                    return { success: false, message: "Erreur lors de l'envoi du message" };
+                }
+            },
+
+            // Marquer une conversation comme lue
+            markConversationAsRead: async function(conversationId, userId) {
+                try {
+                    // Récupérer tous les messages non lus de cette conversation
+                    const q = query(
+                        collection(db, "messages"),
+                        where("conversationId", "==", conversationId),
+                        where("senderId", "!=", userId),
+                        where("read", "==", false)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    
+                    // Mettre à jour chaque message
+                    const updatePromises = [];
+                    querySnapshot.forEach((doc) => {
+                        updatePromises.push(updateDoc(doc.ref, { read: true }));
+                    });
+                    
+                    await Promise.all(updatePromises);
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de marquage des messages comme lus:", error);
+                    return { success: false, message: "Erreur lors du marquage des messages comme lus" };
+                }
+            },
+
+            // Récupérer les messages d'une conversation
+            getMessages: async function(conversationId) {
+                try {
+                    const q = query(
+                        collection(db, "messages"),
+                        where("conversationId", "==", conversationId),
+                        orderBy("timestamp", "asc")
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    const messages = [];
+                    
+                    querySnapshot.forEach((doc) => {
+                        const messageData = doc.data();
+                        messages.push({
+                            id: doc.id,
+                            senderId: messageData.senderId,
+                            text: messageData.text,
+                            fileURL: messageData.fileURL,
+                            timestamp: messageData.timestamp?.toDate() || new Date(),
+                            read: messageData.read
+                        });
+                    });
+                    
+                    return messages;
+                } catch (error) {
+                    console.error("Erreur de récupération des messages:", error);
+                    throw error;
+                }
+            },
+
+            // Écouter les nouveaux messages d'une conversation
+            listenToMessages: function(conversationId, callback) {
+                const q = query(
+                    collection(db, "messages"),
+                    where("conversationId", "==", conversationId),
+                    orderBy("timestamp", "asc")
+                );
+                
+                return onSnapshot(q, (querySnapshot) => {
+                    const messages = [];
+                    querySnapshot.forEach((doc) => {
+                        const messageData = doc.data();
+                        messages.push({
+                            id: doc.id,
+                            senderId: messageData.senderId,
+                            text: messageData.text,
+                            fileURL: messageData.fileURL,
+                            timestamp: messageData.timestamp?.toDate() || new Date(),
+                            read: messageData.read
+                        });
+                    });
+                    callback(messages);
+                });
+            },
+
+            // Récupérer les conversations d'un utilisateur
+            getUserConversations: async function(userId) {
+                try {
+                    // Récupérer toutes les conversations où l'utilisateur est participant
+                    const q = query(
+                        collection(db, "conversations"),
+                        where("participants", "array-contains", userId)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    const conversations = [];
+                    
+                    for (const doc of querySnapshot.docs) {
+                        const conversationData = doc.data();
+                        
+                        // Trouver l'autre participant
+                        const otherUserId = conversationData.participants.find(id => id !== userId);
+                        
+                        // Récupérer les informations de l'autre utilisateur
+                        const otherUser = await UserManager.getUserById(otherUserId);
+                        
+                        if (otherUser) {
+                            conversations.push({
+                                id: doc.id,
+                                otherUser: otherUser,
+                                lastMessage: conversationData.lastMessage,
+                                lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
+                                lastMessageSenderId: conversationData.lastMessageSenderId
+                            });
+                        }
+                    }
+                    
+                    // Trier par dernier message
+                    conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
+                    
+                    return conversations;
+                } catch (error) {
+                    console.error("Erreur de récupération des conversations:", error);
+                    throw error;
+                }
+            },
+
+            // Écouter les changements de conversations
+            listenToConversations: function(userId, callback) {
+                const q = query(
+                    collection(db, "conversations"),
+                    where("participants", "array-contains", userId)
+                );
+                
+                return onSnapshot(q, async (querySnapshot) => {
+                    const conversations = [];
+                    
+                    for (const doc of querySnapshot.docs) {
+                        const conversationData = doc.data();
+                        
+                        // Trouver l'autre participant
+                        const otherUserId = conversationData.participants.find(id => id !== userId);
+                        
+                        try {
+                            // Récupérer les informations de l'autre utilisateur
+                            const otherUser = await UserManager.getUserById(otherUserId);
+                            
+                            if (otherUser) {
+                                conversations.push({
+                                    id: doc.id,
+                                    otherUser: otherUser,
+                                    lastMessage: conversationData.lastMessage,
+                                    lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
+                                    lastMessageSenderId: conversationData.lastMessageSenderId
+                                });
+                            }
+                        } catch (error) {
+                            console.error("Erreur lors de la récupération de l'utilisateur:", error);
+                        }
+                    }
+                    
+                    // Trier par dernier message
+                    conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
+                    
+                    callback(conversations);
+                });
+            },
+
+            // Supprimer toutes les conversations d'un utilisateur
+            deleteAllUserConversations: async function(userId) {
+                try {
+                    // Récupérer toutes les conversations où l'utilisateur est participant
+                    const q = query(
+                        collection(db, "conversations"),
+                        where("participants", "array-contains", userId)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    
+                    // Supprimer chaque conversation et ses messages
+                    for (const doc of querySnapshot.docs) {
+                        // Supprimer les messages de la conversation
+                        const messagesQuery = query(
+                            collection(db, "messages"),
+                            where("conversationId", "==", doc.id)
+                        );
+                        
+                        const messagesSnapshot = await getDocs(messagesQuery);
+                        
+                        for (const messageDoc of messagesSnapshot.docs) {
+                            await deleteDoc(messageDoc.ref);
+                        }
+                        
+                        // Supprimer la conversation
+                        await deleteDoc(doc.ref);
+                    }
+                    
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de suppression des conversations:", error);
+                    return { success: false, message: "Erreur lors de la suppression des conversations" };
+                }
+            },
+
+            // Mettre à jour le statut de typing
+            updateTypingStatus: async function(userId, otherUserId, isTyping) {
+                try {
+                    const sortedIds = [userId, otherUserId].sort();
+                    const conversationId = sortedIds.join('_');
+                    
+                    await updateDoc(doc(db, "conversations", conversationId), {
+                        [`typing_${userId}`]: isTyping,
+                        typingUpdatedAt: serverTimestamp()
+                    });
+                    
+                    return { success: true };
+                } catch (error) {
+                    console.error("Erreur de mise à jour du statut de typing:", error);
+                    return { success: false };
+                }
+            },
+
+            // Écouter le statut de typing
+            listenToTypingStatus: function(conversationId, otherUserId, callback) {
+                return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
+                    if (doc.exists()) {
+                        const data = doc.data();
+                        const isTyping = data[`typing_${otherUserId}`] || false;
+                        callback(isTyping);
+                    }
+                });
+            },
+
+            // Télécharger un fichier pour un message
+            uploadFile: async function(file, senderId, conversationId) {
+                try {
+                    // Compresser l'image si c'est une image
+                    let fileToUpload = file;
+                    if (file.type.startsWith('image/')) {
+                        fileToUpload = await UserManager.compressImage(file);
+                    }
+                    
+                    // Créer une référence dans le stockage
+                    const storageRef = ref(storage, `messages/${conversationId}/${senderId}_${Date.now()}_${file.name}`);
+                    
+                    // Uploader le fichier
+                    const snapshot = await uploadBytes(storageRef, fileToUpload);
+                    
+                    // Récupérer l'URL de téléchargement
+                    const downloadURL = await getDownloadURL(storageRef);
+                    
+                    return { success: true, url: downloadURL };
+                } catch (error) {
+                    console.error("Erreur d'upload de fichier:", error);
+                    return { success: false, message: "Erreur lors de l'upload du fichier" };
+                }
+            }
+        };
+
+        // Fonctions utilitaires pour l'interface
+        var UI = {
+            showLoading: function(message) {
+                if (!message) message = "Chargement en cours...";
+                elements.loadingText.textContent = message;
+                elements.loadingOverlay.classList.remove('hidden');
+            },
+
+            hideLoading: function() {
+                elements.loadingOverlay.classList.add('hidden');
+            },
+
+            updateProfileInfo: function() {
+                if (appData.currentUser) {
+                    elements.profileUsername.textContent = appData.currentUser.username;
+                    elements.profileEmail.textContent = appData.currentUser.email || 'Non renseigné';
+                    elements.profilePhone.textContent = appData.currentUser.phone || 'Non renseigné';
+                    
+                    if (appData.currentUser.avatar) {
+                        elements.profileAvatar.innerHTML = '<img src="' + appData.currentUser.avatar + '" alt="Avatar" class="avatar-img">';
+                    } else {
+                        elements.profileAvatar.innerHTML = appData.currentUser.username.charAt(0).toUpperCase();
+                    }
+
+                    // Mettre à jour le bouton de statut
+                    elements.statusToggle.textContent = appData.isOnline ? "Passer hors ligne" : "Passer en ligne";
+                }
+            },
+
+            renderConversations: function(conversations) {
+                elements.conversationsList.innerHTML = '';
+                
+                if (!conversations || conversations.length === 0) {
+                    elements.conversationsList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucune conversation</p>';
+                    return;
                 }
                 
-                return result;
+                conversations.forEach(conversation => {
+                    const otherUser = conversation.otherUser;
+                    const lastMessage = conversation.lastMessage;
+                    const lastMessageSenderId = conversation.lastMessageSenderId;
+                    const isLastMessageMine = lastMessageSenderId === auth.currentUser.uid;
+                    
+                    const contactEl = document.createElement('div');
+                    contactEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
+                    contactEl.style.cursor = 'pointer';
+                    contactEl.setAttribute('data-user-id', otherUser.uid);
+                    
+                    let avatarContent = '';
+                    if (otherUser.avatar) {
+                        avatarContent = `
+                            <div class="relative">
+                                <img src="${otherUser.avatar}" alt="${otherUser.username}" class="h-12 w-12 rounded-full" style="object-fit: cover;">
+                                ${otherUser.online ? '<div class="online-indicator"></div>' : ''}
+                            </div>
+                        `;
+                    } else {
+                        avatarContent = `
+                            <div class="relative">
+                                <div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                                    ${otherUser.username.charAt(0).toUpperCase()}
+                                </div>
+                                ${otherUser.online ? '<div class="online-indicator"></div>' : ''}
+                            </div>
+                        `;
+                    }
+                    
+                    // Formater la date du dernier message
+                    let timeString = '';
+                    if (conversation.lastMessageTimestamp) {
+                        timeString = this.formatTimeOrDate(conversation.lastMessageTimestamp);
+                    }
+                    
+                    contactEl.innerHTML = `
+                        ${avatarContent}
+                        <div class="ml-3 flex-1">
+                            <div class="font-medium">${otherUser.username}</div>
+                            <div class="text-sm text-gray-500 truncate">
+                                ${isLastMessageMine ? 'Vous: ' : ''}${lastMessage || 'Aucun message'}
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-400">${timeString}</div>
+                    `;
+                    
+                    contactEl.addEventListener('click', () => {
+                        this.openChat(otherUser);
+                    });
+                    
+                    elements.conversationsList.appendChild(contactEl);
+                });
             },
 
-            getNextConversationId: function() {
-                var maxId = 0;
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    if (appData.conversations[i].id > maxId) {
-                        maxId = appData.conversations[i].id;
+            renderUsers: function(users) {
+                elements.usersList.innerHTML = '';
+                
+                if (!users || users.length === 0) {
+                    elements.usersList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun utilisateur disponible</p>';
+                    return;
+                }
+                
+                users.forEach(user => {
+                    const userEl = document.createElement('div');
+                    userEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
+                    
+                    let avatarContent = '';
+                    if (user.avatar) {
+                        avatarContent = `
+                            <div class="relative">
+                                <img src="${user.avatar}" alt="${user.username}" class="h-12 w-12 rounded-full" style="object-fit: cover;">
+                                ${user.online ? '<div class="online-indicator"></div>' : ''}
+                            </div>
+                        `;
+                    } else {
+                        avatarContent = `
+                            <div class="relative">
+                                <div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                                    ${user.username.charAt(0).toUpperCase()}
+                                </div>
+                                ${user.online ? '<div class="online-indicator"></div>' : ''}
+                            </div>
+                        `;
+                    }
+                    
+                    // Formater le dernier vu
+                    let lastSeenText = 'Jamais connecté';
+                    if (user.online) {
+                        lastSeenText = 'En ligne';
+                    } else if (user.lastSeen) {
+                        const lastSeen = user.lastSeen.toDate ? user.lastSeen.toDate() : new Date(user.lastSeen);
+                        lastSeenText = `Vu ${this.formatTimeOrDate(lastSeen)}`;
+                    }
+                    
+                    userEl.innerHTML = `
+                        ${avatarContent}
+                        <div class="ml-3 flex-1">
+                            <div class="font-medium">${user.username}</div>
+                            <div class="text-xs text-gray-500">${lastSeenText}</div>
+                        </div>
+                        <button class="start-chat-btn px-3 py-1 bg-primary text-white rounded-lg text-sm" data-user-id="${user.uid}">
+                            Discuter
+                        </button>
+                    `;
+                    
+                    elements.usersList.appendChild(userEl);
+                });
+                
+                // Ajouter des gestionnaires d'événements pour les boutons "Discuter"
+                document.querySelectorAll('.start-chat-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const userId = btn.getAttribute('data-user-id');
+                        
+                        try {
+                            this.showLoading("Chargement de l'utilisateur...");
+                            const user = await UserManager.getUserById(userId);
+                            this.hideLoading();
+                            
+                            if (user) {
+                                this.openChat(user);
+                            }
+                        } catch (error) {
+                            this.hideLoading();
+                            console.error("Erreur lors de l'ouverture du chat:", error);
+                            this.showNotification("Erreur lors de l'ouverture du chat", "error");
+                        }
+                    });
+                });
+            },
+
+            openChat: async function(user) {
+                this.showLoading("Chargement de la conversation...");
+                
+                try {
+                    // Stocker l'utilisateur en cours de discussion
+                    appData.currentChatUser = user;
+                    
+                    // Mettre à jour l'en-tête de la conversation
+                    elements.chatContact.textContent = user.username;
+                    
+                    // Afficher l'avatar du contact
+                    if (user.avatar) {
+                        elements.chatContactAvatar.innerHTML = `
+                            <img src="${user.avatar}" alt="${user.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
+                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
+                        `;
+                    } else {
+                        elements.chatContactAvatar.innerHTML = `
+                            ${user.username.charAt(0).toUpperCase()}
+                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
+                        `;
+                    }
+                    
+                    // Mettre à jour le statut en ligne
+                    const onlineStatus = document.getElementById('online-status');
+                    if (user.online) {
+                        onlineStatus.classList.remove('hidden');
+                    } else {
+                        onlineStatus.classList.add('hidden');
+                    }
+                    
+                    // Afficher l'écran de chat, masquer les autres et la barre de navigation
+                    this.showScreen('chat-screen');
+                    elements.navigationBar.classList.add('hidden');
+                    
+                    // Obtenir l'ID de conversation
+                    const conversationId = await ConversationManager.getOrCreateConversation(
+                        auth.currentUser.uid,
+                        user.uid
+                    );
+                    
+                    // Stocker l'ID de conversation dans l'élément
+                    elements.chatScreen.setAttribute('data-conversation-id', conversationId);
+                    elements.chatScreen.setAttribute('data-other-user-id', user.uid);
+                    
+                    // Vider le champ de message
+                    elements.messageInput.value = '';
+                    
+                    // Vider le conteneur de messages
+                    elements.chatMessages.innerHTML = '';
+                    
+                    // Afficher un indicateur de chargement des messages
+                    elements.chatMessages.innerHTML = '<div class="flex justify-center p-4"><div class="loader"></div></div>';
+                    
+                    // Écouter les messages de la conversation
+                    const unsubscribeMessages = ConversationManager.listenToMessages(
+                        conversationId,
+                        (messages) => {
+                            // Supprimer l'indicateur de chargement
+                            elements.chatMessages.innerHTML = '';
+                            
+                            // Afficher les messages
+                            if (messages.length === 0) {
+                                elements.chatMessages.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun message. Commencez la conversation !</p>';
+                            } else {
+                                messages.forEach(message => {
+                                    this.addMessageToUI(message);
+                                });
+                                
+                                // Défiler vers le bas
+                                this.scrollToBottom();
+                            }
+                            
+                            // Marquer les messages comme lus
+                            ConversationManager.markConversationAsRead(conversationId, auth.currentUser.uid);
+                        }
+                    );
+                    
+                    // Stocker l'unsubscribe function
+                    elements.chatScreen.setAttribute('data-unsubscribe-messages', unsubscribeMessages);
+                    
+                    // Écouter le statut de typing
+                    const unsubscribeTyping = ConversationManager.listenToTypingStatus(
+                        conversationId,
+                        user.uid,
+                        (isTyping) => {
+                            if (isTyping) {
+                                elements.typingStatus.classList.remove('hidden');
+                            } else {
+                                elements.typingStatus.classList.add('hidden');
+                            }
+                        }
+                    );
+                    
+                    // Stocker l'unsubscribe function
+                    elements.chatScreen.setAttribute('data-unsubscribe-typing', unsubscribeTyping);
+                    
+                    // Écouter les changements de l'utilisateur
+                    const unsubscribeUser = UserManager.listenToUserChanges(
+                        user.uid,
+                        (updatedUser) => {
+                            // Mettre à jour le statut en ligne
+                            const onlineStatus = document.getElementById('online-status');
+                            if (updatedUser.online) {
+                                onlineStatus.classList.remove('hidden');
+                            } else {
+                                onlineStatus.classList.add('hidden');
+                            }
+                            
+                            // Mettre à jour l'avatar si changé
+                            if (updatedUser.avatar !== user.avatar) {
+                                if (updatedUser.avatar) {
+                                    elements.chatContactAvatar.innerHTML = `
+                                        <img src="${updatedUser.avatar}" alt="${updatedUser.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
+                                        ${updatedUser.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
+                                    `;
+                                } else {
+                                    elements.chatContactAvatar.innerHTML = `
+                                        ${updatedUser.username.charAt(0).toUpperCase()}
+                                        ${updatedUser.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
+                                    `;
+                                }
+                            }
+                            
+                            // Mettre à jour l'objet utilisateur
+                            appData.currentChatUser = updatedUser;
+                        }
+                    );
+                    
+                    // Stocker l'unsubscribe function
+                    elements.chatScreen.setAttribute('data-unsubscribe-user', unsubscribeUser);
+                    
+                    // Focus sur le champ de saisie de message
+                    elements.messageInput.focus();
+                } catch (error) {
+                    console.error("Erreur lors de l'ouverture de la conversation:", error);
+                    this.showNotification("Erreur lors de l'ouverture de la conversation", "error");
+                } finally {
+                    this.hideLoading();
+                }
+            },
+
+            addMessageToUI: function(message, isSending = false) {
+                const isSent = message.senderId === auth.currentUser.uid;
+                
+                const messageEl = document.createElement('div');
+                messageEl.className = 'flex ' + (isSent ? 'justify-end' : 'justify-start');
+                messageEl.id = 'msg-' + (message.id || Date.now());
+                
+                const timestamp = message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp);
+                
+                const sendingIndicator = isSending ? '<span class="sending-indicator">Envoi...</span>' : '';
+                
+                let messageContent = '';
+                
+                // Si le message contient un fichier
+                if (message.fileURL) {
+                    // Vérifier si c'est une image
+                    if (this.isImageURL(message.fileURL)) {
+                        messageContent = `
+                            <div class="mb-1">
+                                <img src="${message.fileURL}" alt="Image partagée" class="max-w-full rounded-lg" style="max-height: 200px;">
+                            </div>
+                        `;
+                    } else {
+                        // C'est un autre type de fichier
+                        messageContent = `
+                            <div class="mb-1">
+                                <a href="${message.fileURL}" target="_blank" class="flex items-center text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Fichier partagé
+                                </a>
+                            </div>
+                        `;
                     }
                 }
-                return maxId + 1;
+                
+                // Ajouter le texte du message s'il y en a
+                if (message.text) {
+                    messageContent += `<div>${message.text}</div>`;
+                }
+                
+                messageEl.innerHTML = `
+                    <div class="chat-bubble ${isSent ? 'sent' : 'received'} px-4 py-2 ${isSending ? 'sending' : ''}">
+                        ${messageContent}
+                        <div class="text-xs mt-1 opacity-70 flex justify-between items-center">
+                            <span>${this.formatTime(timestamp)}</span>
+                            ${isSent && message.read ? 
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>' : 
+                                ''}
+                        </div>
+                        ${sendingIndicator}
+                    </div>
+                `;
+                
+                elements.chatMessages.appendChild(messageEl);
+                
+                // Défiler vers le bas
+                this.scrollToBottom();
+                
+                // Si le message était en cours d'envoi, marquer comme envoyé après un court délai
+                if (isSending) {
+                    setTimeout(function() {
+                        const bubble = messageEl.querySelector('.chat-bubble');
+                        if (bubble) {
+                            bubble.classList.remove('sending');
+                            const indicator = bubble.querySelector('.sending-indicator');
+                            if (indicator) indicator.remove();
+                        }
+                    }, 500);
+                }
             },
 
-            getNextMessageId: function() {
-                var maxId = 0;
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    var conv = appData.conversations[i];
-                    for (var j = 0; j < conv.messages.length; j++) {
-                        var msgId = conv.messages[j].id || 0;
-                        if (msgId > maxId) {
-                            maxId = msgId;
+            scrollToBottom: function() {
+                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+            },
+
+            formatTime: function(timestamp) {
+                const hours = timestamp.getHours().toString().padStart(2, '0');
+                const minutes = timestamp.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            },
+
+            formatTimeOrDate: function(timestamp) {
+                const now = new Date();
+                const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+                
+                // Si c'est aujourd'hui, afficher l'heure
+                if (date.toDateString() === now.toDateString()) {
+                    return this.formatTime(date);
+                }
+                
+                // Si c'est hier, afficher "Hier"
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1);
+                if (date.toDateString() === yesterday.toDateString()) {
+                    return 'Hier';
+                }
+                
+                // Si c'est cette semaine, afficher le jour
+                const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+                if (now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000) {
+                    return days[date.getDay()];
+                }
+                
+                // Sinon, afficher la date
+                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            },
+
+            showScreen: function(screenId) {
+                // Masquer tous les écrans
+                elements.conversationsScreen.classList.add('hidden');
+                elements.usersScreen.classList.add('hidden');
+                elements.chatScreen.classList.add('hidden');
+                elements.profileScreen.classList.add('hidden');
+                
+                // Afficher l'écran demandé
+                document.getElementById(screenId).classList.remove('hidden');
+                
+                // Afficher la barre de navigation si on n'est pas dans la vue chat
+                if (screenId !== 'chat-screen') {
+                    elements.navigationBar.classList.remove('hidden');
+                    
+                    // Désinscrire des écouteurs si on quitte la vue chat
+                    if (elements.chatScreen.hasAttribute('data-unsubscribe-messages')) {
+                        const unsubscribeMessages = elements.chatScreen.getAttribute('data-unsubscribe-messages');
+                        if (typeof unsubscribeMessages === 'function') {
+                            unsubscribeMessages();
+                        }
+                    }
+                    
+                    if (elements.chatScreen.hasAttribute('data-unsubscribe-typing')) {
+                        const unsubscribeTyping = elements.chatScreen.getAttribute('data-unsubscribe-typing');
+                        if (typeof unsubscribeTyping === 'function') {
+                            unsubscribeTyping();
+                        }
+                    }
+                    
+                    if (elements.chatScreen.hasAttribute('data-unsubscribe-user')) {
+                        const unsubscribeUser = elements.chatScreen.getAttribute('data-unsubscribe-user');
+                        if (typeof unsubscribeUser === 'function') {
+                            unsubscribeUser();
                         }
                     }
                 }
-                return maxId + 1;
+                
+                // Mettre à jour le bouton de navigation actif
+                elements.navButtons.forEach(btn => {
+                    const screen = btn.getAttribute('data-screen');
+                    if (screen === screenId) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             },
 
-            // Ajoute un message et l'ajoute immédiatement à la conversation
-            addMessage: function(userId1, userId2, senderId, text) {
-                // Créer le message
-                var message = {
-                    id: this.getNextMessageId(),
-                    senderId: senderId,
-                    text: text,
-                    timestamp: new Date()
-                };
+            showNotification: function(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type === 'error' ? 'bg-red-500' : 'bg-primary'}`;
+                notification.textContent = message;
                 
-                // Trouver et mettre à jour la conversation immédiatement
-                var conversation = null;
-                var initialDataConversation = null;
+                elements.notificationArea.appendChild(notification);
                 
-                // Trouver dans appData
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    var conv = appData.conversations[i];
-                    if (conv.participants.includes(userId1) && conv.participants.includes(userId2)) {
-                        conversation = conv;
-                        break;
-                    }
-                }
-                
-                // Trouver dans INITIAL_DATA
-                for (var i = 0; i < INITIAL_DATA.conversations.length; i++) {
-                    var conv = INITIAL_DATA.conversations[i];
-                    if (conv.participants.includes(userId1) && conv.participants.includes(userId2)) {
-                        initialDataConversation = conv;
-                        break;
-                    }
-                }
-                
-                if (conversation) {
-                    // Ajouter à appData
-                    conversation.messages.push({
-                        id: message.id,
-                        senderId: message.senderId,
-                        text: message.text,
-                        timestamp: message.timestamp.toISOString()
-                    });
-                    
-                    // Ajouter à INITIAL_DATA
-                    if (initialDataConversation) {
-                        initialDataConversation.messages.push({
-                            id: message.id,
-                            senderId: message.senderId,
-                            text: message.text,
-                            timestamp: message.timestamp.toISOString()
-                        });
-                    }
-                } else {
-                    // Créer une nouvelle conversation si nécessaire
-                    var newConversation = {
-                        id: this.getNextConversationId(),
-                        participants: [userId1, userId2],
-                        messages: [{
-                            id: message.id,
-                            senderId: message.senderId,
-                            text: message.text,
-                            timestamp: message.timestamp.toISOString()
-                        }]
-                    };
-                    
-                    // Ajouter à appData et INITIAL_DATA
-                    appData.conversations.push(newConversation);
-                    INITIAL_DATA.conversations.push(newConversation);
-                }
-                
-                // Afficher le bouton d'export lorsqu'il y a de nouvelles données
-                elements.exportButton.classList.remove('hidden');
-                
-                return message;
+                // Supprimer la notification après 3 secondes
+                setTimeout(() => {
+                    notification.classList.add('hide');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
             },
 
-            getUserConversations: function(userId) {
-                var result = [];
-                for (var i = 0; i < appData.conversations.length; i++) {
-                    var conv = appData.conversations[i];
-                    if (conv.participants.includes(userId)) {
-                        result.push(this.processConversation(conv));
-                    }
-                }
-                return result;
-            },
+            isImageURL: function(url) {
+                // Vérifier par l'extension
+                const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+                const lowerUrl = url.toLowerCase();
+                return extensions.some(ext => lowerUrl.endsWith(ext));
+            }
+        };
 
-            getLastMessage: function(userId1, userId2) {
-                var conversation = this.getConversation(userId1, userId2);
-                if (conversation.messages.length > 0) {
-                    return conversation.messages[conversation.messages.length - 1];
+        // Module de validation
+        var Validator = {
+            validateEmail: function(email) {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return regex.test(email);
+            },
+            
+            validatePhone: function(phone) {
+                // Format français: 10 chiffres avec ou sans espaces/tirets, peut commencer par +33 ou 0
+                const regex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+                return regex.test(phone);
+            },
+            
+            validatePassword: function(password, confirmPassword) {
+                if (password.length < 6) {
+                    return { valid: false, message: "Le mot de passe doit contenir au moins 6 caractères" };
                 }
-                return null;
+                
+                if (confirmPassword !== undefined && password !== confirmPassword) {
+                    return { valid: false, message: "Les mots de passe ne correspondent pas" };
+                }
+                
+                return { valid: true };
             }
         };
 
@@ -1908,11 +2506,11 @@
                 }
                 
                 // Initialiser le thème de couleur
-                for (var i = 0; i < elements.themeColors.length; i++) {
-                    if (elements.themeColors[i].value === appData.theme.color) {
-                        elements.themeColors[i].checked = true;
+                elements.themeColors.forEach(radio => {
+                    if (radio.value === appData.theme.color) {
+                        radio.checked = true;
                     }
-                }
+                });
                 
                 // Appliquer le thème actuel
                 this.applyTheme();
@@ -1923,18 +2521,18 @@
                 try {
                     // Tentative d'utilisation de matchMedia si disponible
                     if (window.matchMedia) {
-                        var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                         this.setDarkMode(isDarkMode);
                         
                         // Essayer d'ajouter un listener pour les changements de préférence
                         try {
-                            window.matchMedia('(prefers-color-scheme: dark)').addListener(function(e) {
+                            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
                                 ThemeManager.setDarkMode(e.matches);
                             });
                         } catch(e) {
                             // iOS 12 n'a pas addListener, on utilise addEventListener comme fallback
                             try {
-                                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
                                     ThemeManager.setDarkMode(e.matches);
                                 });
                             } catch(err) {
@@ -1977,316 +2575,109 @@
                 // Appliquer la couleur du thème
                 document.body.className = document.body.className.replace(/theme-\w+/g, '');
                 document.body.classList.add('theme-' + appData.theme.color);
+                
+                // Stocker les préférences dans Firestore si l'utilisateur est connecté
+                if (auth.currentUser) {
+                    updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        theme: appData.theme
+                    }).catch(error => {
+                        console.error("Erreur lors de la sauvegarde des préférences de thème:", error);
+                    });
+                }
             }
         };
 
-        // Fonctions utilitaires pour l'interface
-        var UI = {
-            showLoading: function(message) {
-                if (!message) message = "Chargement en cours...";
-                elements.loadingText.textContent = message;
-                elements.loadingOverlay.classList.remove('hidden');
-            },
-
-            hideLoading: function() {
-                elements.loadingOverlay.classList.add('hidden');
-            },
-
-            updateProfileInfo: function() {
-                if (appData.currentUser) {
-                    elements.profileUsername.textContent = appData.currentUser.username;
-                    elements.profileEmail.textContent = appData.currentUser.email || 'Non renseigné';
-                    elements.profilePhone.textContent = appData.currentUser.phone || 'Non renseigné';
-                    
-                    if (appData.currentUser.avatar) {
-                        elements.profileAvatar.innerHTML = '<img src="' + appData.currentUser.avatar + '" alt="Avatar" class="avatar-img">';
-                    } else {
-                        elements.profileAvatar.innerHTML = appData.currentUser.username.charAt(0).toUpperCase();
-                    }
-                }
-            },
-
-            renderConversations: function() {
-                if (!appData.currentUser) return;
-                
-                elements.conversationsList.innerHTML = '';
-                var users = UserManager.getOtherUsers();
-                
-                if (users.length === 0) {
-                    elements.conversationsList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun contact disponible</p>';
-                    return;
-                }
-                
-                for (var i = 0; i < users.length; i++) {
-                    var user = users[i];
-                    var lastMessage = ConversationManager.getLastMessage(appData.currentUser.id, user.id);
-                    
-                    var contactEl = document.createElement('div');
-                    contactEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
-                    contactEl.style.cursor = 'pointer';
-                    
-                    var avatarContent = '';
-                    if (user.avatar) {
-                        avatarContent = '<img src="' + user.avatar + '" alt="' + user.username + '" class="h-12 w-12 rounded-full" style="object-fit: cover;">';
-                    } else {
-                        avatarContent = '<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">' +
-                            user.username.charAt(0).toUpperCase() +
-                        '</div>';
-                    }
-                    
-                    contactEl.innerHTML =
-                        avatarContent +
-                        '<div class="ml-3 flex-1">' +
-                            '<div class="font-medium">' + user.username + '</div>' +
-                            '<div class="text-sm text-gray-500 truncate">' +
-                                (lastMessage ? lastMessage.text : 'Aucun message') +
-                            '</div>' +
-                        '</div>';
-                    
-                    // IIFE pour préserver la référence à l'utilisateur pour chaque contactEl
-                    (function(userObj) {
-                        contactEl.addEventListener('click', function() {
-                            UI.openChat(userObj);
-                        });
-                    })(user);
-                    
-                    elements.conversationsList.appendChild(contactEl);
-                }
-            },
-
-            renderAllUsers: function() {
-                elements.usersList.innerHTML = '';
-                var allUsers = UserManager.getAllUsers();
-                
-                if (allUsers.length === 0) {
-                    elements.usersList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun utilisateur inscrit</p>';
-                    return;
-                }
-                
-                for (var i = 0; i < allUsers.length; i++) {
-                    var user = allUsers[i];
-                    var userEl = document.createElement('div');
-                    userEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
-                    
-                    var avatarContent = '';
-                    if (user.avatar) {
-                        avatarContent = '<img src="' + user.avatar + '" alt="' + user.username + '" class="h-12 w-12 rounded-full" style="object-fit: cover;">';
-                    } else {
-                        avatarContent = '<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">' +
-                            user.username.charAt(0).toUpperCase() +
-                        '</div>';
-                    }
-                    
-                    var isCurrentUser = appData.currentUser && user.id === appData.currentUser.id;
-                    
-                    userEl.innerHTML =
-                        avatarContent +
-                        '<div class="ml-3 flex-1">' +
-                            '<div class="font-medium">' + user.username + ' ' + (isCurrentUser ? '(Vous)' : '') + '</div>' +
-                            '<div class="text-sm text-gray-500">' +
-                                (user.email || 'Email non disponible') +
-                            '</div>' +
-                        '</div>' +
-                        (!isCurrentUser ? 
-                        '<button class="start-chat-btn px-3 py-1 bg-primary text-white rounded-lg text-sm" data-user-id="' + user.id + '">' +
-                            'Discuter' +
-                        '</button>' : '');
-                    
-                    elements.usersList.appendChild(userEl);
-                }
-                
-                // Ajouter des gestionnaires d'événements pour les boutons "Discuter"
-                var startChatButtons = document.querySelectorAll('.start-chat-btn');
-                for (var j = 0; j < startChatButtons.length; j++) {
-                    (function(btn) {
-                        btn.addEventListener('click', function(e) {
-                            var userId = parseInt(btn.getAttribute('data-user-id'));
-                            var user = UserManager.getUserById(userId);
-                            if (user) {
-                                UI.openChat(user);
+        // Initialisation de l'application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser le thème
+            ThemeManager.init();
+            
+            // Écouter les changements d'authentification
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // L'utilisateur est connecté
+                    try {
+                        // Récupérer les données utilisateur
+                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        
+                        if (userDoc.exists()) {
+                            const userData = userDoc.data();
+                            
+                            appData.currentUser = {
+                                uid: user.uid,
+                                username: userData.username,
+                                email: userData.email,
+                                phone: userData.phone,
+                                avatar: userData.avatar
+                            };
+                            
+                            // Récupérer les préférences de thème
+                            if (userData.theme) {
+                                appData.theme = userData.theme;
+                                ThemeManager.applyTheme();
                             }
-                        });
-                    })(startChatButtons[j]);
-                }
-            },
-
-            openChat: function(contact) {
-                this.showLoading("Chargement de la conversation...");
-                
-                setTimeout(function() {
-                    try {
-                        // Mettre à jour l'en-tête de la conversation
-                        elements.chatContact.textContent = contact.username;
-                        
-                        // Afficher l'avatar du contact
-                        if (contact.avatar) {
-                            elements.chatContactAvatar.innerHTML = '<img src="' + contact.avatar + '" alt="' + contact.username + '" class="h-10 w-10 rounded-full" style="object-fit: cover;">';
+                            
+                            // Mettre à jour le statut en ligne
+                            appData.isOnline = userData.online !== undefined ? userData.online : true;
+                            
+                            // Afficher l'interface principale
+                            elements.splashScreen.classList.add('hidden');
+                            elements.authScreen.classList.add('hidden');
+                            elements.appContainer.classList.remove('hidden');
+                            elements.appContainer.classList.add('flex');
+                            
+                            // Mettre à jour l'interface
+                            UI.updateProfileInfo();
+                            
+                            // Écouter les conversations
+                            const unsubscribeConversations = ConversationManager.listenToConversations(
+                                user.uid,
+                                conversations => {
+                                    UI.renderConversations(conversations);
+                                }
+                            );
+                            
+                            // Charger la liste des utilisateurs
+                            try {
+                                const users = await UserManager.getAllUsers();
+                                UI.renderUsers(users);
+                            } catch (error) {
+                                console.error("Erreur lors du chargement des utilisateurs:", error);
+                                UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
+                            }
                         } else {
-                            elements.chatContactAvatar.innerHTML = contact.username.charAt(0).toUpperCase();
+                            // Le document utilisateur n'existe pas, déconnecter l'utilisateur
+                            await signOut(auth);
+                            
+                            elements.splashScreen.classList.add('hidden');
+                            elements.authScreen.classList.remove('hidden');
+                            elements.authScreen.classList.add('flex');
+                            elements.appContainer.classList.add('hidden');
+                            UI.showNotification("Profil utilisateur introuvable", "error");
                         }
-                        
-                        // Stocker le contact sélectionné
-                        elements.appContainer.setAttribute('data-current-contact', contact.id);
-                        
-                        // Afficher l'écran de chat, masquer les autres et la barre de navigation
-                        UI.showScreen('chat-screen');
-                        elements.navigationBar.classList.add('hidden');
-                        
-                        // Afficher les messages
-                        UI.renderMessages(contact.id);
-                        
-                        // Focus sur le champ de saisie de message
-                        elements.messageInput.focus();
                     } catch (error) {
-                        console.error("Erreur lors de l'ouverture de la conversation:", error);
-                        alert("Une erreur s'est produite lors du chargement de la conversation.");
-                    } finally {
-                        UI.hideLoading();
+                        console.error("Erreur lors de la récupération des données utilisateur:", error);
+                        
+                        elements.splashScreen.classList.add('hidden');
+                        elements.authScreen.classList.remove('hidden');
+                        elements.authScreen.classList.add('flex');
+                        elements.appContainer.classList.add('hidden');
+                        UI.showNotification("Erreur lors de la récupération des données utilisateur", "error");
                     }
-                }, 300);
-            },
-
-            renderMessages: function(contactId) {
-                elements.chatMessages.innerHTML = '';
-                var conversation = ConversationManager.getConversation(appData.currentUser.id, parseInt(contactId));
-                
-                if (conversation.messages.length === 0) {
-                    elements.chatMessages.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun message. Commencez la conversation !</p>';
-                    return;
+                } else {
+                    // L'utilisateur n'est pas connecté
+                    elements.splashScreen.classList.add('hidden');
+                    elements.authScreen.classList.remove('hidden');
+                    elements.authScreen.classList.add('flex');
+                    elements.appContainer.classList.add('hidden');
                 }
-                
-                for (var i = 0; i < conversation.messages.length; i++) {
-                    this.addMessageToUI(conversation.messages[i]);
-                }
-                
-                // Défiler vers le bas
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-            },
+            });
             
-            // Ajoute un message au DOM
-            addMessageToUI: function(message, isSending) {
-                var isSent = message.senderId === appData.currentUser.id;
-                
-                var messageEl = document.createElement('div');
-                messageEl.className = 'flex ' + (isSent ? 'justify-end' : 'justify-start');
-                messageEl.id = 'msg-' + (message.id || Date.now());
-                
-                var timestamp = message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp);
-                
-                var sendingIndicator = isSending ? '<span class="sending-indicator">Envoi...</span>' : '';
-                
-                messageEl.innerHTML =
-                    '<div class="chat-bubble ' + (isSent ? 'sent' : 'received') + ' px-4 py-2 ' + (isSending ? 'sending' : '') + '">' +
-                        '<div>' + message.text + '</div>' +
-                        '<div class="text-xs mt-1 opacity-70">' + this.formatTime(timestamp) + '</div>' +
-                        sendingIndicator +
-                    '</div>';
-                
-                elements.chatMessages.appendChild(messageEl);
-                
-                // Défiler vers le bas
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-
-                // Si le message était en cours d'envoi, marquer comme envoyé après un court délai
-                if (isSending) {
-                    setTimeout(function() {
-                        var bubble = messageEl.querySelector('.chat-bubble');
-                        if (bubble) {
-                            bubble.classList.remove('sending');
-                            var indicator = bubble.querySelector('.sending-indicator');
-                            if (indicator) indicator.parentNode.removeChild(indicator);
-                        }
-                    }, 500);
-                }
-            },
-
-            formatTime: function(timestamp) {
-                var hours = timestamp.getHours();
-                var minutes = timestamp.getMinutes();
-                
-                // Ajouter un zéro devant si nécessaire
-                hours = hours < 10 ? '0' + hours : hours;
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                
-                return hours + ':' + minutes;
-            },
-
-            showScreen: function(screenId) {
-                // Masquer tous les écrans
-                elements.conversationsScreen.classList.add('hidden');
-                elements.chatScreen.classList.add('hidden');
-                elements.profileScreen.classList.add('hidden');
-                elements.usersScreen.classList.add('hidden');
-                
-                // Afficher l'écran demandé
-                document.getElementById(screenId).classList.remove('hidden');
-                
-                // Afficher la barre de navigation si on n'est pas dans la vue chat
-                if (screenId !== 'chat-screen') {
-                    elements.navigationBar.classList.remove('hidden');
-                }
-                
-                // Mettre à jour le bouton de navigation actif
-                for (var i = 0; i < elements.navButtons.length; i++) {
-                    var btn = elements.navButtons[i];
-                    var screen = btn.getAttribute('data-screen');
-                    if (screen === screenId) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                }
-            },
-
-            compressImage: function(dataUrl, maxWidth, maxHeight, callback) {
-                var img = new Image();
-                img.src = dataUrl;
-                img.onload = function() {
-                    var width = img.width;
-                    var height = img.height;
-                    
-                    // Redimensionner si nécessaire
-                    if (width > maxWidth || height > maxHeight) {
-                        var ratio = Math.min(maxWidth / width, maxHeight / height);
-                        width = Math.floor(width * ratio);
-                        height = Math.floor(height * ratio);
-                    }
-                    
-                    var canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    var ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    // Convertir en JPEG avec compression pour réduire la taille
-                    try {
-                        var compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                        callback(compressedDataUrl);
-                    } catch (e) {
-                        // Fallback en cas d'erreur (possible sur iOS 12)
-                        callback(dataUrl);
-                    }
-                };
-            }
-        };
-
-        // Validation de formulaire
-        var Validator = {
-            validateEmail: function(email) {
-                var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return regex.test(email);
-            },
-            
-            validatePhone: function(phone) {
-                // Format français: 10 chiffres avec ou sans espaces/tirets, peut commencer par +33 ou 0
-                var regex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
-                return regex.test(phone);
-            },
-            
-            validatePassword: function(password, confirmPassword) {
-                return password === confirmPassword;
-            }
-        };
+            // Afficher l'animation de lancement pour un court instant
+            setTimeout(function() {
+                // Le splash screen sera automatiquement masqué par onAuthStateChanged
+            }, 1500);
+        });
 
         // Gestion des onglets de connexion/inscription
         elements.loginTab.addEventListener('click', function() {
@@ -2306,157 +2697,204 @@
         });
 
         // Gestion formulaire de connexion
-        elements.loginForm.addEventListener('submit', function(e) {
+        elements.loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            var username = elements.loginUsername.value.trim();
-            var password = elements.loginPassword.value;
+            const email = elements.loginEmail.value.trim();
+            const password = elements.loginPassword.value;
+            
+            if (!email || !password) {
+                UI.showNotification("Veuillez remplir tous les champs", "error");
+                return;
+            }
             
             UI.showLoading("Connexion en cours...");
             
-            setTimeout(function() {
-                try {
-                    var result = UserManager.login(username, password);
-                    
-                    if (result.success) {
-                        // Afficher l'application
-                        elements.authScreen.classList.add('hidden');
-                        elements.appContainer.classList.remove('hidden');
-                        elements.appContainer.classList.add('flex');
-                        
-                        // Mettre à jour l'interface
-                        UI.updateProfileInfo();
-                        UI.renderConversations();
-                        
-                        // Réinitialiser le formulaire
-                        elements.loginForm.reset();
-                    } else {
-                        alert(result.message);
-                    }
-                } catch (error) {
-                    console.error("Erreur d'authentification:", error);
-                    alert("Une erreur s'est produite. Veuillez réessayer.");
-                } finally {
+            try {
+                const result = await UserManager.login(email, password);
+                
+                if (result.success) {
+                    // La redirection sera gérée par onAuthStateChanged
+                } else {
                     UI.hideLoading();
+                    UI.showNotification(result.message, "error");
                 }
-            }, 600);
+            } catch (error) {
+                UI.hideLoading();
+                console.error("Erreur d'authentification:", error);
+                UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
+            }
         });
 
         // Gestion formulaire d'inscription
-        elements.registerForm.addEventListener('submit', function(e) {
+        elements.registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            var username = elements.registerUsername.value.trim();
-            var email = elements.registerEmail.value.trim();
-            var phone = elements.registerPhone.value.trim();
-            var password = elements.registerPassword.value;
-            var confirmPassword = elements.registerConfirmPassword.value;
+            const username = elements.registerUsername.value.trim();
+            const email = elements.registerEmail.value.trim();
+            const phone = elements.registerPhone.value.trim();
+            const password = elements.registerPassword.value;
+            const confirmPassword = elements.registerConfirmPassword.value;
+            
+            // Validation des champs
+            if (!username || !email || !phone || !password || !confirmPassword) {
+                UI.showNotification("Veuillez remplir tous les champs", "error");
+                return;
+            }
+            
+            if (!Validator.validateEmail(email)) {
+                UI.showNotification("Adresse email invalide", "error");
+                return;
+            }
+            
+            if (!Validator.validatePhone(phone)) {
+                UI.showNotification("Numéro de téléphone invalide", "error");
+                return;
+            }
+            
+            const passwordValidation = Validator.validatePassword(password, confirmPassword);
+            if (!passwordValidation.valid) {
+                UI.showNotification(passwordValidation.message, "error");
+                return;
+            }
             
             UI.showLoading("Création du compte...");
             
-            setTimeout(function() {
-                try {
-                    // Validation des champs
-                    if (!Validator.validateEmail(email)) {
-                        alert('Veuillez entrer une adresse email valide');
-                        UI.hideLoading();
-                        return;
-                    }
-                    
-                    if (!Validator.validatePhone(phone)) {
-                        alert('Veuillez entrer un numéro de téléphone valide');
-                        UI.hideLoading();
-                        return;
-                    }
-                    
-                    if (!Validator.validatePassword(password, confirmPassword)) {
-                        alert('Les mots de passe ne correspondent pas');
-                        UI.hideLoading();
-                        return;
-                    }
-                    
-                    // Créer le compte
-                    var result = UserManager.register(username, email, phone, password);
-                    
-                    if (result.success) {
-                        // Afficher l'application
-                        elements.authScreen.classList.add('hidden');
-                        elements.appContainer.classList.remove('hidden');
-                        elements.appContainer.classList.add('flex');
-                        
-                        // Mettre à jour l'interface
-                        UI.updateProfileInfo();
-                        UI.renderConversations();
-                        UI.renderAllUsers();
-                        
-                        // Réinitialiser le formulaire
-                        elements.registerForm.reset();
-                    } else {
-                        alert(result.message);
-                    }
-                } catch (error) {
-                    console.error("Erreur d'inscription:", error);
-                    alert("Une erreur s'est produite. Veuillez réessayer.");
-                } finally {
+            try {
+                const result = await UserManager.register(username, email, phone, password);
+                
+                if (result.success) {
+                    // La redirection sera gérée par onAuthStateChanged
+                } else {
                     UI.hideLoading();
+                    UI.showNotification(result.message, "error");
                 }
-            }, 600);
+            } catch (error) {
+                UI.hideLoading();
+                console.error("Erreur d'inscription:", error);
+                UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
+            }
         });
 
         // Gestion de l'envoi de messages
         elements.sendMessage.addEventListener('click', sendMessageHandler);
         elements.messageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
+            // Envoyer le message sur Entrée
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessageHandler();
+            }
+            
+            // Mettre à jour le statut de typing
+            const conversationId = elements.chatScreen.getAttribute('data-conversation-id');
+            const otherUserId = elements.chatScreen.getAttribute('data-other-user-id');
+            
+            if (conversationId && otherUserId) {
+                // Effacer le timeout précédent
+                if (appData.typingTimeout) {
+                    clearTimeout(appData.typingTimeout);
+                }
+                
+                // Mettre à jour le statut typing
+                ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, true);
+                
+                // Définir un nouveau timeout pour arrêter le typing après 2 secondes
+                appData.typingTimeout = setTimeout(() => {
+                    ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, false);
+                }, 2000);
             }
         });
 
-        function sendMessageHandler() {
-            var text = elements.messageInput.value.trim();
-            var contactId = parseInt(elements.appContainer.getAttribute('data-current-contact'));
+        async function sendMessageHandler() {
+            const text = elements.messageInput.value.trim();
+            const conversationId = elements.chatScreen.getAttribute('data-conversation-id');
+            const otherUserId = elements.chatScreen.getAttribute('data-other-user-id');
             
-            if (text && contactId) {
-                // Désactiver le bouton d'envoi pendant le traitement
-                elements.sendMessage.disabled = true;
+            if ((!text && !appData.currentFile) || !otherUserId) return;
+            
+            // Désactiver le bouton d'envoi pendant le traitement
+            elements.sendMessage.disabled = true;
+            
+            try {
+                // Créer le message temporaire pour l'affichage
+                const tempMessage = {
+                    id: Date.now().toString(),
+                    senderId: auth.currentUser.uid,
+                    text: text,
+                    fileURL: appData.currentFile ? URL.createObjectURL(appData.currentFile) : null,
+                    timestamp: new Date(),
+                    read: false
+                };
                 
-                try {
-                    // Créer le message temporaire pour l'affichage
-                    var tempMessage = {
-                        id: Date.now(),
-                        senderId: appData.currentUser.id,
-                        text: text,
-                        timestamp: new Date()
-                    };
-                    
-                    // Afficher immédiatement le message avec l'indicateur d'envoi
-                    UI.addMessageToUI(tempMessage, true);
-                    
-                    // Vider le champ de saisie immédiatement
-                    elements.messageInput.value = '';
-                    
-                    // Ajouter le message à la conversation (sauvegarde)
-                    ConversationManager.addMessage(
-                        appData.currentUser.id,
-                        contactId,
-                        appData.currentUser.id,
-                        text
+                // Afficher immédiatement le message avec l'indicateur d'envoi
+                UI.addMessageToUI(tempMessage, true);
+                
+                // Vider le champ de saisie immédiatement
+                elements.messageInput.value = '';
+                
+                // Arrêter le statut de typing
+                ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, false);
+                
+                // Si un fichier est attaché, l'uploader d'abord
+                let fileURL = null;
+                if (appData.currentFile) {
+                    const uploadResult = await ConversationManager.uploadFile(
+                        appData.currentFile,
+                        auth.currentUser.uid,
+                        conversationId
                     );
-                } catch (error) {
-                    console.error("Erreur lors de l'envoi du message:", error);
-                    alert("Une erreur s'est produite lors de l'envoi du message.");
-                } finally {
-                    // Réactiver le bouton d'envoi
-                    elements.sendMessage.disabled = false;
-                    elements.messageInput.focus();
+                    
+                    if (uploadResult.success) {
+                        fileURL = uploadResult.url;
+                    } else {
+                        throw new Error("Erreur lors de l'upload du fichier");
+                    }
+                    
+                    // Réinitialiser le fichier courant
+                    appData.currentFile = null;
                 }
+                
+                // Envoyer le message
+                await ConversationManager.sendMessage(
+                    auth.currentUser.uid,
+                    otherUserId,
+                    text,
+                    fileURL
+                );
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message:", error);
+                UI.showNotification("Erreur lors de l'envoi du message", "error");
+            } finally {
+                // Réactiver le bouton d'envoi
+                elements.sendMessage.disabled = false;
+                elements.messageInput.focus();
             }
         }
+
+        // Gestion de l'attachement de fichiers
+        elements.attachFile.addEventListener('click', function() {
+            elements.fileUpload.click();
+        });
+
+        elements.fileUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) { // 5MB max
+                    UI.showNotification("Le fichier ne doit pas dépasser 5MB", "error");
+                    return;
+                }
+                
+                appData.currentFile = file;
+                UI.showNotification(`Fichier joint: ${file.name}`);
+                
+                // Focus sur le champ de message pour envoi immédiat
+                elements.messageInput.focus();
+            }
+        });
 
         // Gestion du bouton de retour dans la conversation
         elements.backToConversations.addEventListener('click', function() {
             UI.showScreen('conversations-screen');
-            elements.navigationBar.classList.remove('hidden');
-            UI.renderConversations();
         });
 
         // Gestion de la modification de l'avatar
@@ -2464,36 +2902,31 @@
             elements.avatarUpload.click();
         });
 
-        elements.avatarUpload.addEventListener('change', function(e) {
-            var file = e.target.files[0];
+        elements.avatarUpload.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
             if (file) {
-                if (file.size > 2 * 1024 * 1024) { // 2MB max
-                    alert('La taille de l\'image ne doit pas dépasser 2MB');
+                if (file.size > 5 * 1024 * 1024) { // 5MB max
+                    UI.showNotification("L'image ne doit pas dépasser 5MB", "error");
                     return;
                 }
                 
-                UI.showLoading("Traitement de l'image en cours...");
+                UI.showLoading("Mise à jour de l'avatar...");
                 
-                var reader = new FileReader();
-                reader.onload = function(event) {
-                    var avatarData = event.target.result;
+                try {
+                    const result = await UserManager.updateAvatar(file);
                     
-                    // Compresser l'image
-                    UI.compressImage(avatarData, 300, 300, function(compressedImage) {
-                        try {
-                            UserManager.updateAvatar(appData.currentUser.id, compressedImage);
-                            UI.updateProfileInfo();
-                            UI.renderConversations();
-                            UI.renderAllUsers();
-                        } catch (error) {
-                            console.error("Erreur lors de la mise à jour de l'avatar:", error);
-                            alert("Une erreur s'est produite lors de la mise à jour de l'avatar.");
-                        } finally {
-                            UI.hideLoading();
-                        }
-                    });
-                };
-                reader.readAsDataURL(file);
+                    if (result.success) {
+                        UI.updateProfileInfo();
+                        UI.showNotification("Avatar mis à jour avec succès");
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la mise à jour de l'avatar:", error);
+                    UI.showNotification("Erreur lors de la mise à jour de l'avatar", "error");
+                } finally {
+                    UI.hideLoading();
+                }
             }
         });
 
@@ -2510,115 +2943,108 @@
             }
         });
 
-        for (var i = 0; i < elements.themeColors.length; i++) {
-            (function(radio) {
-                radio.addEventListener('change', function() {
-                    if (radio.checked) {
-                        ThemeManager.setThemeColor(radio.value);
-                    }
-                });
-            })(elements.themeColors[i]);
-        }
+        elements.themeColors.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (radio.checked) {
+                    ThemeManager.setThemeColor(radio.value);
+                }
+            });
+        });
 
         // Gestion de la déconnexion
-        elements.logoutButton.addEventListener('click', function() {
-            UserManager.logout();
-            elements.appContainer.classList.add('hidden');
-            elements.appContainer.classList.remove('flex');
-            elements.authScreen.classList.remove('hidden');
-            elements.authScreen.classList.add('flex');
+        elements.logoutButton.addEventListener('click', async function() {
+            UI.showLoading("Déconnexion en cours...");
+            
+            try {
+                await UserManager.logout();
+                UI.showNotification("Déconnexion réussie");
+                // La redirection sera gérée par onAuthStateChanged
+            } catch (error) {
+                UI.hideLoading();
+                console.error("Erreur de déconnexion:", error);
+                UI.showNotification("Erreur lors de la déconnexion", "error");
+            }
         });
 
         // Gestion de la suppression du compte
-        elements.deleteAccountButton.addEventListener('click', function() {
-            if (window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+        elements.deleteAccountButton.addEventListener('click', async function() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
                 UI.showLoading("Suppression du compte en cours...");
                 
-                setTimeout(function() {
-                    try {
-                        // Supprimer le compte
-                        UserManager.deleteAccount(appData.currentUser.id);
-                        
-                        // Revenir à l'écran de connexion
-                        elements.appContainer.classList.add('hidden');
-                        elements.appContainer.classList.remove('flex');
-                        elements.authScreen.classList.remove('hidden');
-                        elements.authScreen.classList.add('flex');
-                        
-                        alert("Votre compte a été supprimé avec succès.");
-                    } catch (error) {
-                        console.error("Erreur lors de la suppression du compte:", error);
-                        alert("Une erreur s'est produite lors de la suppression du compte.");
-                    } finally {
-                        UI.hideLoading();
+                try {
+                    const result = await UserManager.deleteAccount();
+                    
+                    if (result.success) {
+                        UI.showNotification("Compte supprimé avec succès");
+                        // La redirection sera gérée par onAuthStateChanged
+                    } else {
+                        throw new Error(result.message);
                     }
-                }, 800);
+                } catch (error) {
+                    UI.hideLoading();
+                    console.error("Erreur lors de la suppression du compte:", error);
+                    UI.showNotification("Erreur lors de la suppression du compte", "error");
+                }
+            }
+        });
+
+        // Gestion du statut en ligne/hors ligne
+        elements.statusToggle.addEventListener('click', async function() {
+            try {
+                await UserManager.toggleOnlineStatus();
+            } catch (error) {
+                console.error("Erreur lors du changement de statut:", error);
+                UI.showNotification("Erreur lors du changement de statut", "error");
             }
         });
 
         // Gestion de la navigation
-        for (var i = 0; i < elements.navButtons.length; i++) {
-            (function(btn) {
-                btn.addEventListener('click', function() {
-                    var screenId = btn.getAttribute('data-screen');
-                    UI.showScreen(screenId);
-                    
-                    // Actualiser les listes si nécessaire
-                    if (screenId === 'conversations-screen') {
-                        UI.renderConversations();
-                    }
-                    
-                    if (screenId === 'users-screen') {
-                        UI.renderAllUsers();
-                    }
-                });
-            })(elements.navButtons[i]);
-        }
-
-        // Gestion de l'export du code
-        elements.exportButton.addEventListener('click', function() {
-            CodeManager.showCodeModal();
+        elements.navButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const screenId = btn.getAttribute('data-screen');
+                UI.showScreen(screenId);
+                
+                // Actualiser les données si nécessaire
+                if (screenId === 'profile-screen') {
+                    UI.updateProfileInfo();
+                }
+            });
         });
 
-        elements.exportCodeButton.addEventListener('click', function() {
-            CodeManager.showCodeModal();
-        });
-
-        elements.closeModalButton.addEventListener('click', function() {
-            elements.codeOutputModal.classList.add('hidden');
-        });
-
-        elements.closeCodeButton.addEventListener('click', function() {
-            elements.codeOutputModal.classList.add('hidden');
-        });
-
-        elements.copyCodeButton.addEventListener('click', function() {
-            CodeManager.copyCodeToClipboard();
-        });
-
-        // Fermer le modal au clic en dehors du contenu
-        elements.codeOutputModal.addEventListener('click', function(e) {
-            if (e.target === elements.codeOutputModal) {
-                elements.codeOutputModal.classList.add('hidden');
+        // Gestion du rafraîchissement des conversations
+        elements.refreshConversations.addEventListener('click', async function() {
+            if (!auth.currentUser) return;
+            
+            try {
+                UI.showLoading("Actualisation des conversations...");
+                const conversations = await ConversationManager.getUserConversations(auth.currentUser.uid);
+                UI.renderConversations(conversations);
+            } catch (error) {
+                console.error("Erreur lors de l'actualisation des conversations:", error);
+                UI.showNotification("Erreur lors de l'actualisation des conversations", "error");
+            } finally {
+                UI.hideLoading();
             }
         });
 
-        // Initialisation de l'application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialiser le thème
-            ThemeManager.init();
-            
-            // Afficher l'animation de lancement
-            setTimeout(function() {
-                elements.splashScreen.style.opacity = '0';
-                elements.splashScreen.style.transition = 'opacity 0.5s ease-out';
-                
-                setTimeout(function() {
-                    elements.splashScreen.classList.add('hidden');
-                    elements.authScreen.classList.remove('hidden');
-                    elements.authScreen.classList.add('flex');
-                }, 500);
-            }, 1500);
+        // Gestion du rafraîchissement des utilisateurs
+        elements.refreshUsers.addEventListener('click', async function() {
+            try {
+                UI.showLoading("Actualisation des utilisateurs...");
+                const users = await UserManager.getAllUsers();
+                UI.renderUsers(users);
+            } catch (error) {
+                console.error("Erreur lors de l'actualisation des utilisateurs:", error);
+                UI.showNotification("Erreur lors de l'actualisation des utilisateurs", "error");
+            } finally {
+                UI.hideLoading();
+            }
+        });
+
+        // Gestion du mot de passe oublié
+        elements.forgotPassword.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert("Cette fonctionnalité n'est pas encore disponible.");
         });
     </script>
 </body>
