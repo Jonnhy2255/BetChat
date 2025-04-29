@@ -850,6 +850,60 @@
         .message-image:hover {
             opacity: 0.9;
         }
+
+        /* Message reactions */
+        .message-reactions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        
+        .message-reaction {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        
+        .message-received .message-reaction {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .message-reaction-count {
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .reaction-picker {
+            position: absolute;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+            z-index: 100;
+            transform-origin: center;
+            animation: scale-in 0.2s ease-out;
+        }
+        
+        .reaction-picker-item {
+            font-size: 18px;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .reaction-picker-item:active {
+            background-color: var(--secondary-bg);
+            transform: scale(1.1);
+        }
         
         /* Top message action buttons */
         .message-action-buttons {
@@ -924,6 +978,61 @@
             transform: scale(0.95);
             color: var(--accent-color);
         }
+
+        /* Emoji button */
+        .emoji-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--secondary-text);
+            transition: all 0.3s;
+        }
+        
+        .emoji-button:active {
+            transform: scale(0.95);
+            color: var(--accent-color);
+        }
+        
+        .emoji-picker {
+            position: absolute;
+            bottom: 70px;
+            left: 16px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            z-index: 100;
+            animation: scale-in 0.2s ease-out;
+            max-width: calc(100% - 32px);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .emoji-item {
+            font-size: 20px;
+            height: 36px;
+            width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .emoji-item:active {
+            background-color: var(--secondary-bg);
+            transform: scale(1.1);
+        }
         
         .message-input-container {
             flex: 1;
@@ -946,7 +1055,7 @@
             outline: none;
         }
         
-        .send-button, .voice-button {
+        .send-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -957,33 +1066,92 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
-        }
-        
-        .send-button {
             color: var(--accent-color);
         }
         
-        .voice-button {
-            color: var(--accent-color);
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Custom image preview */
+        .custom-image-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
         }
         
-        .voice-button.recording {
-            background-color: var(--error-color);
+        .custom-image-preview-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 80vh;
+        }
+        
+        .custom-image-preview img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+            animation: scaleIn 0.3s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        
+        .custom-image-preview-actions {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+        }
+        
+        .custom-image-preview-action {
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            transform: scale(1.1);
-            animation: pulse 1.5s infinite;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-            }
+        .custom-image-preview-action:active {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0.95);
+        }
+        
+        .custom-image-preview-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
         
         /* Voice recording indicator */
@@ -1945,6 +2113,57 @@
             opacity: 0.1;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
+
+        /* Message animation - smooth fade in */
+        @keyframes message-fade-in {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-new {
+            animation: message-fade-in 0.4s ease-out forwards;
+        }
+
+        /* Batch action bar */
+        .batch-actions-bar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--accent-color);
+            color: white;
+            z-index: 95;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: slide-down-banner 0.3s forwards;
+        }
+
+        .batch-actions-title {
+            font-weight: 600;
+        }
+
+        .batch-action-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .batch-action-button:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -2042,6 +2261,14 @@
                 item: null
             },
             messageModCounter: {},  // Track how many times each message was modified
+            emojiPickerVisible: false, // Track emoji picker visibility
+            selectedEmojis: {}, // Track selected emojis for messages
+            customImagePreview: null,
+            availableEmojis: ['👍', '❤️', '😂', '😮', '😢', '👏', '🔥', '🎉', '🤔', '💯'],
+            reactionPickerVisible: false,
+            reactionPickerTargetId: null,
+            totalUserCount: 0, // Track total user count
+            maxUserLimit: 55, // Maximum number of users allowed
             
             // Initialize app
             init() {
@@ -2051,6 +2278,9 @@
                 // Then proceed with auth check
                 this.setupAuthListener();
                 this.setupCopyProtection();
+                
+                // Check total user count
+                this.checkUserCount();
                 
                 // Setup document events
                 document.addEventListener('click', (e) => {
@@ -2063,10 +2293,30 @@
                         this.closeChatMenu();
                     }
                     
-                    if (this.fullScreenImage && !e.target.closest('.full-screen-image')) {
-                        this.closeFullScreenImage();
+                    if (this.customImagePreview && !e.target.closest('.custom-image-preview-content') && !e.target.closest('.message-image')) {
+                        this.closeCustomImagePreview();
+                    }
+                    
+                    // Close emoji picker when clicking outside
+                    if (this.emojiPickerVisible && !e.target.closest('.emoji-picker') && !e.target.closest('.emoji-button')) {
+                        this.closeEmojiPicker();
+                    }
+                    
+                    // Close reaction picker when clicking outside
+                    if (this.reactionPickerVisible && !e.target.closest('.reaction-picker') && !e.target.closest('.message-bubble')) {
+                        this.closeReactionPicker();
                     }
                 });
+            },
+            
+            // Check total user count
+            async checkUserCount() {
+                try {
+                    const snapshot = await db.collection('users').get();
+                    this.totalUserCount = snapshot.size;
+                } catch (error) {
+                    console.error("Error checking user count:", error);
+                }
             },
             
             // Setup copy protection
@@ -2317,6 +2567,12 @@
                 const password = document.getElementById('register-password').value;
                 const confirmPassword = document.getElementById('register-confirm-password').value;
                 
+                // Check if user limit is reached
+                if (this.totalUserCount >= this.maxUserLimit) {
+                    this.showBannerNotification(`Limite de ${this.maxUserLimit} utilisateurs atteinte`, "error");
+                    return;
+                }
+                
                 // Basic validation
                 if (password !== confirmPassword) {
                     this.showBannerNotification("Les mots de passe ne correspondent pas", "error");
@@ -2364,6 +2620,7 @@
                     });
                     
                     this.showBannerNotification("Compte créé avec succès", "success");
+                    this.totalUserCount++;
                     
                 } catch (error) {
                     console.error("Registration error:", error);
@@ -2443,6 +2700,7 @@
                                     
                                     this.showBannerNotification("Compte supprimé avec succès", "success");
                                     this.closeModal();
+                                    this.totalUserCount--;
                                     
                                 } catch (error) {
                                     console.error("Account deletion error:", error);
@@ -2604,63 +2862,105 @@
             
             // Delete conversation (for current user only)
             async deleteConversation(conversationId) {
-                try {
-                    const conversationRef = db.collection('conversations').doc(conversationId);
-                    const conversationDoc = await conversationRef.get();
-                    
-                    if (conversationDoc.exists) {
-                        // Mark conversation as deleted for current user
-                        let deleted = conversationDoc.data().deleted || {};
-                        deleted[this.currentUser.uid] = true;
-                        
-                        await conversationRef.update({ deleted });
-                        
-                        this.showBannerNotification("Conversation supprimée", "success");
-                        
-                        // If in chat screen, go back to main
-                        if (this.currentScreen === 'chat' && this.currentChat?.id === conversationId) {
-                            this.currentScreen = 'main';
-                            this.currentChat = null;
-                            this.render();
+                // Show confirmation modal
+                this.showModal({
+                    title: 'Supprimer la conversation',
+                    content: 'Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action ne peut pas être annulée.',
+                    actions: [
+                        {
+                            label: 'Annuler',
+                            action: () => this.closeModal(),
+                            className: 'modal-button-cancel'
+                        },
+                        {
+                            label: 'Supprimer',
+                            action: async () => {
+                                try {
+                                    const conversationRef = db.collection('conversations').doc(conversationId);
+                                    const conversationDoc = await conversationRef.get();
+                                    
+                                    if (conversationDoc.exists) {
+                                        // Mark conversation as deleted for current user
+                                        let deleted = conversationDoc.data().deleted || {};
+                                        deleted[this.currentUser.uid] = true;
+                                        
+                                        await conversationRef.update({ deleted });
+                                        
+                                        this.showBannerNotification("Conversation supprimée", "success");
+                                        
+                                        // If in chat screen, go back to main
+                                        if (this.currentScreen === 'chat' && this.currentChat?.id === conversationId) {
+                                            this.currentScreen = 'main';
+                                            this.currentChat = null;
+                                            this.render();
+                                        }
+                                    }
+                                    
+                                    this.closeModal();
+                                    
+                                } catch (error) {
+                                    console.error("Error deleting conversation:", error);
+                                    this.showBannerNotification("Erreur lors de la suppression", "error");
+                                    this.closeModal();
+                                }
+                            },
+                            className: 'modal-button-danger'
                         }
-                    }
-                } catch (error) {
-                    console.error("Error deleting conversation:", error);
-                    this.showBannerNotification("Erreur lors de la suppression", "error");
-                }
+                    ]
+                });
             },
             
             // Delete multiple conversations
             async deleteSelectedConversations() {
                 if (this.selectedConversations.size === 0) return;
                 
-                try {
-                    const batch = db.batch();
-                    
-                    for (const conversationId of this.selectedConversations) {
-                        const conversationRef = db.collection('conversations').doc(conversationId);
-                        const conversationDoc = await conversationRef.get();
-                        
-                        if (conversationDoc.exists) {
-                            // Mark conversation as deleted for current user
-                            let deleted = conversationDoc.data().deleted || {};
-                            deleted[this.currentUser.uid] = true;
-                            
-                            batch.update(conversationRef, { deleted });
+                // Show confirmation modal
+                this.showModal({
+                    title: 'Supprimer les conversations',
+                    content: `Êtes-vous sûr de vouloir supprimer ${this.selectedConversations.size} conversation(s) ? Cette action ne peut pas être annulée.`,
+                    actions: [
+                        {
+                            label: 'Annuler',
+                            action: () => this.closeModal(),
+                            className: 'modal-button-cancel'
+                        },
+                        {
+                            label: 'Supprimer',
+                            action: async () => {
+                                try {
+                                    const batch = db.batch();
+                                    
+                                    for (const conversationId of this.selectedConversations) {
+                                        const conversationRef = db.collection('conversations').doc(conversationId);
+                                        const conversationDoc = await conversationRef.get();
+                                        
+                                        if (conversationDoc.exists) {
+                                            // Mark conversation as deleted for current user
+                                            let deleted = conversationDoc.data().deleted || {};
+                                            deleted[this.currentUser.uid] = true;
+                                            
+                                            batch.update(conversationRef, { deleted });
+                                        }
+                                    }
+                                    
+                                    await batch.commit();
+                                    
+                                    this.showBannerNotification(`${this.selectedConversations.size} conversation(s) supprimée(s)`, "success");
+                                    
+                                    // Exit selection mode
+                                    this.exitConversationSelectionMode();
+                                    this.closeModal();
+                                    
+                                } catch (error) {
+                                    console.error("Error deleting conversations:", error);
+                                    this.showBannerNotification("Erreur lors de la suppression", "error");
+                                    this.closeModal();
+                                }
+                            },
+                            className: 'modal-button-danger'
                         }
-                    }
-                    
-                    await batch.commit();
-                    
-                    this.showBannerNotification(`${this.selectedConversations.size} conversation(s) supprimée(s)`, "success");
-                    
-                    // Exit selection mode
-                    this.exitConversationSelectionMode();
-                    
-                } catch (error) {
-                    console.error("Error deleting conversations:", error);
-                    this.showBannerNotification("Erreur lors de la suppression", "error");
-                }
+                    ]
+                });
             },
             
             // Clear chat history (for current user only)
@@ -2687,6 +2987,7 @@
                         // Update conversation's last message
                         await db.collection('conversations').doc(conversationId).update({
                             lastMessage: "Historique effacé",
+                            lastMessageType: 'text',
                             lastMessageTimestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         
@@ -2830,7 +3131,8 @@
                                 messageType: messageData.messageType || 'text',
                                 timestamp: messageData.timestamp?.toDate() || new Date(),
                                 read: messageData.read,
-                                edited: messageData.edited || false
+                                edited: messageData.edited || false,
+                                reactions: messageData.reactions || {}
                             });
                         });
                         
@@ -2875,68 +3177,6 @@
                 } catch (error) {
                     console.error("Error marking messages as read:", error);
                 }
-            },
-            
-            // Updated voice recognition method
-            startVoiceRecognition() {
-                if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-                    this.showBannerNotification("Votre navigateur ne supporte pas la reconnaissance vocale", "error");
-                    return;
-                }
-                
-                // Create recognition object
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                
-                recognition.lang = 'fr-FR';
-                recognition.continuous = false;
-                recognition.interimResults = true;
-                
-                // Start recognition
-                recognition.start();
-                
-                // Show user that voice is being detected
-                this.isRecording = true;
-                this.render();
-                
-                // Update UI with interim results
-                recognition.onresult = (event) => {
-                    const transcript = Array.from(event.results)
-                        .map(result => result[0].transcript)
-                        .join('');
-                    
-                    // Update input field with transcribed text
-                    const messageInput = document.getElementById('message-input');
-                    if (messageInput) {
-                        messageInput.value = transcript;
-                    }
-                };
-                
-                // Handle end of recognition
-                recognition.onend = () => {
-                    this.isRecording = false;
-                    this.render();
-                    
-                    // Focus on input field
-                    setTimeout(() => {
-                        const messageInput = document.getElementById('message-input');
-                        if (messageInput) {
-                            messageInput.focus();
-                        }
-                    }, 100);
-                };
-                
-                // Handle errors
-                recognition.onerror = (event) => {
-                    this.isRecording = false;
-                    this.render();
-                    
-                    if (event.error === 'no-speech') {
-                        this.showNotification("Aucune parole détectée", "info");
-                    } else {
-                        this.showBannerNotification(`Erreur: ${event.error}`, "error");
-                    }
-                };
             },
             
             // Select image for upload
@@ -3145,7 +3385,7 @@
                     {
                         label: 'Supprimer la conversation',
                         icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                        action: () => this.confirmDeleteConversation(),
+                        action: () => this.deleteConversation(this.currentChat.id),
                         className: 'danger'
                     }
                 ];
@@ -3210,31 +3450,6 @@
                 });
             },
             
-            // Confirm delete conversation
-            confirmDeleteConversation() {
-                if (!this.currentChat) return;
-                
-                this.showModal({
-                    title: 'Supprimer la conversation',
-                    content: 'Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action ne peut pas être annulée.',
-                    actions: [
-                        {
-                            label: 'Annuler',
-                            action: () => this.closeModal(),
-                            className: 'modal-button-cancel'
-                        },
-                        {
-                            label: 'Supprimer',
-                            action: () => {
-                                this.deleteConversation(this.currentChat.id);
-                                this.closeModal();
-                            },
-                            className: 'modal-button-danger'
-                        }
-                    ]
-                });
-            },
-            
             // Send a message
             async sendMessage() {
                 if (!this.currentChat) return;
@@ -3252,7 +3467,8 @@
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         read: false,
                         edited: false,
-                        hidden: {}
+                        hidden: {},
+                        reactions: {}
                     };
                     
                     let lastMessageText = '';
@@ -3311,6 +3527,168 @@
                     reader.onload = () => resolve(reader.result);
                     reader.onerror = error => reject(error);
                 });
+            },
+            
+            // Add reaction to message
+            async addReaction(messageId, emoji) {
+                try {
+                    const messageRef = db.collection('messages').doc(messageId);
+                    const messageDoc = await messageRef.get();
+                    
+                    if (!messageDoc.exists) {
+                        console.error("Message not found");
+                        return;
+                    }
+                    
+                    const messageData = messageDoc.data();
+                    const reactions = messageData.reactions || {};
+                    
+                    // Check if user already reacted with this emoji
+                    const existingReaction = Object.entries(reactions).find(([key, users]) => 
+                        key === emoji && users.includes(this.currentUser.uid)
+                    );
+                    
+                    if (existingReaction) {
+                        // Remove reaction
+                        const updatedUsers = reactions[emoji].filter(uid => uid !== this.currentUser.uid);
+                        
+                        if (updatedUsers.length === 0) {
+                            // Remove emoji key if no users left
+                            delete reactions[emoji];
+                        } else {
+                            reactions[emoji] = updatedUsers;
+                        }
+                    } else {
+                        // Add reaction
+                        if (!reactions[emoji]) {
+                            reactions[emoji] = [];
+                        }
+                        reactions[emoji].push(this.currentUser.uid);
+                    }
+                    
+                    // Update message with new reactions
+                    await messageRef.update({ reactions });
+                    
+                    // Close reaction picker
+                    this.closeReactionPicker();
+                    
+                } catch (error) {
+                    console.error("Error adding reaction:", error);
+                    this.showNotification("Erreur lors de l'ajout de la réaction", "error");
+                }
+            },
+            
+            // Show reaction picker
+            showReactionPicker(messageId, event) {
+                // Close if already open for same message
+                if (this.reactionPickerVisible && this.reactionPickerTargetId === messageId) {
+                    this.closeReactionPicker();
+                    return;
+                }
+                
+                // Close if open for different message
+                if (this.reactionPickerVisible) {
+                    this.closeReactionPicker();
+                }
+                
+                const messageBubble = event.currentTarget;
+                const rect = messageBubble.getBoundingClientRect();
+                
+                const pickerContainer = document.createElement('div');
+                pickerContainer.className = 'reaction-picker';
+                pickerContainer.style.top = `${rect.top - 50}px`;
+                
+                // Position horizontally based on message position
+                if (messageBubble.classList.contains('message-sent')) {
+                    pickerContainer.style.right = `${window.innerWidth - rect.right}px`;
+                } else {
+                    pickerContainer.style.left = `${rect.left}px`;
+                }
+                
+                // Add emojis
+                pickerContainer.innerHTML = this.availableEmojis.map(emoji => 
+                    `<div class="reaction-picker-item" data-emoji="${emoji}">${emoji}</div>`
+                ).join('');
+                
+                document.body.appendChild(pickerContainer);
+                
+                // Add event listeners
+                pickerContainer.querySelectorAll('.reaction-picker-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const emoji = e.target.dataset.emoji;
+                        this.addReaction(messageId, emoji);
+                        e.stopPropagation();
+                    });
+                });
+                
+                this.reactionPickerVisible = true;
+                this.reactionPickerTargetId = messageId;
+            },
+            
+            // Close reaction picker
+            closeReactionPicker() {
+                const picker = document.querySelector('.reaction-picker');
+                if (picker) {
+                    picker.remove();
+                }
+                this.reactionPickerVisible = false;
+                this.reactionPickerTargetId = null;
+            },
+            
+            // Show emoji picker
+            showEmojiPicker() {
+                if (this.emojiPickerVisible) {
+                    this.closeEmojiPicker();
+                    return;
+                }
+                
+                const pickerContainer = document.createElement('div');
+                pickerContainer.className = 'emoji-picker';
+                
+                // Add more emojis for the picker
+                const emojis = [
+                    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', 
+                    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', 
+                    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
+                    '👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏',
+                    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '💔', '❣️', '💕',
+                    '🔥', '⭐', '🌟', '✨', '💯', '💢', '💫', '💦', '💤', '🎉'
+                ];
+                
+                pickerContainer.innerHTML = emojis.map(emoji => 
+                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
+                ).join('');
+                
+                document.body.appendChild(pickerContainer);
+                
+                // Add event listeners
+                pickerContainer.querySelectorAll('.emoji-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const emoji = e.target.dataset.emoji;
+                        const messageInput = document.getElementById('message-input');
+                        if (messageInput) {
+                            const cursorPos = messageInput.selectionStart;
+                            const textBefore = messageInput.value.substring(0, cursorPos);
+                            const textAfter = messageInput.value.substring(cursorPos);
+                            messageInput.value = textBefore + emoji + textAfter;
+                            messageInput.focus();
+                            messageInput.selectionStart = cursorPos + emoji.length;
+                            messageInput.selectionEnd = cursorPos + emoji.length;
+                        }
+                        this.closeEmojiPicker();
+                    });
+                });
+                
+                this.emojiPickerVisible = true;
+            },
+            
+            // Close emoji picker
+            closeEmojiPicker() {
+                const picker = document.querySelector('.emoji-picker');
+                if (picker) {
+                    picker.remove();
+                }
+                this.emojiPickerVisible = false;
             },
             
             // Block/unblock user
@@ -3484,6 +3862,93 @@
                         this.swipeState.active = false;
                     });
                 });
+            },
+
+            // Show custom image preview
+            showCustomImagePreview(src) {
+                const overlay = document.createElement('div');
+                overlay.className = 'custom-image-preview';
+                
+                overlay.innerHTML = `
+                    <div class="custom-image-preview-content">
+                        <img src="${src}" alt="Image preview">
+                        <button class="custom-image-preview-close" onclick="app.closeCustomImagePreview()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="custom-image-preview-actions">
+                        <button class="custom-image-preview-action" onclick="app.shareImage('${src}')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                        <button class="custom-image-preview-action" onclick="app.downloadImage('${src}')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
+                this.customImagePreview = overlay;
+            },
+            
+            // Close custom image preview
+            closeCustomImagePreview() {
+                if (this.customImagePreview) {
+                    this.customImagePreview.remove();
+                    this.customImagePreview = null;
+                }
+            },
+            
+            // Share image
+            shareImage(src) {
+                try {
+                    if (navigator.share) {
+                        fetch(src)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+                                navigator.share({
+                                    files: [file],
+                                    title: 'Partager une image'
+                                }).catch(err => {
+                                    console.error('Error sharing:', err);
+                                    this.showNotification("Erreur lors du partage", "error");
+                                });
+                            });
+                    } else {
+                        this.showNotification("Partage non supporté sur cet appareil", "warning");
+                    }
+                } catch (error) {
+                    console.error("Error sharing image:", error);
+                    this.showNotification("Erreur lors du partage", "error");
+                }
+            },
+            
+            // Download image
+            downloadImage(src) {
+                try {
+                    const a = document.createElement('a');
+                    a.href = src;
+                    a.download = 'image.jpg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch (error) {
+                    console.error("Error downloading image:", error);
+                    this.showNotification("Erreur lors du téléchargement", "error");
+                }
             },
             
             // Format time for display
@@ -3741,48 +4206,33 @@
                 
                 const isMine = message.senderId === this.currentUser.uid;
                 
-                // Only the sender can delete for everyone
-                const options = [
-                    {
-                        label: 'Supprimer pour moi',
-                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                        action: () => this.deleteMessageForMe(messageId)
-                    }
-                ];
-                
-                if (isMine) {
-                    options.push({
-                        label: 'Supprimer pour tout le monde',
-                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                        action: () => this.deleteMessageForEveryone(messageId),
-                        className: 'modal-option-danger'
-                    });
-                }
-                
+                // Show confirmation modal
                 this.showModal({
                     title: 'Supprimer le message',
-                    content: `
-                        <div class="modal-options">
-                            ${options.map(option => `
-                                <div class="modal-option ${option.className || ''}" data-action="${options.indexOf(option)}">
-                                    <div class="modal-option-icon">${option.icon}</div>
-                                    <div>${option.label}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `,
-                    closeOnOutsideClick: true
-                });
-                
-                // Setup option click handlers
-                options.forEach((option, index) => {
-                    const element = document.querySelector(`.modal-option[data-action="${index}"]`);
-                    if (element) {
-                        element.addEventListener('click', () => {
-                            option.action();
-                            this.closeModal();
-                        });
-                    }
+                    content: 'Voulez-vous supprimer ce message ?',
+                    actions: [
+                        {
+                            label: 'Annuler',
+                            action: () => this.closeModal(),
+                            className: 'modal-button-cancel'
+                        },
+                        {
+                            label: 'Pour moi',
+                            action: () => {
+                                this.deleteMessageForMe(messageId);
+                                this.closeModal();
+                            },
+                            className: 'modal-button-danger'
+                        },
+                        ...(isMine ? [{
+                            label: 'Pour tous',
+                            action: () => {
+                                this.deleteMessageForEveryone(messageId);
+                                this.closeModal();
+                            },
+                            className: 'modal-button-danger'
+                        }] : [])
+                    ]
                 });
             },
             
@@ -4018,27 +4468,56 @@
                 }
             },
             
-            // Setup message interaction (tap to select)
+            // Setup message interaction (long press to select)
             setupMessageInteraction() {
                 const messageBubbles = document.querySelectorAll('.message-bubble');
                 
                 messageBubbles.forEach(bubble => {
                     const messageId = bubble.dataset.id;
                     
-                    // Handle tap (click)
+                    // Double tap for reactions
+                    let lastTap = 0;
                     bubble.addEventListener('click', (e) => {
+                        // Handle image click
                         if (e.target.classList.contains('message-image')) {
-                            // If clicked on image, show fullscreen
-                            const imgSrc = e.target.src;
-                            this.showFullScreenImage(imgSrc);
-                        } else {
-                            // Regular tap - toggle message selection
-                            this.toggleMessageSelection(messageId);
+                            this.showCustomImagePreview(e.target.src);
+                            return;
                         }
+                        
+                        // Handle double tap for reactions
+                        const now = new Date().getTime();
+                        const timeDiff = now - lastTap;
+                        if (timeDiff < 300 && timeDiff > 0) {
+                            // Double tap detected - show reaction picker
+                            this.showReactionPicker(messageId, e);
+                            e.preventDefault();
+                        }
+                        lastTap = now;
+                    });
+                    
+                    // Long press to select
+                    let longPressTimer;
+                    
+                    bubble.addEventListener('touchstart', () => {
+                        longPressTimer = setTimeout(() => {
+                            // Vibrate if supported
+                            if (navigator.vibrate) {
+                                navigator.vibrate(50);
+                            }
+                            this.toggleMessageSelection(messageId);
+                        }, 500);
+                    });
+                    
+                    bubble.addEventListener('touchend', () => {
+                        clearTimeout(longPressTimer);
+                    });
+                    
+                    bubble.addEventListener('touchmove', () => {
+                        clearTimeout(longPressTimer);
                     });
                 });
                 
-                // Handle conversation item press
+                // Handle conversation item long press
                 const conversationItems = document.querySelectorAll('.conversation-item');
                 
                 conversationItems.forEach(item => {
@@ -4076,45 +4555,6 @@
             preventClick(e) {
                 e.stopPropagation();
                 e.preventDefault();
-            },
-            
-            // Show full screen image
-            showFullScreenImage(src) {
-                const overlay = document.createElement('div');
-                overlay.className = 'full-screen-overlay';
-                
-                overlay.innerHTML = `
-                    <img src="${src}" class="full-screen-image" alt="Image">
-                    <button class="full-screen-close">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                `;
-                
-                document.body.appendChild(overlay);
-                this.fullScreenImage = overlay;
-                
-                // Add close handler
-                overlay.querySelector('.full-screen-close').addEventListener('click', () => {
-                    this.closeFullScreenImage();
-                });
-                
-                // Close on click outside image
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        this.closeFullScreenImage();
-                    }
-                });
-            },
-            
-            // Close full screen image
-            closeFullScreenImage() {
-                if (this.fullScreenImage) {
-                    this.fullScreenImage.remove();
-                    this.fullScreenImage = null;
-                }
             },
             
             // Toggle message selection
@@ -4280,35 +4720,48 @@
             
             // Render register form
             renderRegisterForm() {
+                const usersLeft = this.maxUserLimit - this.totalUserCount;
+                const registrationDisabled = usersLeft <= 0;
+                
                 return `
-                    <form id="register-form" onsubmit="app.handleRegister(event)">
-                        <div class="form-group">
-                            <label class="form-label" for="register-username">Nom d'utilisateur</label>
-                            <input type="text" id="register-username" class="form-input" required autocomplete="username">
+                    ${registrationDisabled ? `
+                        <div style="text-align: center; padding: 16px; color: var(--error-color);">
+                            <div style="font-weight: bold; margin-bottom: 8px;">Inscription temporairement fermée</div>
+                            <p>La limite de ${this.maxUserLimit} utilisateurs a été atteinte.</p>
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="register-email">Email</label>
-                            <input type="email" id="register-email" class="form-input" required autocomplete="email">
+                    ` : `
+                        <div style="text-align: center; margin-bottom: 16px; font-size: 14px; color: var(--secondary-text);">
+                            Places restantes: ${usersLeft}/${this.maxUserLimit}
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="register-phone">Téléphone</label>
-                            <input type="tel" id="register-phone" class="form-input" required autocomplete="tel">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="register-password">Mot de passe</label>
-                            <input type="password" id="register-password" class="form-input" required autocomplete="new-password">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="register-confirm-password">Confirmer le mot de passe</label>
-                            <input type="password" id="register-confirm-password" class="form-input" required autocomplete="new-password">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">S'inscrire</button>
-                    </form>
+                        <form id="register-form" onsubmit="app.handleRegister(event)">
+                            <div class="form-group">
+                                <label class="form-label" for="register-username">Nom d'utilisateur</label>
+                                <input type="text" id="register-username" class="form-input" required autocomplete="username">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="register-email">Email</label>
+                                <input type="email" id="register-email" class="form-input" required autocomplete="email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="register-phone">Téléphone</label>
+                                <input type="tel" id="register-phone" class="form-input" required autocomplete="tel">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="register-password">Mot de passe</label>
+                                <input type="password" id="register-password" class="form-input" required autocomplete="new-password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="register-confirm-password">Confirmer le mot de passe</label>
+                                <input type="password" id="register-confirm-password" class="form-input" required autocomplete="new-password">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">S'inscrire</button>
+                        </form>
+                    `}
                 `;
             },
             
@@ -4325,7 +4778,7 @@
                         
                         ${this.currentTab === 'conversations' ? `
                             <div class="compose-button" onclick="app.switchTab('users')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 5V19M5 12H19" />
                                 </svg>
                             </div>
@@ -4387,8 +4840,8 @@
                                     <circle cx="16.5" cy="14.5" r="1.5"></circle>
                                 </svg>
                             </div>
-                            <h2 class="ai-feature-title">Assistant IA</h2>
-                            <p class="ai-feature-description">Notre assistant IA vous aidera à trouver des réponses, générer du contenu et améliorer votre expérience de messagerie.</p>
+                            <h2 class="ai-feature-title">IA Prédictions Sportives</h2>
+                            <p class="ai-feature-description">Notre IA analysera les données sportives pour vous fournir des prédictions précises sur les résultats des matchs et compétitions.</p>
                             <div class="ai-feature-coming-soon">Bientôt disponible</div>
                         </div>
                         
@@ -4398,43 +4851,38 @@
                                 <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                     <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--purple-gradient); display: flex; align-items: center; justify-content: center; color: white;">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                            <line x1="4" y1="22" x2="4" y2="15"></line>
                                         </svg>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Assistant conversationnel</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Posez vos questions et obtenez des réponses intelligentes</div>
+                                        <div style="font-weight: 600; color: var(--text-color);">Analyse de matchs</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Statistiques détaillées et recommandations personnalisées</div>
                                     </div>
                                 </div>
                                 
                                 <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                     <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-gradient); display: flex; align-items: center; justify-content: center; color: white;">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                            <polyline points="21 15 16 10 5 21"></polyline>
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                                         </svg>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Génération d'images</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Créez des images à partir de descriptions textuelles</div>
+                                        <div style="font-weight: 600; color: var(--text-color);">Tendances et performances</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Suivi des équipes et joueurs en temps réel</div>
                                     </div>
                                 </div>
                                 
                                 <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                     <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--green-gradient); display: flex; align-items: center; justify-content: center; color: white;">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                                            <polyline points="9 11 12 14 22 4"></polyline>
+                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                         </svg>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Transcription vocale</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Dictez vos messages et convertissez-les en texte</div>
+                                        <div style="font-weight: 600; color: var(--text-color);">Conseils stratégiques</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Recommandations basées sur l'analyse des données</div>
                                     </div>
                                 </div>
                             </div>
@@ -4451,21 +4899,23 @@
                             ${this.selectedConversations.size} sélectionné${this.selectedConversations.size > 1 ? 's' : ''}
                         </div>
                         
-                        <button class="batch-action-button" onclick="app.deleteSelectedConversations()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-                                <line x1="10" y1="11" x2="10" y2="17"></line>
-                                <line x1="14" y1="11" x2="14" y2="17"></line>
-                            </svg>
-                        </button>
-                        
-                        <button class="batch-action-button" onclick="app.exitConversationSelectionMode()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+                        <div style="display: flex;">
+                            <button class="batch-action-button" onclick="app.deleteSelectedConversations()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                            
+                            <button class="batch-action-button" onclick="app.exitConversationSelectionMode()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 `;
             },
@@ -5032,19 +5482,6 @@
                             ${this.renderChatMessages()}
                         </div>
                         
-                        ${this.isRecording ? `
-                        <div class="voice-indicator">
-                            <div id="voice-recording-time">Enregistrement en cours...</div>
-                            <div class="voice-waves">
-                                <div class="voice-wave"></div>
-                                <div class="voice-wave"></div>
-                                <div class="voice-wave"></div>
-                                <div class="voice-wave"></div>
-                                <div class="voice-wave"></div>
-                            </div>
-                        </div>
-                        ` : ''}
-                        
                         <div class="chat-input-container">
                             ${this.imagePreview ? `
                             <div id="image-preview-container" class="image-preview-container">
@@ -5069,26 +5506,25 @@
                                     </svg>
                                 </button>
                                 
+                                <button class="emoji-button" onclick="app.showEmojiPicker()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                    </svg>
+                                </button>
+                                
                                 <div class="message-input-container">
                                     <input type="text" id="message-input" class="message-input" placeholder="Écrire un message..." onkeypress="if(event.key === 'Enter') app.sendMessage()">
                                 </div>
                                 
-                                ${this.isRecording ? `
-                                <button class="voice-button recording" onclick="app.isRecording = false; app.render()">
+                                <button class="send-button" onclick="app.sendMessage()">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="6" y="4" width="12" height="16" rx="2" ry="2"></rect>
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                                     </svg>
                                 </button>
-                                ` : `
-                                <button id="send-voice-button" class="voice-button" onclick="app.startVoiceRecognition()">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                        <line x1="12" y1="19" x2="12" y2="23"></line>
-                                        <line x1="8" y1="23" x2="16" y2="23"></line>
-                                    </svg>
-                                </button>
-                                `}
                             </div>
                         </div>
                     </div>
@@ -5176,7 +5612,7 @@
                         });
                         
                         html += `
-                            <div class="message-bubble ${messageClass} ${isSelected ? 'selected' : ''}" data-id="${message.id}">
+                            <div class="message-bubble ${messageClass} ${isSelected ? 'selected' : ''} message-new" data-id="${message.id}">
                         `;
                         
                         // Render image if present
@@ -5188,21 +5624,27 @@
                             `;
                         }
                         
-                        // Render audio if present
-                        if (message.messageType === 'audio' && message.audio) {
-                            html += `
-                                <div style="margin-bottom: 8px;">
-                                    <audio controls style="width: 100%; height: 40px;">
-                                        <source src="${message.audio}" type="audio/webm">
-                                        Votre navigateur ne supporte pas la lecture audio.
-                                    </audio>
-                                </div>
-                            `;
-                        }
-                        
                         // Render text if present
                         if (message.text) {
                             html += `<div>${message.text}</div>`;
+                        }
+                        
+                        // Render reactions if present
+                        if (message.reactions && Object.keys(message.reactions).length > 0) {
+                            html += `<div class="message-reactions">`;
+                            
+                            for (const [emoji, users] of Object.entries(message.reactions)) {
+                                if (users.length > 0) {
+                                    const isMyReaction = users.includes(this.currentUser.uid);
+                                    html += `
+                                        <div class="message-reaction" style="${isMyReaction ? 'font-weight: bold;' : ''}">
+                                            ${emoji} <span class="message-reaction-count">${users.length}</span>
+                                        </div>
+                                    `;
+                                }
+                            }
+                            
+                            html += `</div>`;
                         }
                         
                         // Render time and read status
@@ -5267,53 +5709,8 @@
                     setTimeout(() => {
                         this.setupMessageInteraction();
                         
-                        // Focus message input in chat screen
-                        const messageInput = document.getElementById('message-input');
-                        if (messageInput) {
-                            messageInput.focus();
-                        }
-                        
                         // Scroll to bottom
                         this.scrollToBottom();
-                        
-                        // Update button based on input
-                        const inputField = document.getElementById('message-input');
-                        const voiceButton = document.getElementById('send-voice-button');
-                        const sendButton = document.querySelector('.send-button');
-                                
-                        if (messageInput && (voiceButton || sendButton)) {
-                            messageInput.addEventListener('input', () => {
-                                const hasText = messageInput.value.trim().length > 0;
-                                
-                                if (hasText) {
-                                    // Show send button
-                                    if (voiceButton) {
-                                        voiceButton.outerHTML = `
-                                            <button class="send-button" onclick="app.sendMessage()">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                                </svg>
-                                            </button>
-                                        `;
-                                    }
-                                } else {
-                                    // Show voice button
-                                    if (sendButton) {
-                                        sendButton.outerHTML = `
-                                            <button id="send-voice-button" class="voice-button" onclick="app.startVoiceRecognition()">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                                                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                                                </svg>
-                                            </button>
-                                        `;
-                                    }
-                                }
-                            });
-                        }
                     }, 0);
                 }
                 
