@@ -17,18 +17,38 @@
             user-select: none; /* Prevent text selection */
         }
         
+        :root {
+            --accent-color: #5D5CDE;
+            --text-color: #333;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #eaeaea;
+            --secondary-bg: #f5f5f5;
+            --secondary-text: #777;
+            --header-height: 60px;
+            --footer-height: 56px;
+            --success-color: #4CAF50;
+            --error-color: #EF4444;
+            --warning-color: #F59E0B;
+            --info-color: #3B82F6;
+        }
+        
+        .dark {
+            --text-color: #f5f5f5;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --secondary-bg: #252525;
+            --secondary-text: #aaa;
+        }
+        
         html, body {
             height: 100%;
             width: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             overscroll-behavior: none;
-        }
-
-        body.dark {
-            background-color: #121212;
-            color: #f5f5f5;
         }
         
         .container {
@@ -37,39 +57,112 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            background-color: white;
+            background-color: var(--bg-color);
             position: relative;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
         
-        body.dark .container {
-            background-color: #1e1e1e;
+        .dark .container {
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         
         .header {
-            padding: 16px;
-            background-color: #5D5CDE;
+            padding: 12px 16px;
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
-            position: relative;
+            z-index: 100;
+            position: sticky;
+            top: 0;
+            height: var(--header-height);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .back-button:active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .more-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .more-button:active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-bar {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            margin: 0 8px;
+            flex: 1;
+            transition: background-color 0.3s;
+        }
+        
+        .search-bar:focus-within {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            padding: 0 8px;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
         }
         
         .main {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 72px; /* Space for fixed tab bar */
+            padding-bottom: var(--footer-height);
+            position: relative;
         }
         
         .tab-bar {
             display: flex;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: var(--card-bg);
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             z-index: 100;
             position: fixed;
@@ -78,59 +171,53 @@
             right: 0;
             max-width: 500px;
             margin: 0 auto;
-            border-top: 1px solid #eaeaea;
+            border-top: 1px solid var(--border-color);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-        }
-        
-        body.dark .tab-bar {
-            background-color: rgba(30, 30, 30, 0.95);
-            border-top: 1px solid #333;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            height: var(--footer-height);
         }
         
         .tab-button {
             flex: 1;
-            padding: 12px;
+            padding: 6px 0;
             text-align: center;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #777;
+            color: var(--secondary-text);
             transition: all 0.3s;
             position: relative;
-            overflow: hidden;
         }
         
-        .tab-button::after {
+        .tab-button.active {
+            color: var(--accent-color);
+        }
+        
+        .tab-button.active::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
-            width: 0;
+            width: 20%;
             height: 3px;
-            background-color: #5D5CDE;
-            transition: all 0.3s ease;
+            background-color: var(--accent-color);
             transform: translateX(-50%);
         }
         
-        .tab-button.active {
-            color: #5D5CDE;
-        }
-        
-        .tab-button.active::after {
-            width: 40%;
-        }
-        
-        .tab-button svg {
+        .tab-button-icon {
             margin-bottom: 4px;
             transition: transform 0.2s ease;
         }
         
-        .tab-button:active svg {
+        .tab-button:active .tab-button-icon {
             transform: scale(0.9);
+        }
+        
+        .tab-button-label {
+            font-size: 12px;
+            font-weight: 500;
         }
         
         /* Auth screen */
@@ -143,7 +230,7 @@
             background: linear-gradient(to bottom, rgba(93, 92, 222, 0.1), rgba(93, 92, 222, 0.05));
         }
         
-        body.dark .auth-container {
+        .dark .auth-container {
             background: linear-gradient(to bottom, rgba(93, 92, 222, 0.2), rgba(93, 92, 222, 0.1));
         }
         
@@ -159,14 +246,14 @@
         }
         
         .auth-logo h1 {
-            color: #5D5CDE;
+            color: var(--accent-color);
             font-size: 32px;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
         
         .auth-form {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -178,19 +265,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        body.dark .auth-form {
-            background-color: #252525;
+        .dark .auth-form {
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
         .auth-tabs {
             display: flex;
             margin-bottom: 24px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        body.dark .auth-tabs {
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .auth-tab {
@@ -204,7 +286,7 @@
         }
         
         .auth-tab.active {
-            color: #5D5CDE;
+            color: var(--accent-color);
         }
         
         .auth-tab.active::after {
@@ -214,7 +296,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             animation: growWidth 0.3s ease-out;
         }
         
@@ -233,28 +315,23 @@
             margin-bottom: 8px;
             font-weight: 500;
             transition: all 0.3s;
+            color: var(--text-color);
         }
         
         .form-input {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             font-size: 16px;
-            background-color: white;
-            color: #333;
+            background-color: var(--card-bg);
+            color: var(--text-color);
             transition: all 0.3s;
-        }
-        
-        body.dark .form-input {
-            background-color: #333;
-            color: #f5f5f5;
-            border-color: #555;
         }
         
         .form-input:focus {
             outline: none;
-            border-color: #5D5CDE;
+            border-color: var(--accent-color);
             box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.2);
         }
         
@@ -302,7 +379,7 @@
         }
         
         .btn-primary {
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             width: 100%;
         }
@@ -322,57 +399,52 @@
         .conversation-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
         }
         
         .conversation-item {
             display: flex;
             align-items: center;
-            padding: 14px;
-            border-radius: 14px;
+            padding: 16px;
             cursor: pointer;
-            transition: all 0.3s;
-            background-color: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: background-color 0.2s;
             position: relative;
-            overflow: hidden;
-        }
-        
-        body.dark .conversation-item {
-            background-color: #252525;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-        
-        .conversation-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border-color);
         }
         
         .conversation-item:active {
-            transform: scale(0.98);
+            background-color: var(--secondary-bg);
         }
         
-        .conversation-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(93, 92, 222, 0.05), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+        .conversation-item.selected {
+            background-color: rgba(93, 92, 222, 0.1);
         }
         
-        .conversation-item:hover::after {
-            transform: translateX(100%);
+        .dark .conversation-item.selected {
+            background-color: rgba(93, 92, 222, 0.2);
+        }
+        
+        .conversation-checkbox {
+            margin-right: 14px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .conversation-item.selected .conversation-checkbox {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color);
         }
         
         .conversation-avatar {
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
@@ -384,7 +456,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        body.dark .conversation-avatar {
+        .dark .conversation-avatar {
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
@@ -402,16 +474,12 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            border: 2px solid white;
+            border: 2px solid var(--card-bg);
             background-color: #ccc;
         }
         
-        body.dark .conversation-status {
-            border-color: #252525;
-        }
-        
         .conversation-status.online {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
         }
         
         .conversation-content {
@@ -424,59 +492,49 @@
             margin-bottom: 4px;
             display: flex;
             align-items: center;
+            color: var(--text-color);
+        }
+        
+        .conversation-blocked {
+            margin-left: 6px;
+            font-size: 12px;
+            font-weight: normal;
+            color: var(--error-color);
         }
         
         .conversation-message {
-            color: #777;
+            color: var(--secondary-text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
         }
         
-        body.dark .conversation-message {
-            color: #aaa;
-        }
-        
-        .conversation-time {
-            color: #777;
-            font-size: 12px;
-            white-space: nowrap;
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
             margin-left: 8px;
         }
         
-        body.dark .conversation-time {
-            color: #aaa;
+        .conversation-time {
+            color: var(--secondary-text);
+            font-size: 12px;
+            white-space: nowrap;
+            margin-bottom: 4px;
         }
         
-        .conversation-actions {
-            position: absolute;
-            right: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .conversation-item:hover .conversation-actions {
-            opacity: 1;
-        }
-        
-        .conversation-action-btn {
-            background: none;
-            border: none;
-            color: #777;
-            padding: 8px;
-            cursor: pointer;
+        .conversation-badge {
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            transition: all 0.3s;
-        }
-        
-        .conversation-action-btn:hover {
-            background-color: rgba(0,0,0,0.05);
-            color: #5D5CDE;
-        }
-        
-        body.dark .conversation-action-btn:hover {
-            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
         
         /* Chat screen */
@@ -487,7 +545,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235d5cde' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
-        body.dark .chat-container {
+        .dark .chat-container {
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235d5cde' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
@@ -495,32 +553,10 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 10;
-        }
-        
-        .back-button {
-            background: none;
-            border: none;
-            color: white;
-            margin-right: 12px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .back-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .back-button:active {
-            background-color: rgba(255, 255, 255, 0.2);
         }
         
         .chat-title {
@@ -562,7 +598,7 @@
             position: absolute;
             top: 100%;
             right: 10px;
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 100;
@@ -576,11 +612,6 @@
             to { transform: scale(1); opacity: 1; }
         }
         
-        body.dark .chat-menu {
-            background-color: #252525;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
         .chat-menu-item {
             padding: 12px 16px;
             display: flex;
@@ -588,19 +619,15 @@
             cursor: pointer;
             transition: background-color 0.3s;
             white-space: nowrap;
-            color: #333;
-        }
-        
-        body.dark .chat-menu-item {
-            color: #f5f5f5;
+            color: var(--text-color);
         }
         
         .chat-menu-item:hover {
-            background-color: #f5f5f5;
+            background-color: var(--secondary-bg);
         }
         
-        body.dark .chat-menu-item:hover {
-            background-color: #333;
+        .chat-menu-item:active {
+            background-color: var(--secondary-bg);
         }
         
         .chat-menu-item svg {
@@ -610,18 +637,19 @@
         }
         
         .chat-menu-item.danger {
-            color: #EF4444;
+            color: var(--error-color);
         }
         
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 16px;
+            padding-bottom: 82px; /* Extra padding for input bar */
             background-color: rgba(245, 245, 245, 0.8);
             -webkit-overflow-scrolling: touch;
         }
         
-        body.dark .chat-messages {
+        .dark .chat-messages {
             background-color: rgba(18, 18, 18, 0.8);
         }
         
@@ -643,7 +671,7 @@
             z-index: -1;
         }
         
-        body.dark .message-day-separator::before {
+        .dark .message-day-separator::before {
             background-color: rgba(255, 255, 255, 0.1);
         }
         
@@ -657,7 +685,7 @@
             display: inline-block;
         }
         
-        body.dark .message-day-text {
+        .dark .message-day-text {
             background-color: rgba(30, 30, 30, 0.8);
         }
         
@@ -690,13 +718,7 @@
         }
         
         .message-bubble.selected {
-            background-color: #e3f2fd !important;
-            color: #333 !important;
-        }
-        
-        body.dark .message-bubble.selected {
-            background-color: #263238 !important;
-            color: #f5f5f5 !important;
+            background-color: rgba(93, 92, 222, 0.2) !important;
         }
         
         @keyframes message-in {
@@ -711,20 +733,15 @@
         }
         
         .message-sent {
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             border-bottom-right-radius: 4px;
         }
         
         .message-received {
-            background-color: white;
-            color: #333;
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border-bottom-left-radius: 4px;
-        }
-        
-        body.dark .message-received {
-            background-color: #2a2a2a;
-            color: #f5f5f5;
         }
         
         .message-time {
@@ -769,161 +786,125 @@
             opacity: 0.9;
         }
         
+        .chat-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            z-index: 100;
+            padding: 8px 16px;
+        }
+        
         .chat-input {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            background-color: white;
-            border-top: 1px solid #e0e0e0;
-            position: relative;
-            z-index: 10;
+            background-color: var(--secondary-bg);
+            padding: 4px 8px;
+            border-radius: 24px;
         }
         
-        body.dark .chat-input {
-            background-color: #1e1e1e;
-            border-top: 1px solid #333;
+        .dark .chat-input {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .media-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: #f0f0f0;
+            background: none;
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            margin-right: 8px;
+            color: var(--secondary-text);
             transition: all 0.3s;
-        }
-        
-        body.dark .media-button {
-            background-color: #333;
-        }
-        
-        .media-button:hover {
-            background-color: #e0e0e0;
-        }
-        
-        body.dark .media-button:hover {
-            background-color: #444;
         }
         
         .media-button:active {
             transform: scale(0.95);
+            color: var(--accent-color);
         }
         
         .message-input-container {
             flex: 1;
             position: relative;
-            margin-right: 8px;
+            margin: 0 8px;
         }
         
         .message-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
+            padding: 10px 0;
+            border: none;
+            border-radius: 0;
             font-size: 16px;
-            background-color: white;
-            color: #333;
+            background: none;
+            color: var(--text-color);
             transition: all 0.3s;
-        }
-        
-        body.dark .message-input {
-            background-color: #333;
-            color: #f5f5f5;
-            border-color: #555;
         }
         
         .message-input:focus {
             outline: none;
-            border-color: #5D5CDE;
-            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.1);
         }
         
         .send-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: #5D5CDE;
-            color: white;
+            background: none;
             border: none;
+            color: var(--accent-color);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(93, 92, 222, 0.3);
-        }
-        
-        .send-button:hover {
-            background-color: #4C4BAE;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(93, 92, 222, 0.3);
         }
         
         .send-button:active {
             transform: scale(0.95);
-            box-shadow: 0 1px 2px rgba(93, 92, 222, 0.3);
         }
         
         /* User list */
         .user-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
+            display: flex;
+            flex-direction: column;
         }
         
         .user-item {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             padding: 16px;
-            border-radius: 14px;
-            background-color: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        body.dark .user-item {
-            background-color: #252525;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-        
-        .user-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
         }
         
         .user-item:active {
-            transform: scale(0.98);
-        }
-        
-        .user-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
+            background-color: var(--secondary-bg);
         }
         
         .user-avatar {
-            width: 60px;
-            height: 60px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 26px;
+            font-size: 20px;
             position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-right: 14px;
         }
         
-        body.dark .user-avatar {
+        .dark .user-avatar {
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
@@ -936,7 +917,7 @@
         
         .user-info {
             flex: 1;
-            margin-left: 12px;
+            overflow: hidden;
         }
         
         .user-name {
@@ -945,17 +926,21 @@
             margin-bottom: 4px;
             display: flex;
             align-items: center;
+            color: var(--text-color);
+        }
+        
+        .user-blocked {
+            margin-left: 6px;
+            font-size: 12px;
+            font-weight: normal;
+            color: var(--error-color);
         }
         
         .user-status {
             display: flex;
             align-items: center;
-            color: #777;
+            color: var(--secondary-text);
             font-size: 14px;
-        }
-        
-        body.dark .user-status {
-            color: #aaa;
         }
         
         .status-dot {
@@ -967,80 +952,33 @@
         }
         
         .status-dot.online {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
         }
         
         .user-bio {
-            color: #666;
+            color: var(--secondary-text);
             font-size: 14px;
-            margin-bottom: 12px;
-            line-height: 1.4;
-            max-height: 60px;
+            margin-top: 4px;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-        
-        body.dark .user-bio {
-            color: #bbb;
         }
         
         .user-actions {
             display: flex;
-            justify-content: flex-end;
             gap: 8px;
-        }
-        
-        .user-action-button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .chat-button {
-            background-color: #5D5CDE;
-            color: white;
-            border: none;
-        }
-        
-        .chat-button:hover {
-            background-color: #4C4BAE;
-            transform: translateY(-1px);
-        }
-        
-        .chat-button:active {
-            transform: translateY(1px);
-        }
-        
-        .block-button {
-            background-color: transparent;
-            color: #777;
-            border: none;
-        }
-        
-        body.dark .block-button {
-            color: #aaa;
-        }
-        
-        .block-button:hover {
-            color: #EF4444;
         }
         
         /* Profile screen */
         .profile-container {
-            padding: 20px;
+            padding-bottom: 80px;
         }
         
         .profile-header {
-            background: linear-gradient(135deg, #5D5CDE, #4C4BAE);
+            background: linear-gradient(135deg, var(--accent-color), #4C4BAE);
             color: white;
             padding: 30px 20px;
-            border-radius: 16px;
+            border-radius: 0 0 16px 16px;
             margin-bottom: 80px;
             position: relative;
             box-shadow: 0 4px 10px rgba(93, 92, 222, 0.3);
@@ -1058,14 +996,14 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 32px;
-            border: 4px solid white;
+            border: 4px solid var(--card-bg);
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: relative;
@@ -1083,10 +1021,6 @@
             text-align: center;
         }
         
-        body.dark .profile-avatar {
-            border-color: #1e1e1e;
-        }
-        
         .profile-avatar img {
             width: 100%;
             height: 100%;
@@ -1094,21 +1028,15 @@
         }
         
         .profile-card {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin: 0 16px 20px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             transition: all 0.3s;
         }
         
-        .profile-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        body.dark .profile-card {
-            background-color: #252525;
+        .dark .profile-card {
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         
@@ -1118,26 +1046,19 @@
             display: flex;
             align-items: center;
             padding-bottom: 8px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        body.dark .profile-card-title {
-            border-color: #333;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
         }
         
         .profile-card-title svg {
             margin-right: 10px;
-            color: #5D5CDE;
+            color: var(--accent-color);
         }
         
         .profile-field {
             display: flex;
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        body.dark .profile-field {
-            border-color: #333;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .profile-field:last-child {
@@ -1146,17 +1067,14 @@
         
         .profile-field-label {
             width: 100px;
-            color: #777;
+            color: var(--secondary-text);
             font-weight: 500;
-        }
-        
-        body.dark .profile-field-label {
-            color: #aaa;
         }
         
         .profile-field-value {
             flex: 1;
             font-weight: 500;
+            color: var(--text-color);
         }
         
         .editable-field {
@@ -1187,12 +1105,8 @@
         }
         
         .color-option.active {
-            border-color: #333;
+            border-color: var(--text-color);
             transform: scale(1.1);
-        }
-        
-        body.dark .color-option.active {
-            border-color: white;
         }
         
         .theme-toggle {
@@ -1240,7 +1154,7 @@
         }
         
         input:checked + .toggle-slider {
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
         }
         
         input:checked + .toggle-slider:before {
@@ -1251,10 +1165,10 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 20px;
+            margin: 0 16px;
         }
         
-        .logout-button {
+        .action-button {
             padding: 14px;
             border-radius: 12px;
             font-size: 16px;
@@ -1264,50 +1178,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #5D5CDE;
-            color: #5D5CDE;
-            background-color: transparent;
         }
         
-        .logout-button:hover {
-            background-color: rgba(93, 92, 222, 0.1);
-            transform: translateY(-1px);
-        }
-        
-        .logout-button:active {
-            transform: translateY(1px);
-        }
-        
-        .logout-button svg {
+        .action-button svg {
             margin-right: 8px;
         }
         
+        .logout-button {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            background-color: transparent;
+        }
+        
+        .logout-button:active {
+            background-color: rgba(93, 92, 222, 0.1);
+        }
+        
         .delete-button {
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #EF4444;
+            background-color: var(--error-color);
             color: white;
             border: none;
         }
         
-        .delete-button:hover {
-            background-color: #DC2626;
-            transform: translateY(-1px);
-        }
-        
         .delete-button:active {
-            transform: translateY(1px);
-        }
-        
-        .delete-button svg {
-            margin-right: 8px;
+            background-color: #DC2626;
         }
         
         .loading {
@@ -1322,7 +1216,7 @@
             height: 40px;
             border: 3px solid rgba(93, 92, 222, 0.1);
             border-radius: 50%;
-            border-top-color: #5D5CDE;
+            border-top-color: var(--accent-color);
             animation: spin 1s linear infinite;
         }
         
@@ -1350,19 +1244,19 @@
         }
         
         .banner-notification.success {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
         }
         
         .banner-notification.error {
-            background-color: #EF4444;
+            background-color: var(--error-color);
         }
         
         .banner-notification.warning {
-            background-color: #F59E0B;
+            background-color: var(--warning-color);
         }
         
         .banner-notification.info {
-            background-color: #3B82F6;
+            background-color: var(--info-color);
         }
         
         @keyframes slide-down-banner {
@@ -1439,19 +1333,19 @@
         }
         
         .toast.success {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
         }
         
         .toast.error {
-            background-color: #EF4444;
+            background-color: var(--error-color);
         }
         
         .toast.warning {
-            background-color: #F59E0B;
+            background-color: var(--warning-color);
         }
         
         .toast.info {
-            background-color: #3B82F6;
+            background-color: var(--info-color);
         }
         
         .image-preview-container {
@@ -1460,14 +1354,9 @@
             max-width: 250px;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #ddd;
-            background-color: #f5f5f5;
+            border: 1px solid var(--border-color);
+            background-color: var(--secondary-bg);
             transition: all 0.3s;
-        }
-        
-        body.dark .image-preview-container {
-            border-color: #444;
-            background-color: #333;
         }
         
         .image-preview {
@@ -1503,67 +1392,14 @@
             height: 14px;
         }
         
-        .action-menu {
-            position: fixed;
-            z-index: 1000;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            padding: 6px 0;
-            overflow: hidden;
-            animation: menu-fade-in 0.2s ease-out;
-            transform-origin: top left;
-        }
-        
-        @keyframes menu-fade-in {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        body.dark .action-menu {
-            background-color: #252525;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-        
-        .action-menu-item {
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        
-        .action-menu-item:hover {
-            background-color: #f0f0f0;
-        }
-        
-        body.dark .action-menu-item:hover {
-            background-color: #333;
-        }
-        
-        .action-menu-item svg {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-        }
-        
-        .action-menu-item.delete {
-            color: #EF4444;
-        }
-        
         /* Selection mode styles */
         .selection-mode-bar {
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
+            z-index: 100;
             animation: slide-down 0.3s ease-out;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -1590,10 +1426,6 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s;
-        }
-        
-        .selection-mode-bar-action:hover {
-            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .selection-mode-bar-action:active {
@@ -1648,26 +1480,8 @@
             transition: all 0.3s;
         }
         
-        .full-screen-close:hover {
+        .full-screen-close:active {
             background: rgba(255, 255, 255, 0.4);
-        }
-        
-        .slide-in {
-            animation: slide-in-right 0.3s ease-out;
-        }
-        
-        @keyframes slide-in-right {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        
-        .slide-out {
-            animation: slide-out-right 0.3s ease-out forwards;
-        }
-        
-        @keyframes slide-out-right {
-            from { transform: translateX(0); }
-            to { transform: translateX(100%); }
         }
         
         .input-file {
@@ -1690,7 +1504,7 @@
         }
         
         .modal-container {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 12px;
             width: 90%;
             max-width: 400px;
@@ -1700,37 +1514,25 @@
             animation: scale-in 0.3s ease-out;
         }
         
-        body.dark .modal-container {
-            background-color: #252525;
-            color: #f5f5f5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
         .modal-header {
             padding: 16px;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid var(--border-color);
             font-weight: 600;
             font-size: 18px;
-        }
-        
-        body.dark .modal-header {
-            border-color: #333;
+            color: var(--text-color);
         }
         
         .modal-body {
             padding: 16px;
+            color: var(--text-color);
         }
         
         .modal-footer {
             padding: 16px;
-            border-top: 1px solid #eaeaea;
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-        }
-        
-        body.dark .modal-footer {
-            border-color: #333;
         }
         
         .modal-button {
@@ -1744,40 +1546,31 @@
         
         .modal-button-cancel {
             background-color: transparent;
-            border: 1px solid #ddd;
-            color: #666;
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text);
         }
         
-        body.dark .modal-button-cancel {
-            border-color: #444;
-            color: #ccc;
-        }
-        
-        .modal-button-cancel:hover {
-            background-color: #f5f5f5;
-        }
-        
-        body.dark .modal-button-cancel:hover {
-            background-color: #333;
+        .modal-button-cancel:active {
+            background-color: var(--secondary-bg);
         }
         
         .modal-button-confirm {
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             border: none;
         }
         
-        .modal-button-confirm:hover {
+        .modal-button-confirm:active {
             background-color: #4C4BAE;
         }
         
         .modal-button-danger {
-            background-color: #EF4444;
+            background-color: var(--error-color);
             color: white;
             border: none;
         }
         
-        .modal-button-danger:hover {
+        .modal-button-danger:active {
             background-color: #DC2626;
         }
         
@@ -1791,12 +1584,8 @@
             align-items: center;
         }
         
-        .modal-option:hover {
-            background-color: #f5f5f5;
-        }
-        
-        body.dark .modal-option:hover {
-            background-color: #333;
+        .modal-option:active {
+            background-color: var(--secondary-bg);
         }
         
         .modal-option-icon {
@@ -1804,7 +1593,7 @@
         }
         
         .modal-option-danger {
-            color: #EF4444;
+            color: var(--error-color);
         }
         
         /* Compose button */
@@ -1815,7 +1604,7 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background-color: #5D5CDE;
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
@@ -1823,33 +1612,184 @@
             box-shadow: 0 4px 8px rgba(93, 92, 222, 0.3);
             cursor: pointer;
             transition: all 0.3s;
-            z-index: 100;
-        }
-        
-        .compose-button:hover {
-            background-color: #4C4BAE;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(93, 92, 222, 0.4);
+            z-index: 90;
         }
         
         .compose-button:active {
             transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(93, 92, 222, 0.3);
         }
         
-        /* Prevent text selection */
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        /* Floating action menu */
+        .floating-action-menu {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 90;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 16px;
         }
         
-        /* Allow text selection in input fields */
-        input, textarea {
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
+        .floating-action-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border-radius: 30px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            animation: slide-in 0.2s ease-out;
+            transition: all 0.2s;
+        }
+        
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .floating-action-item:active {
+            transform: scale(0.95);
+        }
+        
+        .floating-action-item-label {
+            margin-right: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .floating-action-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Empty states */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .dark .empty-state-icon {
+            color: #444;
+        }
+        
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        
+        .empty-state-text {
+            color: var(--secondary-text);
+            max-width: 250px;
+        }
+        
+        /* Search styles */
+        .search-container {
+            padding: 8px 16px;
+            position: sticky;
+            top: var(--header-height);
+            z-index: 90;
+            background-color: var(--bg-color);
+            animation: fade-in 0.3s;
+        }
+        
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 8px 12px;
+            transition: all 0.2s;
+        }
+        
+        .search-wrapper:focus-within {
+            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.2);
+        }
+        
+        .dark .search-wrapper:focus-within {
+            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.4);
+        }
+        
+        .search-icon {
+            color: var(--secondary-text);
+            margin-right: 8px;
+        }
+        
+        .search-clear {
+            background: none;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .search-clear:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .search-clear:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Batch actions for lists */
+        .batch-actions-bar {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--accent-color);
+            color: white;
+            z-index: 50;
+            animation: slide-in-bottom 0.3s;
+        }
+        
+        @keyframes slide-in-bottom {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .batch-actions-title {
+            flex: 1;
+            font-weight: 600;
+        }
+        
+        .batch-action-button {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+        
+        .batch-action-button:active {
+            background-color: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -1879,24 +1819,54 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
         
+        // Check for dark mode
+        function checkDarkMode() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+                return true;
+            }
+            return false;
+        }
+        
+        // Listen for dark mode changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+                if (app && app.currentUser) {
+                    app.isDarkMode = true;
+                    app.saveThemePreference();
+                }
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (app && app.currentUser) {
+                    app.isDarkMode = false;
+                    app.saveThemePreference();
+                }
+            }
+        });
+        
         // Main application logic
         const app = {
             currentUser: null,
             currentScreen: 'auth', // auth, main, chat
             currentTab: 'conversations', // conversations, users, profile
             conversations: [],
+            filteredConversations: [],
             users: [],
+            filteredUsers: [],
             messages: [],
             currentChat: null,
             activeAuthTab: 'login',
-            isDarkMode: false,
+            isDarkMode: checkDarkMode(),
             accentColor: '#5D5CDE',
             notificationTimer: null,
             bannerNotificationTimer: null,
             selectedImage: null,
             imagePreview: null,
             selectionMode: false,
+            isConversationSelectionMode: false,
             selectedMessages: new Set(),
+            selectedConversations: new Set(),
             lastTouchStart: 0,
             longPressTimer: null,
             fullScreenImage: null,
@@ -1905,27 +1875,25 @@
             modal: null,
             isEditing: false,
             editingField: null,
+            searchQuery: '',
             
             // Initialize app
             init() {
                 this.setupAuthListener();
-                this.setupDarkModeListener();
                 this.render();
                 this.setupCopyProtection();
                 
-                // Setup touch events for long press detection
+                // Setup document events
                 document.addEventListener('click', (e) => {
-                    // Close action menu if it exists and click outside it
+                    // Close menus if clicking outside
                     if (this.actionMenu && !e.target.closest('.action-menu') && !e.target.closest('.message-bubble')) {
                         this.closeActionMenu();
                     }
                     
-                    // Close chat menu if it exists and click outside it
                     if (this.chatMenu && !e.target.closest('.chat-menu') && !e.target.closest('.chat-menu-button')) {
                         this.closeChatMenu();
                     }
                     
-                    // Close fullscreen image if it exists and click outside it
                     if (this.fullScreenImage && !e.target.closest('.full-screen-image')) {
                         this.closeFullScreenImage();
                     }
@@ -1982,11 +1950,13 @@
                                 // Set theme
                                 if (userData.theme) {
                                     if (userData.theme.mode === 'dark') {
-                                        this.toggleDarkMode(true);
+                                        this.toggleDarkMode(true, false);
+                                    } else {
+                                        this.toggleDarkMode(false, false);
                                     }
+                                    
                                     if (userData.theme.color) {
-                                        this.accentColor = userData.theme.color;
-                                        this.applyAccentColor();
+                                        this.changeAccentColor(userData.theme.color, false);
                                     }
                                 }
                                 
@@ -2036,66 +2006,54 @@
                 });
             },
             
-            // Setup dark mode listener
-            setupDarkModeListener() {
-                // Check system preference
-                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                this.toggleDarkMode(prefersDark);
-                
-                // Listen for changes
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    this.toggleDarkMode(e.matches);
-                });
-            },
-            
             // Apply accent color
             applyAccentColor() {
                 document.documentElement.style.setProperty('--accent-color', this.accentColor);
             },
             
             // Toggle dark mode
-            toggleDarkMode(isDark) {
+            toggleDarkMode(isDark, savePreference = true) {
                 this.isDarkMode = isDark;
                 
                 if (isDark) {
-                    document.body.classList.add('dark');
+                    document.documentElement.classList.add('dark');
                 } else {
-                    document.body.classList.remove('dark');
+                    document.documentElement.classList.remove('dark');
                 }
                 
                 // Save preference to user document if logged in
-                if (this.currentUser && this.currentUser.uid) {
-                    db.collection('users').doc(this.currentUser.uid).update({
-                        theme: { 
-                            mode: isDark ? 'dark' : 'light', 
-                            color: this.accentColor 
-                        }
-                    }).catch(error => {
-                        console.error("Error updating theme preference:", error);
-                    });
+                if (savePreference && this.currentUser && this.currentUser.uid) {
+                    this.saveThemePreference();
                 }
                 
                 this.render();
             },
             
             // Change accent color
-            changeAccentColor(color) {
+            changeAccentColor(color, savePreference = true) {
                 this.accentColor = color;
                 this.applyAccentColor();
                 
                 // Save preference to user document if logged in
+                if (savePreference && this.currentUser && this.currentUser.uid) {
+                    this.saveThemePreference();
+                }
+                
+                this.render();
+            },
+            
+            // Save theme preference
+            saveThemePreference() {
                 if (this.currentUser && this.currentUser.uid) {
                     db.collection('users').doc(this.currentUser.uid).update({
                         theme: { 
                             mode: this.isDarkMode ? 'dark' : 'light', 
-                            color: color 
+                            color: this.accentColor 
                         }
                     }).catch(error => {
-                        console.error("Error updating color preference:", error);
+                        console.error("Error updating theme preference:", error);
                     });
                 }
-                
-                this.render();
             },
             
             // Switch auth tab
@@ -2202,6 +2160,58 @@
             // Switch tabs in main screen
             switchTab(tab) {
                 this.currentTab = tab;
+                this.searchQuery = '';
+                this.exitSelectionMode();
+                this.render();
+            },
+            
+            // Search handling
+            handleSearch(query) {
+                this.searchQuery = query;
+                
+                if (this.currentTab === 'conversations') {
+                    this.filterConversations();
+                } else if (this.currentTab === 'users') {
+                    this.filterUsers();
+                }
+                
+                this.render();
+            },
+            
+            // Filter conversations based on search query
+            filterConversations() {
+                if (!this.searchQuery) {
+                    this.filteredConversations = this.conversations;
+                    return;
+                }
+                
+                const query = this.searchQuery.toLowerCase();
+                this.filteredConversations = this.conversations.filter(conversation => {
+                    return conversation.otherUser.username.toLowerCase().includes(query) ||
+                           (conversation.lastMessage && conversation.lastMessage.toLowerCase().includes(query));
+                });
+            },
+            
+            // Filter users based on search query
+            filterUsers() {
+                if (!this.searchQuery) {
+                    this.filteredUsers = this.users;
+                    return;
+                }
+                
+                const query = this.searchQuery.toLowerCase();
+                this.filteredUsers = this.users.filter(user => {
+                    return user.username.toLowerCase().includes(query) ||
+                           (user.phone && user.phone.includes(query)) ||
+                           (user.bio && user.bio.toLowerCase().includes(query));
+                });
+            },
+            
+            // Clear search
+            clearSearch() {
+                this.searchQuery = '';
+                this.filteredConversations = this.conversations;
+                this.filteredUsers = this.users;
                 this.render();
             },
             
@@ -2239,6 +2249,23 @@
                                     
                                     // Only add non-deleted conversations
                                     if (!isDeleted) {
+                                        // Calculate unread count
+                                        let unreadCount = 0;
+                                        
+                                        // Only perform this check if there's a last message and it wasn't sent by the current user
+                                        if (conversationData.lastMessageSenderId && 
+                                            conversationData.lastMessageSenderId !== this.currentUser.uid) {
+                                            
+                                            // Get unread messages
+                                            const unreadQuery = await db.collection('messages')
+                                                .where('conversationId', '==', doc.id)
+                                                .where('senderId', '==', otherUserId)
+                                                .where('read', '==', false)
+                                                .get();
+                                            
+                                            unreadCount = unreadQuery.size;
+                                        }
+                                        
                                         conversations.push({
                                             id: doc.id,
                                             otherUser: {
@@ -2252,6 +2279,7 @@
                                             lastMessageType: conversationData.lastMessageType || 'text',
                                             lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
                                             lastMessageSenderId: conversationData.lastMessageSenderId,
+                                            unreadCount,
                                             isBlocked
                                         });
                                     }
@@ -2265,6 +2293,7 @@
                         conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
                         
                         this.conversations = conversations;
+                        this.filterConversations();
                         this.render();
                     });
                     
@@ -2298,6 +2327,39 @@
                     }
                 } catch (error) {
                     console.error("Error deleting conversation:", error);
+                    this.showBannerNotification("Erreur lors de la suppression", "error");
+                }
+            },
+            
+            // Delete multiple conversations
+            async deleteSelectedConversations() {
+                if (this.selectedConversations.size === 0) return;
+                
+                try {
+                    const batch = db.batch();
+                    
+                    for (const conversationId of this.selectedConversations) {
+                        const conversationRef = db.collection('conversations').doc(conversationId);
+                        const conversationDoc = await conversationRef.get();
+                        
+                        if (conversationDoc.exists) {
+                            // Mark conversation as deleted for current user
+                            let deleted = conversationDoc.data().deleted || {};
+                            deleted[this.currentUser.uid] = true;
+                            
+                            batch.update(conversationRef, { deleted });
+                        }
+                    }
+                    
+                    await batch.commit();
+                    
+                    this.showBannerNotification(`${this.selectedConversations.size} conversation(s) supprimée(s)`, "success");
+                    
+                    // Exit selection mode
+                    this.exitConversationSelectionMode();
+                    
+                } catch (error) {
+                    console.error("Error deleting conversations:", error);
                     this.showBannerNotification("Erreur lors de la suppression", "error");
                 }
             },
@@ -2374,6 +2436,7 @@
                     });
                     
                     this.users = users;
+                    this.filterUsers();
                     this.render();
                     
                 } catch (error) {
@@ -2793,6 +2856,7 @@
                     messageInput.value = '';
                     this.selectedImage = null;
                     this.imagePreview = null;
+                    this.render();
                     
                 } catch (error) {
                     console.error("Error sending message:", error);
@@ -2856,6 +2920,10 @@
                             }
                             return conversation;
                         });
+                        
+                        // Filter conversations and users
+                        this.filterConversations();
+                        this.filterUsers();
                         
                         // Update current chat if needed
                         if (this.currentChat && this.currentChat.otherUser.uid === userId) {
@@ -3312,82 +3380,92 @@
                 }
             },
             
-            // Handle long press on message
-            setupMessageLongPress() {
+            // Setup message interaction (long press and context menu)
+            setupMessageInteraction() {
                 const messageBubbles = document.querySelectorAll('.message-bubble');
                 
                 messageBubbles.forEach(bubble => {
-                    // Touch events for mobile
-                    bubble.addEventListener('touchstart', (e) => {
-                        this.lastTouchStart = Date.now();
-                        const messageId = bubble.dataset.id;
-                        
-                        this.longPressTimer = setTimeout(() => {
+                    const messageId = bubble.dataset.id;
+                    
+                    // Handle tap (click)
+                    bubble.addEventListener('click', (e) => {
+                        if (this.selectionMode) {
+                            // In selection mode, toggle message selection
+                            this.toggleMessageSelection(messageId);
+                        } else if (e.target.classList.contains('message-image')) {
+                            // If clicked on image, show fullscreen
+                            const imgSrc = e.target.src;
+                            this.showFullScreenImage(imgSrc);
+                        } else {
+                            // Regular tap - show message options
+                            this.showSelectionModeBar();
+                            this.toggleMessageSelection(messageId);
+                        }
+                    });
+                    
+                    // Handle long press
+                    let longPressTimer;
+                    
+                    bubble.addEventListener('touchstart', () => {
+                        longPressTimer = setTimeout(() => {
                             // Vibrate if supported
                             if (navigator.vibrate) {
                                 navigator.vibrate(50);
                             }
                             
                             // Enter selection mode if not already
-                            if (!this.selectionMode) {
-                                this.enterSelectionMode();
-                            }
-                            
-                            // Toggle message selection
+                            this.showSelectionModeBar();
                             this.toggleMessageSelection(messageId);
                         }, 500);
                     });
                     
                     bubble.addEventListener('touchend', () => {
-                        clearTimeout(this.longPressTimer);
-                        
-                        // If it was a short tap and we're in selection mode
-                        if (this.selectionMode && Date.now() - this.lastTouchStart < 500) {
-                            const messageId = bubble.dataset.id;
-                            this.toggleMessageSelection(messageId);
-                        }
+                        clearTimeout(longPressTimer);
                     });
                     
                     bubble.addEventListener('touchmove', () => {
-                        clearTimeout(this.longPressTimer);
-                    });
-                    
-                    // Context menu for desktop
-                    bubble.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                        
-                        const messageId = bubble.dataset.id;
-                        const message = this.messages.find(m => m.id === messageId);
-                        
-                        if (!message) return;
-                        
-                        // Create and show action menu
-                        this.showActionMenu(e.clientX, e.clientY, message);
-                    });
-                    
-                    // Regular click for message in selection mode
-                    bubble.addEventListener('click', (e) => {
-                        if (this.selectionMode) {
-                            e.stopPropagation();
-                            const messageId = bubble.dataset.id;
-                            this.toggleMessageSelection(messageId);
-                        } else if (e.target.classList.contains('message-image')) {
-                            // If clicked on image, show fullscreen
-                            const imgSrc = e.target.src;
-                            this.showFullScreenImage(imgSrc);
-                        }
+                        clearTimeout(longPressTimer);
                     });
                 });
                 
-                // Handle click on chat container to exit selection mode
-                const chatContainer = document.querySelector('.chat-container');
-                if (chatContainer) {
-                    chatContainer.addEventListener('click', (e) => {
-                        if (this.selectionMode && !e.target.closest('.message-bubble') && !e.target.closest('.selection-mode-bar')) {
-                            this.exitSelectionMode();
-                        }
+                // Handle conversation item press
+                const conversationItems = document.querySelectorAll('.conversation-item');
+                
+                conversationItems.forEach(item => {
+                    const conversationId = item.dataset.id;
+                    
+                    let longPressTimer;
+                    
+                    item.addEventListener('touchstart', () => {
+                        longPressTimer = setTimeout(() => {
+                            // Vibrate if supported
+                            if (navigator.vibrate) {
+                                navigator.vibrate(50);
+                            }
+                            
+                            // Enter conversation selection mode
+                            this.enterConversationSelectionMode();
+                            this.toggleConversationSelection(conversationId);
+                            
+                            // Prevent default click event
+                            item.addEventListener('click', this.preventClick, { once: true });
+                        }, 500);
                     });
-                }
+                    
+                    item.addEventListener('touchend', () => {
+                        clearTimeout(longPressTimer);
+                    });
+                    
+                    item.addEventListener('touchmove', () => {
+                        clearTimeout(longPressTimer);
+                    });
+                });
+            },
+            
+            // Prevent default click event
+            preventClick(e) {
+                e.stopPropagation();
+                e.preventDefault();
             },
             
             // Show full screen image
@@ -3398,8 +3476,9 @@
                 overlay.innerHTML = `
                     <img src="${src}" class="full-screen-image" alt="Image">
                     <button class="full-screen-close">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
                     </button>
                 `;
@@ -3451,7 +3530,7 @@
                     label: 'Sélectionner',
                     icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                     action: () => {
-                        this.enterSelectionMode();
+                        this.showSelectionModeBar();
                         this.toggleMessageSelection(message.id);
                     }
                 });
@@ -3501,10 +3580,9 @@
                 }
             },
             
-            // Enter selection mode
-            enterSelectionMode() {
+            // Show selection mode bar
+            showSelectionModeBar() {
                 this.selectionMode = true;
-                this.selectedMessages = new Set();
                 this.render();
             },
             
@@ -3512,6 +3590,19 @@
             exitSelectionMode() {
                 this.selectionMode = false;
                 this.selectedMessages.clear();
+                this.render();
+            },
+            
+            // Enter conversation selection mode
+            enterConversationSelectionMode() {
+                this.isConversationSelectionMode = true;
+                this.render();
+            },
+            
+            // Exit conversation selection mode
+            exitConversationSelectionMode() {
+                this.isConversationSelectionMode = false;
+                this.selectedConversations.clear();
                 this.render();
             },
             
@@ -3526,6 +3617,22 @@
                 // Exit selection mode if no messages selected
                 if (this.selectedMessages.size === 0) {
                     this.exitSelectionMode();
+                } else {
+                    this.render();
+                }
+            },
+            
+            // Toggle conversation selection
+            toggleConversationSelection(conversationId) {
+                if (this.selectedConversations.has(conversationId)) {
+                    this.selectedConversations.delete(conversationId);
+                } else {
+                    this.selectedConversations.add(conversationId);
+                }
+                
+                // Exit selection mode if no conversations selected
+                if (this.selectedConversations.size === 0) {
+                    this.exitConversationSelectionMode();
                 } else {
                     this.render();
                 }
@@ -3750,7 +3857,7 @@
                         </div>
                         
                         <div style="text-align: right; margin-bottom: 16px;">
-                            <a href="#" style="color: #5D5CDE; font-size: 14px;">Mot de passe oublié ?</a>
+                            <a href="#" style="color: var(--accent-color); font-size: 14px;">Mot de passe oublié ?</a>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Se connecter</button>
@@ -3800,40 +3907,69 @@
                         ${this.currentTab === 'users' ? this.renderUsersTab() : ''}
                         ${this.currentTab === 'profile' ? this.renderProfileTab() : ''}
                         
+                        ${this.isConversationSelectionMode ? this.renderBatchActionsBar() : ''}
+                        
                         ${this.currentTab === 'conversations' ? `
                             <div class="compose-button" onclick="app.switchTab('users')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 5V19M5 12H19" />
                                 </svg>
                             </div>
                         ` : ''}
                         
                         <div class="tab-bar">
                             <div class="tab-button ${this.currentTab === 'conversations' ? 'active' : ''}" onclick="app.switchTab('conversations')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="tab-button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
                                 </svg>
-                                <span>Discussions</span>
+                                <span class="tab-button-label">Discussions</span>
                             </div>
                             
                             <div class="tab-button ${this.currentTab === 'users' ? 'active' : ''}" onclick="app.switchTab('users')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="tab-button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="9" cy="7" r="4"></circle>
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                <span>Utilisateurs</span>
+                                <span class="tab-button-label">Utilisateurs</span>
                             </div>
                             
                             <div class="tab-button ${this.currentTab === 'profile' ? 'active' : ''}" onclick="app.switchTab('profile')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="tab-button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>Profil</span>
+                                <span class="tab-button-label">Profil</span>
                             </div>
                         </div>
+                    </div>
+                `;
+            },
+            
+            // Render batch actions bar
+            renderBatchActionsBar() {
+                return `
+                    <div class="batch-actions-bar">
+                        <div class="batch-actions-title">
+                            ${this.selectedConversations.size} sélectionné${this.selectedConversations.size > 1 ? 's' : ''}
+                        </div>
+                        
+                        <button class="batch-action-button" onclick="app.deleteSelectedConversations()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                        </button>
+                        
+                        <button class="batch-action-button" onclick="app.exitConversationSelectionMode()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                     </div>
                 `;
             },
@@ -3842,30 +3978,65 @@
             renderConversationsTab() {
                 return `
                     <div class="header">
-                        <h1>Discussions</h1>
-                        <button>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <h1 class="header-title">Discussions</h1>
+                    </div>
+                    
+                    <div class="search-container">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                        </button>
+                            <input 
+                                type="text" 
+                                class="form-input search-input" 
+                                placeholder="Rechercher..." 
+                                value="${this.searchQuery}"
+                                oninput="app.handleSearch(this.value)"
+                            >
+                            ${this.searchQuery ? `
+                                <button class="search-clear" onclick="app.clearSearch()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                     
                     <div class="main">
-                        ${this.conversations.length === 0 ? this.renderEmptyConversations() : this.renderConversationsList()}
+                        ${this.filteredConversations.length === 0 ? this.renderEmptyConversations() : this.renderConversationsList()}
                     </div>
                 `;
             },
             
             // Render empty conversations state
             renderEmptyConversations() {
+                if (this.searchQuery) {
+                    return `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                            <h3 class="empty-state-title">Aucun résultat</h3>
+                            <p class="empty-state-text">Aucune conversation ne correspond à votre recherche</p>
+                        </div>
+                    `;
+                }
+                
                 return `
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 20px; color: #ccc;">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                        </svg>
-                        <h3 style="margin-bottom: 10px; font-size: 18px;">Aucune conversation</h3>
-                        <p style="color: #777;">Commencez à discuter en visitant l'onglet Utilisateurs</p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                        </div>
+                        <h3 class="empty-state-title">Aucune conversation</h3>
+                        <p class="empty-state-text">Commencez à discuter en visitant l'onglet Utilisateurs</p>
                     </div>
                 `;
             },
@@ -3874,16 +4045,17 @@
             renderConversationsList() {
                 return `
                     <div class="conversation-list">
-                        ${this.conversations.map(conversation => this.renderConversationItem(conversation)).join('')}
+                        ${this.filteredConversations.map(conversation => this.renderConversationItem(conversation)).join('')}
                     </div>
                 `;
             },
             
             // Render conversation item
             renderConversationItem(conversation) {
-                const { otherUser, lastMessage, lastMessageType, lastMessageTimestamp, lastMessageSenderId, isBlocked } = conversation;
+                const { id, otherUser, lastMessage, lastMessageType, lastMessageTimestamp, lastMessageSenderId, unreadCount, isBlocked } = conversation;
                 const isLastMessageMine = lastMessageSenderId === this.currentUser?.uid;
                 const timeString = this.formatTime(lastMessageTimestamp);
+                const isSelected = this.selectedConversations.has(id);
                 
                 // Limit message length
                 const truncateMessage = (message, type) => {
@@ -3893,93 +4065,113 @@
                 };
                 
                 return `
-                    <div class="conversation-item">
-                        <div class="conversation-avatar" onclick="app.startChat(${JSON.stringify(otherUser).replace(/"/g, '&quot;')})">
+                    <div class="conversation-item ${isSelected ? 'selected' : ''}" 
+                         data-id="${id}" 
+                         ${this.isConversationSelectionMode 
+                            ? 'onclick="app.toggleConversationSelection(\'' + id + '\')"' 
+                            : 'onclick="app.startChat(' + JSON.stringify(otherUser).replace(/"/g, '&quot;') + ')"'
+                         }>
+                        
+                        ${this.isConversationSelectionMode ? `
+                            <div class="conversation-checkbox">
+                                ${isSelected ? `
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="conversation-avatar">
                             ${otherUser.avatar 
                                 ? `<img src="${otherUser.avatar}" alt="${otherUser.username}">`
                                 : this.getInitials(otherUser.username)
                             }
                             <div class="conversation-status ${otherUser.online ? 'online' : ''}"></div>
                         </div>
-                        <div class="conversation-content" onclick="app.startChat(${JSON.stringify(otherUser).replace(/"/g, '&quot;')})">
+                        <div class="conversation-content">
                             <div class="conversation-name">
                                 ${otherUser.username}
-                                ${isBlocked ? '<span style="color: #EF4444; font-size: 12px; margin-left: 4px;">Bloqué</span>' : ''}
+                                ${isBlocked ? '<span class="conversation-blocked">Bloqué</span>' : ''}
                             </div>
                             <div class="conversation-message">
                                 ${isLastMessageMine ? 'Vous: ' : ''}${truncateMessage(lastMessage, lastMessageType)}
                             </div>
                         </div>
-                        <div class="conversation-time" onclick="app.startChat(${JSON.stringify(otherUser).replace(/"/g, '&quot;')})">${timeString}</div>
-                        
-                        <div class="conversation-actions">
-                            <button class="conversation-action-btn" onclick="event.stopPropagation(); app.confirmDeleteConversation('${conversation.id}')" title="Supprimer la conversation">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg>
-                            </button>
+                        <div class="conversation-meta">
+                            <div class="conversation-time">${timeString}</div>
+                            ${unreadCount > 0 ? `<div class="conversation-badge">${unreadCount}</div>` : ''}
                         </div>
                     </div>
                 `;
-            },
-            
-            // Confirm delete conversation
-            confirmDeleteConversation(conversationId) {
-                this.showModal({
-                    title: 'Supprimer la conversation',
-                    content: 'Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action ne peut pas être annulée.',
-                    actions: [
-                        {
-                            label: 'Annuler',
-                            action: () => this.closeModal(),
-                            className: 'modal-button-cancel'
-                        },
-                        {
-                            label: 'Supprimer',
-                            action: () => {
-                                this.deleteConversation(conversationId);
-                                this.closeModal();
-                            },
-                            className: 'modal-button-danger'
-                        }
-                    ]
-                });
             },
             
             // Render users tab
             renderUsersTab() {
                 return `
                     <div class="header">
-                        <h1>Utilisateurs</h1>
-                        <button>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <h1 class="header-title">Utilisateurs</h1>
+                    </div>
+                    
+                    <div class="search-container">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                        </button>
+                            <input 
+                                type="text" 
+                                class="form-input search-input" 
+                                placeholder="Rechercher par nom ou téléphone..." 
+                                value="${this.searchQuery}"
+                                oninput="app.handleSearch(this.value)"
+                            >
+                            ${this.searchQuery ? `
+                                <button class="search-clear" onclick="app.clearSearch()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                     
                     <div class="main">
-                        ${this.users.length === 0 ? this.renderEmptyUsers() : this.renderUsersList()}
+                        ${this.filteredUsers.length === 0 ? this.renderEmptyUsers() : this.renderUsersList()}
                     </div>
                 `;
             },
             
             // Render empty users state
             renderEmptyUsers() {
+                if (this.searchQuery) {
+                    return `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                            <h3 class="empty-state-title">Aucun résultat</h3>
+                            <p class="empty-state-text">Aucun utilisateur ne correspond à votre recherche</p>
+                        </div>
+                    `;
+                }
+                
                 return `
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 20px; color: #ccc;">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        <h3 style="margin-bottom: 10px; font-size: 18px;">Aucun utilisateur</h3>
-                        <p style="color: #777;">Aucun utilisateur n'est disponible actuellement</p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h3 class="empty-state-title">Aucun utilisateur</h3>
+                        <p class="empty-state-text">Aucun utilisateur n'est disponible actuellement</p>
                     </div>
                 `;
             },
@@ -3988,7 +4180,7 @@
             renderUsersList() {
                 return `
                     <div class="user-list">
-                        ${this.users.map(user => this.renderUserItem(user)).join('')}
+                        ${this.filteredUsers.map(user => this.renderUserItem(user)).join('')}
                     </div>
                 `;
             },
@@ -3996,50 +4188,27 @@
             // Render user item
             renderUserItem(user) {
                 return `
-                    <div class="user-item">
-                        <div class="user-header">
-                            <div class="user-avatar">
-                                ${user.avatar 
-                                    ? `<img src="${user.avatar}" alt="${user.username}">`
-                                    : this.getInitials(user.username)
+                    <div class="user-item" onclick="app.startChat(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+                        <div class="user-avatar">
+                            ${user.avatar 
+                                ? `<img src="${user.avatar}" alt="${user.username}">`
+                                : this.getInitials(user.username)
+                            }
+                            <div class="conversation-status ${user.online ? 'online' : ''}"></div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">
+                                ${user.username}
+                                ${user.isBlocked ? '<span class="user-blocked">Bloqué</span>' : ''}
+                            </div>
+                            <div class="user-status">
+                                <div class="status-dot ${user.online ? 'online' : ''}"></div>
+                                ${user.online 
+                                    ? 'En ligne' 
+                                    : (user.lastSeen ? `Vu ${this.formatLastSeen(user.lastSeen)}` : 'Hors ligne')
                                 }
                             </div>
-                            <div class="user-info">
-                                <div class="user-name">
-                                    ${user.username}
-                                    ${user.isBlocked ? '<span style="color: #EF4444; font-size: 12px; margin-left: 4px;">Bloqué</span>' : ''}
-                                </div>
-                                <div class="user-status">
-                                    <div class="status-dot ${user.online ? 'online' : ''}"></div>
-                                    ${user.online 
-                                        ? 'En ligne' 
-                                        : (user.lastSeen ? `Vu ${this.formatLastSeen(user.lastSeen)}` : 'Hors ligne')
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        
-                        ${user.bio ? `<div class="user-bio">${user.bio}</div>` : ''}
-                        
-                        <div class="user-actions">
-                            ${user.isBlocked
-                                ? `<button class="user-action-button" onclick="app.toggleBlockUser('${user.uid}', false)">Débloquer</button>`
-                                : `
-                                <button class="user-action-button block-button" onclick="app.toggleBlockUser('${user.uid}', true)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
-                                    </svg>
-                                    Bloquer
-                                </button>
-                                <button class="user-action-button chat-button" onclick="app.startChat(${JSON.stringify(user).replace(/"/g, '&quot;')})">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                                    </svg>
-                                    Discuter
-                                </button>
-                                `
-                            }
+                            ${user.bio ? `<div class="user-bio">${user.bio}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -4056,187 +4225,193 @@
                 }
                 
                 return `
-                    <div class="profile-container">
-                        <div class="profile-header">
-                            <h1 style="font-size: 24px; margin-bottom: 8px;">Mon Profil</h1>
-                            <p>Gérez vos informations et préférences</p>
-                            
-                            <div class="profile-avatar-container" onclick="document.getElementById('avatar-upload').click()">
-                                <input type="file" id="avatar-upload" class="input-file" accept="image/*" onchange="app.handleAvatarSelect(event)">
-                                <div class="profile-avatar">
-                                    ${this.currentUser.avatar 
-                                        ? `<img src="${this.currentUser.avatar}" alt="${this.currentUser.username}">`
-                                        : this.getInitials(this.currentUser.username)
-                                    }
-                                    <div class="profile-avatar-edit">Modifier</div>
+                    <div class="header">
+                        <h1 class="header-title">Profil</h1>
+                    </div>
+                    
+                    <div class="main">
+                        <div class="profile-container">
+                            <div class="profile-header">
+                                <h1 style="font-size: 24px; margin-bottom: 8px;">Mon Profil</h1>
+                                <p>Gérez vos informations et préférences</p>
+                                
+                                <div class="profile-avatar-container" onclick="document.getElementById('avatar-upload').click()">
+                                    <input type="file" id="avatar-upload" class="input-file" accept="image/*" onchange="app.handleAvatarSelect(event)">
+                                    <div class="profile-avatar">
+                                        ${this.currentUser.avatar 
+                                            ? `<img src="${this.currentUser.avatar}" alt="${this.currentUser.username}">`
+                                            : this.getInitials(this.currentUser.username)
+                                        }
+                                        <div class="profile-avatar-edit">Modifier</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div style="text-align: center; margin-bottom: 24px;">
-                            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">${this.currentUser.username}</h2>
-                            <p style="color: #777;">${this.currentUser.email}</p>
-                        </div>
-                        
-                        <div class="profile-card">
-                            <div class="profile-card-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                                Informations personnelles
+                            
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">${this.currentUser.username}</h2>
+                                <p style="color: var(--secondary-text);">${this.currentUser.email}</p>
                             </div>
                             
-                            <div class="profile-field">
-                                <div class="profile-field-label">Nom</div>
-                                ${this.isEditing && this.editingField === 'username' ? `
+                            <div class="profile-card">
+                                <div class="profile-card-title">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    Informations personnelles
+                                </div>
+                                
+                                <div class="profile-field">
+                                    <div class="profile-field-label">Nom</div>
+                                    ${this.isEditing && this.editingField === 'username' ? `
+                                        <div class="profile-field-value">
+                                            <input type="text" id="edit-username" class="form-input" value="${this.currentUser.username}">
+                                            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="profile-field-value editable-field" onclick="app.startEditingField('username')">
+                                            ${this.currentUser.username}
+                                        </div>
+                                    `}
+                                </div>
+                                
+                                <div class="profile-field">
+                                    <div class="profile-field-label">Email</div>
+                                    <div class="profile-field-value">${this.currentUser.email}</div>
+                                </div>
+                                
+                                <div class="profile-field">
+                                    <div class="profile-field-label">Téléphone</div>
+                                    ${this.isEditing && this.editingField === 'phone' ? `
+                                        <div class="profile-field-value">
+                                            <input type="tel" id="edit-phone" class="form-input" value="${this.currentUser.phone || ''}">
+                                            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="profile-field-value editable-field" onclick="app.startEditingField('phone')">
+                                            ${this.currentUser.phone || 'Non renseigné'}
+                                        </div>
+                                    `}
+                                </div>
+                                
+                                <div class="profile-field">
+                                    <div class="profile-field-label">Bio</div>
+                                    ${this.isEditing && this.editingField === 'bio' ? `
+                                        <div class="profile-field-value">
+                                            <textarea id="edit-bio" class="form-input" style="min-height: 80px;">${this.currentUser.bio || ''}</textarea>
+                                            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="profile-field-value editable-field" onclick="app.startEditingField('bio')">
+                                            ${this.currentUser.bio || 'Aucune bio'}
+                                        </div>
+                                    `}
+                                </div>
+                            </div>
+                            
+                            <div class="profile-card">
+                                <div class="profile-card-title">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
+                                    </svg>
+                                    Apparence
+                                </div>
+                                
+                                <div class="theme-toggle">
+                                    <div>
+                                        <div style="font-weight: 500;">Mode sombre</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Thème sombre pour l'application</div>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" ${this.isDarkMode ? 'checked' : ''} onchange="app.toggleDarkMode(this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="profile-field">
+                                    <div class="profile-field-label">Couleur</div>
                                     <div class="profile-field-value">
-                                        <input type="text" id="edit-username" class="form-input" value="${this.currentUser.username}">
-                                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                            <button class="user-action-button chat-button" onclick="app.saveEditingField()">Enregistrer</button>
-                                            <button class="user-action-button" onclick="app.cancelEditingField()">Annuler</button>
+                                        <div class="color-options">
+                                            <div class="color-option ${this.accentColor === '#5D5CDE' ? 'active' : ''}" 
+                                                 style="background-color: #5D5CDE;" 
+                                                 onclick="app.changeAccentColor('#5D5CDE')"></div>
+                                            <div class="color-option ${this.accentColor === '#3B82F6' ? 'active' : ''}" 
+                                                 style="background-color: #3B82F6;" 
+                                                 onclick="app.changeAccentColor('#3B82F6')"></div>
+                                            <div class="color-option ${this.accentColor === '#10B981' ? 'active' : ''}" 
+                                                 style="background-color: #10B981;" 
+                                                 onclick="app.changeAccentColor('#10B981')"></div>
+                                            <div class="color-option ${this.accentColor === '#F59E0B' ? 'active' : ''}" 
+                                                 style="background-color: #F59E0B;" 
+                                                 onclick="app.changeAccentColor('#F59E0B')"></div>
+                                            <div class="color-option ${this.accentColor === '#EF4444' ? 'active' : ''}" 
+                                                 style="background-color: #EF4444;" 
+                                                 onclick="app.changeAccentColor('#EF4444')"></div>
                                         </div>
                                     </div>
-                                ` : `
-                                    <div class="profile-field-value editable-field" onclick="app.startEditingField('username')">
-                                        ${this.currentUser.username}
-                                    </div>
-                                `}
-                            </div>
-                            
-                            <div class="profile-field">
-                                <div class="profile-field-label">Email</div>
-                                <div class="profile-field-value">${this.currentUser.email}</div>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <div class="profile-field-label">Téléphone</div>
-                                ${this.isEditing && this.editingField === 'phone' ? `
-                                    <div class="profile-field-value">
-                                        <input type="tel" id="edit-phone" class="form-input" value="${this.currentUser.phone || ''}">
-                                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                            <button class="user-action-button chat-button" onclick="app.saveEditingField()">Enregistrer</button>
-                                            <button class="user-action-button" onclick="app.cancelEditingField()">Annuler</button>
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="profile-field-value editable-field" onclick="app.startEditingField('phone')">
-                                        ${this.currentUser.phone || 'Non renseigné'}
-                                    </div>
-                                `}
-                            </div>
-                            
-                            <div class="profile-field">
-                                <div class="profile-field-label">Bio</div>
-                                ${this.isEditing && this.editingField === 'bio' ? `
-                                    <div class="profile-field-value">
-                                        <textarea id="edit-bio" class="form-input" style="min-height: 80px;">${this.currentUser.bio || ''}</textarea>
-                                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                            <button class="user-action-button chat-button" onclick="app.saveEditingField()">Enregistrer</button>
-                                            <button class="user-action-button" onclick="app.cancelEditingField()">Annuler</button>
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="profile-field-value editable-field" onclick="app.startEditingField('bio')">
-                                        ${this.currentUser.bio || 'Aucune bio'}
-                                    </div>
-                                `}
-                            </div>
-                        </div>
-                        
-                        <div class="profile-card">
-                            <div class="profile-card-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
-                                </svg>
-                                Apparence
-                            </div>
-                            
-                            <div class="theme-toggle">
-                                <div>
-                                    <div style="font-weight: 500;">Mode sombre</div>
-                                    <div style="font-size: 14px; color: #777;">Thème sombre pour l'application</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" ${this.isDarkMode ? 'checked' : ''} onchange="app.toggleDarkMode(this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <div class="profile-field-label">Couleur</div>
-                                <div class="profile-field-value">
-                                    <div class="color-options">
-                                        <div class="color-option ${this.accentColor === '#5D5CDE' ? 'active' : ''}" 
-                                             style="background-color: #5D5CDE;" 
-                                             onclick="app.changeAccentColor('#5D5CDE')"></div>
-                                        <div class="color-option ${this.accentColor === '#3B82F6' ? 'active' : ''}" 
-                                             style="background-color: #3B82F6;" 
-                                             onclick="app.changeAccentColor('#3B82F6')"></div>
-                                        <div class="color-option ${this.accentColor === '#10B981' ? 'active' : ''}" 
-                                             style="background-color: #10B981;" 
-                                             onclick="app.changeAccentColor('#10B981')"></div>
-                                        <div class="color-option ${this.accentColor === '#F59E0B' ? 'active' : ''}" 
-                                             style="background-color: #F59E0B;" 
-                                             onclick="app.changeAccentColor('#F59E0B')"></div>
-                                        <div class="color-option ${this.accentColor === '#EF4444' ? 'active' : ''}" 
-                                             style="background-color: #EF4444;" 
-                                             onclick="app.changeAccentColor('#EF4444')"></div>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="profile-card">
-                            <div class="profile-card-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                </svg>
-                                Confidentialité et sécurité
-                            </div>
                             
-                            <div class="theme-toggle">
-                                <div>
-                                    <div style="font-weight: 500;">Confirmation de lecture</div>
-                                    <div style="font-size: 14px; color: #777;">Montrer quand vous avez lu les messages</div>
+                            <div class="profile-card">
+                                <div class="profile-card-title">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    </svg>
+                                    Confidentialité et sécurité
                                 </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="theme-toggle">
-                                <div>
-                                    <div style="font-weight: 500;">Statut en ligne</div>
-                                    <div style="font-size: 14px; color: #777;">Montrer quand vous êtes en ligne</div>
+                                
+                                <div class="theme-toggle">
+                                    <div>
+                                        <div style="font-weight: 500;">Confirmation de lecture</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Montrer quand vous avez lu les messages</div>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
                                 </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
+                                
+                                <div class="theme-toggle">
+                                    <div>
+                                        <div style="font-weight: 500;">Statut en ligne</div>
+                                        <div style="font-size: 14px; color: var(--secondary-text);">Montrer quand vous êtes en ligne</div>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="profile-actions">
-                            <button class="logout-button" onclick="app.handleLogout()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                    <polyline points="16 17 21 12 16 7"></polyline>
-                                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                                </svg>
-                                Se déconnecter
-                            </button>
                             
-                            <button class="delete-button">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg>
-                                Supprimer mon compte
-                            </button>
+                            <div class="profile-actions">
+                                <button class="action-button logout-button" onclick="app.handleLogout()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Se déconnecter
+                                </button>
+                                
+                                <button class="action-button delete-button">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                    Supprimer mon compte
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -4249,12 +4424,12 @@
                         <div class="container">
                             <div class="header">
                                 <button class="back-button" onclick="app.currentScreen = 'main'; app.render();">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <line x1="19" y1="12" x2="5" y2="12"></line>
                                         <polyline points="12 19 5 12 12 5"></polyline>
                                     </svg>
                                 </button>
-                                <h1>Chat</h1>
+                                <h1 class="header-title">Chat</h1>
                             </div>
                             <div class="main" style="display: flex; align-items: center; justify-content: center;">
                                 <p>Aucune conversation sélectionnée</p>
@@ -4265,11 +4440,9 @@
                 
                 return `
                     <div class="chat-container">
-                        ${this.selectionMode ? this.renderSelectionModeBar() : ''}
-                        
-                        <div class="chat-header">
+                        <div class="header">
                             <button class="back-button" onclick="app.currentScreen = 'main'; app.render();">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="19" y1="12" x2="5" y2="12"></line>
                                     <polyline points="12 19 5 12 12 5"></polyline>
                                 </svg>
@@ -4284,7 +4457,7 @@
                                 </span>
                             </div>
                             <button class="chat-menu-button" onclick="app.showChatMenu()">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="1"></circle>
                                     <circle cx="12" cy="5" r="1"></circle>
                                     <circle cx="12" cy="19" r="1"></circle>
@@ -4292,43 +4465,47 @@
                             </button>
                         </div>
                         
+                        ${this.selectionMode ? this.renderSelectionModeBar() : ''}
+                        
                         <div id="chat-messages" class="chat-messages">
                             ${this.renderChatMessages()}
                         </div>
                         
-                        <div class="chat-input">
+                        <div class="chat-input-container">
+                            ${this.imagePreview ? `
+                            <div id="image-preview-container" class="image-preview-container">
+                                <img src="${this.imagePreview}" class="image-preview" alt="Preview">
+                                <button class="image-preview-close" onclick="app.cancelImageUpload()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            ` : ''}
+                            
                             <input type="file" id="image-upload" class="input-file" accept="image/*" onchange="app.handleImageSelect(event)">
                             
-                            <button class="media-button" onclick="app.selectImage()">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                            </button>
-                            
-                            <div class="message-input-container">
-                                <input type="text" id="message-input" class="message-input" placeholder="Écrire un message..." onkeypress="if(event.key === 'Enter') app.sendMessage()">
+                            <div class="chat-input">
+                                <button class="media-button" onclick="app.selectImage()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                </button>
                                 
-                                ${this.imagePreview ? `
-                                <div id="image-preview-container" class="image-preview-container">
-                                    <img src="${this.imagePreview}" class="image-preview" alt="Preview">
-                                    <button class="image-preview-close" onclick="app.cancelImageUpload()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                        </svg>
-                                    </button>
+                                <div class="message-input-container">
+                                    <input type="text" id="message-input" class="message-input" placeholder="Écrire un message..." onkeypress="if(event.key === 'Enter') app.sendMessage()">
                                 </div>
-                                ` : ''}
+                                
+                                <button class="send-button" onclick="app.sendMessage()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
                             </div>
-                            
-                            <button class="send-button" onclick="app.sendMessage()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 `;
@@ -4343,7 +4520,7 @@
                         </div>
                         
                         <button class="selection-mode-bar-action" onclick="app.deleteSelectedMessages()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                 <line x1="10" y1="11" x2="10" y2="17"></line>
@@ -4352,7 +4529,7 @@
                         </button>
                         
                         <button class="selection-mode-bar-action" onclick="app.exitSelectionMode()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                             </svg>
@@ -4365,8 +4542,14 @@
             renderChatMessages() {
                 if (this.messages.length === 0) {
                     return `
-                        <div style="text-align: center; padding: 40px 20px;">
-                            <p style="color: #777;">Aucun message. Démarrez la conversation !</p>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="empty-state-title">Aucun message</h3>
+                            <p class="empty-state-text">Démarrez la conversation !</p>
                         </div>
                     `;
                 }
@@ -4506,10 +4689,10 @@
                 
                 appElement.innerHTML = content;
                 
-                // Setup long press detection for messages
+                // Setup message interaction after render
                 if (this.currentScreen === 'chat') {
                     setTimeout(() => {
-                        this.setupMessageLongPress();
+                        this.setupMessageInteraction();
                         
                         // Focus message input in chat screen
                         const messageInput = document.getElementById('message-input');
@@ -4521,6 +4704,9 @@
                         this.scrollToBottom();
                     }, 0);
                 }
+                
+                // Apply accent color
+                this.applyAccentColor();
             }
         };
         
