@@ -19,6 +19,8 @@
         
         :root {
             --accent-color: #5D5CDE;
+            --accent-color-dark: #4C4BAE;
+            --accent-color-light: #7A79E8;
             --text-color: #333;
             --bg-color: #ffffff;
             --card-bg: #ffffff;
@@ -28,9 +30,13 @@
             --header-height: 60px;
             --footer-height: 56px;
             --success-color: #4CAF50;
+            --success-color-dark: #388E3C;
             --error-color: #EF4444;
+            --error-color-dark: #DC2626;
             --warning-color: #F59E0B;
+            --warning-color-dark: #D97706;
             --info-color: #3B82F6;
+            --info-color-dark: #2563EB;
         }
         
         .dark {
@@ -68,7 +74,7 @@
         
         .header {
             padding: 12px 16px;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             display: flex;
             align-items: center;
@@ -202,8 +208,9 @@
             left: 50%;
             width: 20%;
             height: 3px;
-            background-color: var(--accent-color);
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
             transform: translateX(-50%);
+            border-radius: 3px 3px 0 0;
         }
         
         .tab-button-icon {
@@ -250,6 +257,9 @@
             font-size: 32px;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .auth-form {
@@ -296,7 +306,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background-color: var(--accent-color);
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
             animation: growWidth 0.3s ease-out;
         }
         
@@ -379,13 +389,13 @@
         }
         
         .btn-primary {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             width: 100%;
         }
         
         .btn-primary:hover {
-            background-color: #4C4BAE;
+            background: linear-gradient(135deg, var(--accent-color-light), var(--accent-color));
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(93, 92, 222, 0.3);
         }
@@ -406,9 +416,12 @@
             align-items: center;
             padding: 16px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             position: relative;
             border-bottom: 1px solid var(--border-color);
+            transform: translateX(0);
+            left: 0;
+            touch-action: pan-x;
         }
         
         .conversation-item:active {
@@ -444,7 +457,7 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
             color: white;
             display: flex;
             align-items: center;
@@ -525,7 +538,7 @@
         }
         
         .conversation-badge {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
             color: white;
             font-size: 12px;
             width: 20px;
@@ -535,6 +548,32 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+        }
+        
+        /* Swipe Actions */
+        .conversation-actions {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            background-color: var(--error-color);
+            transform: translateX(100%);
+            transition: all 0.3s;
+        }
+        
+        .conversation-action-delete {
+            color: white;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
         }
         
         /* Chat screen */
@@ -553,7 +592,7 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 10;
@@ -733,7 +772,7 @@
         }
         
         .message-sent {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             border-bottom-right-radius: 4px;
         }
@@ -742,6 +781,7 @@
             background-color: var(--card-bg);
             color: var(--text-color);
             border-bottom-left-radius: 4px;
+            border: 1px solid var(--border-color);
         }
         
         .message-time {
@@ -784,6 +824,56 @@
         
         .message-image:hover {
             opacity: 0.9;
+        }
+        
+        /* Quick message actions */
+        .message-actions {
+            position: fixed;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(var(--footer-height) + 8px);
+            z-index: 1000;
+            padding: 6px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .dark .message-actions {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .message-actions.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .message-action-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .message-action-button:active {
+            background-color: var(--secondary-bg);
+        }
+        
+        .message-action-button.delete {
+            color: var(--error-color);
+        }
+        
+        .message-action-button svg {
+            margin-right: 8px;
         }
         
         .chat-input-container {
@@ -851,13 +941,12 @@
             outline: none;
         }
         
-        .send-button {
+        .send-button, .voice-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             background: none;
             border: none;
-            color: var(--accent-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -865,8 +954,88 @@
             transition: all 0.3s;
         }
         
-        .send-button:active {
-            transform: scale(0.95);
+        .send-button {
+            color: var(--accent-color);
+        }
+        
+        .voice-button {
+            color: var(--accent-color);
+        }
+        
+        .voice-button.recording {
+            background-color: var(--error-color);
+            color: white;
+            transform: scale(1.1);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        /* Voice recording indicator */
+        .voice-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--accent-color);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            transform: translateY(-100%);
+            display: none;
+        }
+        
+        .voice-waves {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 4px;
+            height: 20px;
+        }
+        
+        .voice-wave {
+            width: 3px;
+            height: 10px;
+            background-color: white;
+            margin: 0 2px;
+            border-radius: 3px;
+            animation: wave 0.5s infinite alternate;
+        }
+        
+        .voice-wave:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .voice-wave:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        .voice-wave:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+        
+        .voice-wave:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes wave {
+            0% {
+                height: 5px;
+            }
+            100% {
+                height: 20px;
+            }
         }
         
         /* User list */
@@ -892,7 +1061,7 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
             color: white;
             display: flex;
             align-items: center;
@@ -975,7 +1144,7 @@
         }
         
         .profile-header {
-            background: linear-gradient(135deg, var(--accent-color), #4C4BAE);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             padding: 30px 20px;
             border-radius: 0 0 16px 16px;
@@ -996,7 +1165,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
             color: white;
             display: flex;
             align-items: center;
@@ -1154,7 +1323,7 @@
         }
         
         input:checked + .toggle-slider {
-            background-color: var(--accent-color);
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
         }
         
         input:checked + .toggle-slider:before {
@@ -1195,13 +1364,13 @@
         }
         
         .delete-button {
-            background-color: var(--error-color);
+            background: linear-gradient(135deg, var(--error-color), var(--error-color-dark));
             color: white;
             border: none;
         }
         
         .delete-button:active {
-            background-color: #DC2626;
+            background: linear-gradient(135deg, var(--error-color-dark), var(--error-color));
         }
         
         .loading {
@@ -1244,19 +1413,19 @@
         }
         
         .banner-notification.success {
-            background-color: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), var(--success-color-dark));
         }
         
         .banner-notification.error {
-            background-color: var(--error-color);
+            background: linear-gradient(135deg, var(--error-color), var(--error-color-dark));
         }
         
         .banner-notification.warning {
-            background-color: var(--warning-color);
+            background: linear-gradient(135deg, var(--warning-color), var(--warning-color-dark));
         }
         
         .banner-notification.info {
-            background-color: var(--info-color);
+            background: linear-gradient(135deg, var(--info-color), var(--info-color-dark));
         }
         
         @keyframes slide-down-banner {
@@ -1333,19 +1502,19 @@
         }
         
         .toast.success {
-            background-color: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), var(--success-color-dark));
         }
         
         .toast.error {
-            background-color: var(--error-color);
+            background: linear-gradient(135deg, var(--error-color), var(--error-color-dark));
         }
         
         .toast.warning {
-            background-color: var(--warning-color);
+            background: linear-gradient(135deg, var(--warning-color), var(--warning-color-dark));
         }
         
         .toast.info {
-            background-color: var(--info-color);
+            background: linear-gradient(135deg, var(--info-color), var(--info-color-dark));
         }
         
         .image-preview-container {
@@ -1397,7 +1566,7 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             z-index: 100;
             animation: slide-down 0.3s ease-out;
@@ -1555,23 +1724,23 @@
         }
         
         .modal-button-confirm {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             border: none;
         }
         
         .modal-button-confirm:active {
-            background-color: #4C4BAE;
+            background: linear-gradient(135deg, var(--accent-color-dark), var(--accent-color));
         }
         
         .modal-button-danger {
-            background-color: var(--error-color);
+            background: linear-gradient(135deg, var(--error-color), var(--error-color-dark));
             color: white;
             border: none;
         }
         
         .modal-button-danger:active {
-            background-color: #DC2626;
+            background: linear-gradient(135deg, var(--error-color-dark), var(--error-color));
         }
         
         .modal-option {
@@ -1604,7 +1773,7 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             display: flex;
             align-items: center;
@@ -1665,7 +1834,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
         }
         
@@ -1760,7 +1929,7 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
             color: white;
             z-index: 50;
             animation: slide-in-bottom 0.3s;
@@ -1848,7 +2017,7 @@
         // Main application logic
         const app = {
             currentUser: null,
-            currentScreen: 'auth', // auth, main, chat
+            currentScreen: 'loading', // loading, auth, main, chat
             currentTab: 'conversations', // conversations, users, profile
             conversations: [],
             filteredConversations: [],
@@ -1876,11 +2045,24 @@
             isEditing: false,
             editingField: null,
             searchQuery: '',
+            isRecording: false,
+            mediaRecorder: null,
+            audioChunks: [],
+            recordingStartTime: null,
+            swipeState: {
+                active: false,
+                startX: 0,
+                currentX: 0,
+                item: null
+            },
             
             // Initialize app
             init() {
+                // Show loading state first
+                this.renderLoadingScreen();
+                
+                // Then proceed with auth check
                 this.setupAuthListener();
-                this.render();
                 this.setupCopyProtection();
                 
                 // Setup document events
@@ -1927,6 +2109,22 @@
                     e.preventDefault();
                     return false;
                 });
+            },
+            
+            // Render loading screen
+            renderLoadingScreen() {
+                const appElement = document.getElementById('app');
+                if (!appElement) return;
+                
+                appElement.innerHTML = `
+                    <div class="loading" style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-color);">
+                        <div style="margin-bottom: 40px; text-align: center;">
+                            <h1 style="font-size: 32px; margin-bottom: 10px; background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BetXchange</h1>
+                            <p style="color: var(--secondary-text);">Chargement en cours...</p>
+                        </div>
+                        <div class="spinner"></div>
+                    </div>
+                `;
             },
             
             // Setup authentication listener
@@ -2009,6 +2207,26 @@
             // Apply accent color
             applyAccentColor() {
                 document.documentElement.style.setProperty('--accent-color', this.accentColor);
+                
+                // Generate dark and light variants
+                const darkColor = this.adjustColorBrightness(this.accentColor, -20);
+                const lightColor = this.adjustColorBrightness(this.accentColor, 20);
+                
+                document.documentElement.style.setProperty('--accent-color-dark', darkColor);
+                document.documentElement.style.setProperty('--accent-color-light', lightColor);
+            },
+            
+            // Adjust color brightness
+            adjustColorBrightness(hexColor, percent) {
+                let r = parseInt(hexColor.slice(1, 3), 16);
+                let g = parseInt(hexColor.slice(3, 5), 16);
+                let b = parseInt(hexColor.slice(5, 7), 16);
+                
+                r = Math.max(0, Math.min(255, r + percent));
+                g = Math.max(0, Math.min(255, g + percent));
+                b = Math.max(0, Math.min(255, b + percent));
+                
+                return `#${(r.toString(16).padStart(2, '0'))}${(g.toString(16).padStart(2, '0'))}${(b.toString(16).padStart(2, '0'))}`;
             },
             
             // Toggle dark mode
@@ -2070,6 +2288,7 @@
                 const password = document.getElementById('login-password').value;
                 
                 try {
+                    this.showBannerNotification("Connexion en cours...", "info");
                     await auth.signInWithEmailAndPassword(email, password);
                     // Auth state change listener will handle the rest
                 } catch (error) {
@@ -2095,6 +2314,8 @@
                 }
                 
                 try {
+                    this.showBannerNotification("Création du compte...", "info");
+                    
                     // Check if username exists
                     const usernameCheck = await db.collection('users')
                         .where('username', '==', username)
@@ -2138,23 +2359,87 @@
             
             // Handle logout
             async handleLogout() {
-                try {
-                    if (this.currentUser) {
-                        // Update online status
-                        await db.collection('users').doc(this.currentUser.uid).update({
-                            online: false,
-                            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    }
-                    
-                    // Sign out
-                    await auth.signOut();
-                    this.showBannerNotification("Déconnexion réussie", "success");
-                    
-                } catch (error) {
-                    console.error("Logout error:", error);
-                    this.showBannerNotification("Erreur lors de la déconnexion", "error");
-                }
+                // Show confirmation dialog
+                this.showModal({
+                    title: 'Déconnexion',
+                    content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                    actions: [
+                        {
+                            label: 'Annuler',
+                            action: () => this.closeModal(),
+                            className: 'modal-button-cancel'
+                        },
+                        {
+                            label: 'Déconnecter',
+                            action: async () => {
+                                try {
+                                    this.showBannerNotification("Déconnexion en cours...", "info");
+                                    
+                                    if (this.currentUser) {
+                                        // Update online status
+                                        await db.collection('users').doc(this.currentUser.uid).update({
+                                            online: false,
+                                            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                                        });
+                                    }
+                                    
+                                    // Sign out
+                                    await auth.signOut();
+                                    this.showBannerNotification("Déconnexion réussie", "success");
+                                    this.closeModal();
+                                    
+                                } catch (error) {
+                                    console.error("Logout error:", error);
+                                    this.showBannerNotification("Erreur lors de la déconnexion", "error");
+                                    this.closeModal();
+                                }
+                            },
+                            className: 'modal-button-confirm'
+                        }
+                    ]
+                });
+            },
+            
+            // Handle account deletion
+            async handleDeleteAccount() {
+                // Show confirmation dialog
+                this.showModal({
+                    title: 'Supprimer le compte',
+                    content: 'Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.',
+                    actions: [
+                        {
+                            label: 'Annuler',
+                            action: () => this.closeModal(),
+                            className: 'modal-button-cancel'
+                        },
+                        {
+                            label: 'Supprimer',
+                            action: async () => {
+                                try {
+                                    this.showBannerNotification("Suppression du compte...", "info");
+                                    
+                                    // Delete user document
+                                    await db.collection('users').doc(this.currentUser.uid).delete();
+                                    
+                                    // Delete user auth
+                                    const user = auth.currentUser;
+                                    if (user) {
+                                        await user.delete();
+                                    }
+                                    
+                                    this.showBannerNotification("Compte supprimé avec succès", "success");
+                                    this.closeModal();
+                                    
+                                } catch (error) {
+                                    console.error("Account deletion error:", error);
+                                    this.showBannerNotification("Erreur lors de la suppression du compte", "error");
+                                    this.closeModal();
+                                }
+                            },
+                            className: 'modal-button-danger'
+                        }
+                    ]
+                });
             },
             
             // Switch tabs in main screen
@@ -2578,6 +2863,174 @@
                 }
             },
             
+            // Start voice recording
+            startVoiceRecording() {
+                if (this.isRecording) return;
+                
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    this.showBannerNotification("Votre navigateur ne supporte pas l'enregistrement vocal", "error");
+                    return;
+                }
+                
+                try {
+                    // Get permission to use microphone
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(stream => {
+                            // Show voice recording UI
+                            this.isRecording = true;
+                            this.recordingStartTime = Date.now();
+                            this.audioChunks = [];
+                            
+                            // Setup media recorder
+                            this.mediaRecorder = new MediaRecorder(stream);
+                            
+                            // Get voice data chunks
+                            this.mediaRecorder.addEventListener('dataavailable', e => {
+                                this.audioChunks.push(e.data);
+                            });
+                            
+                            // Handle stop event
+                            this.mediaRecorder.addEventListener('stop', () => {
+                                // Convert audio chunks to base64
+                                const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                                this.convertBlobToBase64(audioBlob)
+                                    .then(base64Audio => {
+                                        // Send audio message
+                                        this.sendAudioMessage(base64Audio);
+                                    })
+                                    .catch(error => {
+                                        console.error("Error converting audio:", error);
+                                        this.showBannerNotification("Erreur lors de l'enregistrement", "error");
+                                    });
+                                
+                                // Reset state
+                                this.stopVoiceRecording(false);
+                            });
+                            
+                            // Start recording
+                            this.mediaRecorder.start();
+                            
+                            // Update UI
+                            this.render();
+                            
+                            // Update recording timer
+                            this.updateRecordingTimer();
+                        })
+                        .catch(error => {
+                            console.error("Error accessing microphone:", error);
+                            this.showBannerNotification("Impossible d'accéder au microphone", "error");
+                        });
+                        
+                } catch (error) {
+                    console.error("Voice recording error:", error);
+                    this.showBannerNotification("Erreur lors de l'enregistrement", "error");
+                    this.isRecording = false;
+                }
+            },
+            
+            // Update recording timer
+            updateRecordingTimer() {
+                if (!this.isRecording) return;
+                
+                const elapsedTime = Math.floor((Date.now() - this.recordingStartTime) / 1000);
+                const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+                const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+                
+                const indicator = document.getElementById('voice-recording-time');
+                if (indicator) {
+                    indicator.textContent = `${minutes}:${seconds}`;
+                }
+                
+                // Update again in 1 second
+                setTimeout(() => this.updateRecordingTimer(), 1000);
+            },
+            
+            // Stop voice recording
+            stopVoiceRecording(cancel = false) {
+                if (!this.isRecording) return;
+                
+                // Stop media recorder if active
+                if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+                    if (cancel) {
+                        this.mediaRecorder.ondataavailable = null;
+                        this.mediaRecorder.onstop = null;
+                    }
+                    
+                    this.mediaRecorder.stop();
+                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Reset state
+                this.isRecording = false;
+                this.mediaRecorder = null;
+                
+                if (cancel) {
+                    this.audioChunks = [];
+                    this.showNotification("Enregistrement annulé", "info");
+                }
+                
+                // Update UI
+                this.render();
+            },
+            
+            // Convert blob to base64
+            convertBlobToBase64(blob) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            },
+            
+            // Send audio message
+            async sendAudioMessage(base64Audio) {
+                if (!this.currentChat) return;
+                
+                try {
+                    // Create message data
+                    const messageData = {
+                        conversationId: this.currentChat.id,
+                        senderId: this.currentUser.uid,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        read: false,
+                        edited: false,
+                        hidden: {},
+                        text: "Message vocal",
+                        audio: base64Audio,
+                        messageType: 'audio'
+                    };
+                    
+                    // Add to firestore
+                    await db.collection('messages').add(messageData);
+                    
+                    // Update conversation
+                    await db.collection('conversations').doc(this.currentChat.id).update({
+                        lastMessage: "Message vocal",
+                        lastMessageType: 'audio',
+                        lastMessageTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastMessageSenderId: this.currentUser.uid
+                    });
+                    
+                    this.showNotification("Message vocal envoyé", "success");
+                    
+                } catch (error) {
+                    console.error("Error sending audio message:", error);
+                    this.showBannerNotification("Erreur lors de l'envoi du message vocal", "error");
+                }
+            },
+            
+            // Transcribe audio in real-time
+            async transcribeAudio(audioData) {
+                // In a real implementation, this would connect to a speech-to-text API
+                // For demonstration, we'll mock a response
+                
+                const mockTranscript = "Ceci est un message vocal transcrit en texte.";
+                
+                // In real implementation, update UI with partial transcripts as they come
+                return mockTranscript;
+            },
+            
             // Select image for upload
             selectImage() {
                 const fileInput = document.getElementById('image-upload');
@@ -2602,20 +3055,81 @@
                     return;
                 }
                 
-                // Create preview
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.selectedImage = file;
-                    this.imagePreview = e.target.result;
-                    this.render();
-                    
-                    // Update UI to show preview
-                    const previewContainer = document.getElementById('image-preview-container');
-                    if (previewContainer) {
-                        previewContainer.style.display = 'block';
-                    }
-                };
-                reader.readAsDataURL(file);
+                // Compress and create preview
+                this.compressImage(file, 1200, 0.8)
+                    .then(compressedFile => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.selectedImage = compressedFile;
+                            this.imagePreview = e.target.result;
+                            this.render();
+                            
+                            // Update UI to show preview
+                            const previewContainer = document.getElementById('image-preview-container');
+                            if (previewContainer) {
+                                previewContainer.style.display = 'block';
+                            }
+                        };
+                        reader.readAsDataURL(compressedFile);
+                    })
+                    .catch(error => {
+                        console.error("Error compressing image:", error);
+                        this.showBannerNotification("Erreur lors du traitement de l'image", "error");
+                    });
+            },
+            
+            // Compress image before upload
+            compressImage(file, maxWidth, quality) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // Calculate new dimensions
+                            let width = img.width;
+                            let height = img.height;
+                            
+                            if (width > maxWidth) {
+                                height = Math.round(height * maxWidth / width);
+                                width = maxWidth;
+                            }
+                            
+                            // Create canvas for resizing
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            
+                            // Draw and compress image
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // Convert to Blob
+                            canvas.toBlob(
+                                blob => {
+                                    if (!blob) {
+                                        reject(new Error('Canvas to Blob failed'));
+                                        return;
+                                    }
+                                    
+                                    // Create new file
+                                    const compressedFile = new File(
+                                        [blob], 
+                                        file.name, 
+                                        {type: file.type, lastModified: Date.now()}
+                                    );
+                                    
+                                    resolve(compressedFile);
+                                }, 
+                                file.type, 
+                                quality
+                            );
+                        };
+                        img.onerror = reject;
+                        img.src = event.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
             },
             
             // Handle avatar upload
@@ -2636,35 +3150,39 @@
                     return;
                 }
                 
-                // Upload avatar
-                this.uploadAvatar(file);
+                // Compress and upload avatar
+                this.compressImage(file, 300, 0.8)
+                    .then(compressedFile => {
+                        this.convertBlobToBase64(compressedFile)
+                            .then(base64Avatar => {
+                                this.uploadAvatar(base64Avatar);
+                            })
+                            .catch(error => {
+                                console.error("Error converting avatar to base64:", error);
+                                this.showBannerNotification("Erreur lors du traitement de l'image", "error");
+                            });
+                    })
+                    .catch(error => {
+                        console.error("Error compressing avatar:", error);
+                        this.showBannerNotification("Erreur lors du traitement de l'image", "error");
+                    });
             },
             
-            // Upload avatar to Firebase Storage
-            async uploadAvatar(file) {
+            // Upload avatar to Firestore (base64 encoded)
+            async uploadAvatar(base64Avatar) {
                 try {
                     if (!this.currentUser) return;
                     
                     // Show loading notification
                     this.showBannerNotification("Téléchargement en cours...", "info");
                     
-                    // Create storage reference
-                    const storageRef = storage.ref();
-                    const avatarRef = storageRef.child(`avatars/${this.currentUser.uid}`);
-                    
-                    // Upload file
-                    await avatarRef.put(file);
-                    
-                    // Get download URL
-                    const downloadURL = await avatarRef.getDownloadURL();
-                    
-                    // Update user document
+                    // Update user document with base64 avatar
                     await db.collection('users').doc(this.currentUser.uid).update({
-                        avatar: downloadURL
+                        avatar: base64Avatar
                     });
                     
                     // Update local state
-                    this.currentUser.avatar = downloadURL;
+                    this.currentUser.avatar = base64Avatar;
                     
                     this.showBannerNotification("Photo de profil mise à jour", "success");
                     this.render();
@@ -2804,7 +3322,7 @@
                 if (!this.currentChat) return;
                 
                 const messageInput = document.getElementById('message-input');
-                const text = messageInput.value.trim();
+                const text = messageInput ? messageInput.value.trim() : '';
                 
                 // Check if we have text or image
                 if (!text && !this.selectedImage) return;
@@ -2853,7 +3371,7 @@
                     });
                     
                     // Clear input and selected image
-                    messageInput.value = '';
+                    if (messageInput) messageInput.value = '';
                     this.selectedImage = null;
                     this.imagePreview = null;
                     this.render();
@@ -2944,6 +3462,85 @@
                     console.error("Error blocking/unblocking user:", error);
                     this.showBannerNotification("Erreur lors de l'action", "error");
                 }
+            },
+            
+            // Setup swipe actions for conversations
+            setupSwipeActions() {
+                const items = document.querySelectorAll('.conversation-item');
+                
+                items.forEach(item => {
+                    const conversationId = item.dataset.id;
+                    
+                    // Add touch event listeners for swipe
+                    item.addEventListener('touchstart', (e) => {
+                        if (this.isConversationSelectionMode) return;
+                        
+                        this.swipeState = {
+                            active: true,
+                            startX: e.touches[0].clientX,
+                            currentX: e.touches[0].clientX,
+                            item: item
+                        };
+                    });
+                    
+                    item.addEventListener('touchmove', (e) => {
+                        if (!this.swipeState.active || this.isConversationSelectionMode) return;
+                        
+                        this.swipeState.currentX = e.touches[0].clientX;
+                        
+                        // Calculate offset
+                        const offsetX = this.swipeState.currentX - this.swipeState.startX;
+                        
+                        // Limit to left swipe only and max offset
+                        const limitedOffset = Math.min(0, Math.max(-80, offsetX));
+                        
+                        // Apply transform
+                        item.style.transform = `translateX(${limitedOffset}px)`;
+                        
+                        // Show delete action if swiped enough
+                        const deleteAction = item.querySelector('.conversation-actions');
+                        if (deleteAction) {
+                            if (limitedOffset < -30) {
+                                deleteAction.style.opacity = '1';
+                            } else {
+                                deleteAction.style.opacity = '0';
+                            }
+                        }
+                    });
+                    
+                    item.addEventListener('touchend', (e) => {
+                        if (!this.swipeState.active || this.isConversationSelectionMode) return;
+                        
+                        const offsetX = this.swipeState.currentX - this.swipeState.startX;
+                        
+                        // If swiped far enough, keep open
+                        if (offsetX < -40) {
+                            item.style.transform = 'translateX(-80px)';
+                            
+                            // Set a click event on document to close when clicking elsewhere
+                            const closeSwipe = (event) => {
+                                if (!item.contains(event.target) || 
+                                    event.target.closest('.conversation-action-delete')) {
+                                    
+                                    item.style.transform = 'translateX(0)';
+                                    document.removeEventListener('click', closeSwipe);
+                                    
+                                    // If clicked on delete button
+                                    if (event.target.closest('.conversation-action-delete')) {
+                                        this.deleteConversation(conversationId);
+                                    }
+                                }
+                            };
+                            
+                            document.addEventListener('click', closeSwipe);
+                        } else {
+                            // Reset position
+                            item.style.transform = 'translateX(0)';
+                        }
+                        
+                        this.swipeState.active = false;
+                    });
+                });
             },
             
             // Format time for display
@@ -3246,6 +3843,24 @@
                 });
             },
             
+            // Show message actions
+            showMessageActions() {
+                if (this.selectedMessages.size === 0) return;
+                
+                const actionsContainer = document.getElementById('message-actions');
+                if (actionsContainer) {
+                    actionsContainer.classList.add('visible');
+                }
+            },
+            
+            // Hide message actions
+            hideMessageActions() {
+                const actionsContainer = document.getElementById('message-actions');
+                if (actionsContainer) {
+                    actionsContainer.classList.remove('visible');
+                }
+            },
+            
             // Close modal
             closeModal() {
                 if (this.modal) {
@@ -3400,6 +4015,7 @@
                             // Regular tap - show message options
                             this.showSelectionModeBar();
                             this.toggleMessageSelection(messageId);
+                            this.showMessageActions();
                         }
                     });
                     
@@ -3416,6 +4032,7 @@
                             // Enter selection mode if not already
                             this.showSelectionModeBar();
                             this.toggleMessageSelection(messageId);
+                            this.showMessageActions();
                         }, 500);
                     });
                     
@@ -3532,6 +4149,7 @@
                     action: () => {
                         this.showSelectionModeBar();
                         this.toggleMessageSelection(message.id);
+                        this.showMessageActions();
                     }
                 });
                 
@@ -3590,6 +4208,7 @@
             exitSelectionMode() {
                 this.selectionMode = false;
                 this.selectedMessages.clear();
+                this.hideMessageActions();
                 this.render();
             },
             
@@ -4061,6 +4680,7 @@
                 const truncateMessage = (message, type) => {
                     if (!message) return 'Aucun message';
                     if (type === 'image') return '📷 Image';
+                    if (type === 'audio') return '🎤 Message vocal';
                     return message.length > 30 ? message.substring(0, 30) + '...' : message;
                 };
                 
@@ -4101,6 +4721,18 @@
                         <div class="conversation-meta">
                             <div class="conversation-time">${timeString}</div>
                             ${unreadCount > 0 ? `<div class="conversation-badge">${unreadCount}</div>` : ''}
+                        </div>
+                        
+                        <div class="conversation-actions">
+                            <div class="conversation-action-delete">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                Supprimer
+                            </div>
                         </div>
                     </div>
                 `;
@@ -4267,7 +4899,7 @@
                                         <div class="profile-field-value">
                                             <input type="text" id="edit-username" class="form-input" value="${this.currentUser.username}">
                                             <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark)); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
                                                 <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
                                             </div>
                                         </div>
@@ -4289,7 +4921,7 @@
                                         <div class="profile-field-value">
                                             <input type="tel" id="edit-phone" class="form-input" value="${this.currentUser.phone || ''}">
                                             <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark)); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
                                                 <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
                                             </div>
                                         </div>
@@ -4306,7 +4938,7 @@
                                         <div class="profile-field-value">
                                             <textarea id="edit-bio" class="form-input" style="min-height: 80px;">${this.currentUser.bio || ''}</textarea>
                                             <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                                <button class="action-button" style="padding: 8px; background-color: var(--accent-color); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
+                                                <button class="action-button" style="padding: 8px; background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark)); color: white; border: none; border-radius: 6px;" onclick="app.saveEditingField()">Enregistrer</button>
                                                 <button class="action-button" style="padding: 8px; border: 1px solid var(--border-color); background: none; border-radius: 6px;" onclick="app.cancelEditingField()">Annuler</button>
                                             </div>
                                         </div>
@@ -4342,19 +4974,19 @@
                                     <div class="profile-field-value">
                                         <div class="color-options">
                                             <div class="color-option ${this.accentColor === '#5D5CDE' ? 'active' : ''}" 
-                                                 style="background-color: #5D5CDE;" 
+                                                 style="background: linear-gradient(135deg, #5D5CDE, #4C4BAE);" 
                                                  onclick="app.changeAccentColor('#5D5CDE')"></div>
                                             <div class="color-option ${this.accentColor === '#3B82F6' ? 'active' : ''}" 
-                                                 style="background-color: #3B82F6;" 
+                                                 style="background: linear-gradient(135deg, #3B82F6, #2563EB);" 
                                                  onclick="app.changeAccentColor('#3B82F6')"></div>
                                             <div class="color-option ${this.accentColor === '#10B981' ? 'active' : ''}" 
-                                                 style="background-color: #10B981;" 
+                                                 style="background: linear-gradient(135deg, #10B981, #059669);" 
                                                  onclick="app.changeAccentColor('#10B981')"></div>
                                             <div class="color-option ${this.accentColor === '#F59E0B' ? 'active' : ''}" 
-                                                 style="background-color: #F59E0B;" 
+                                                 style="background: linear-gradient(135deg, #F59E0B, #D97706);" 
                                                  onclick="app.changeAccentColor('#F59E0B')"></div>
                                             <div class="color-option ${this.accentColor === '#EF4444' ? 'active' : ''}" 
-                                                 style="background-color: #EF4444;" 
+                                                 style="background: linear-gradient(135deg, #EF4444, #DC2626);" 
                                                  onclick="app.changeAccentColor('#EF4444')"></div>
                                         </div>
                                     </div>
@@ -4402,7 +5034,7 @@
                                     Se déconnecter
                                 </button>
                                 
-                                <button class="action-button delete-button">
+                                <button class="action-button delete-button" onclick="app.handleDeleteAccount()">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -4471,6 +5103,32 @@
                             ${this.renderChatMessages()}
                         </div>
                         
+                        <div id="message-actions" class="message-actions">
+                            <button class="message-action-button delete" onclick="app.deleteSelectedMessages()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                Supprimer
+                            </button>
+                        </div>
+                        
+                        ${this.isRecording ? `
+                        <div class="voice-indicator">
+                            <div id="voice-recording-time">00:00</div>
+                            <div class="voice-waves">
+                                <div class="voice-wave"></div>
+                                <div class="voice-wave"></div>
+                                <div class="voice-wave"></div>
+                                <div class="voice-wave"></div>
+                                <div class="voice-wave"></div>
+                            </div>
+                            <div style="font-size: 12px; margin-top: 4px;">Glissez vers le haut pour annuler</div>
+                        </div>
+                        ` : ''}
+                        
                         <div class="chat-input-container">
                             ${this.imagePreview ? `
                             <div id="image-preview-container" class="image-preview-container">
@@ -4499,12 +5157,22 @@
                                     <input type="text" id="message-input" class="message-input" placeholder="Écrire un message..." onkeypress="if(event.key === 'Enter') app.sendMessage()">
                                 </div>
                                 
-                                <button class="send-button" onclick="app.sendMessage()">
+                                ${this.isRecording ? `
+                                <button class="voice-button recording" onmouseup="app.stopVoiceRecording()" ontouchend="app.stopVoiceRecording()">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                        <rect x="6" y="4" width="12" height="16" rx="2" ry="2"></rect>
                                     </svg>
                                 </button>
+                                ` : `
+                                <button id="send-voice-button" class="voice-button" onmousedown="app.startVoiceRecording()" ontouchstart="app.startVoiceRecording()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                </button>
+                                `}
                             </div>
                         </div>
                     </div>
@@ -4631,6 +5299,18 @@
                             `;
                         }
                         
+                        // Render audio if present
+                        if (message.messageType === 'audio' && message.audio) {
+                            html += `
+                                <div style="margin-bottom: 8px;">
+                                    <audio controls style="width: 100%; height: 40px;">
+                                        <source src="${message.audio}" type="audio/webm">
+                                        Votre navigateur ne supporte pas la lecture audio.
+                                    </audio>
+                                </div>
+                            `;
+                        }
+                        
                         // Render text if present
                         if (message.text) {
                             html += `<div>${message.text}</div>`;
@@ -4674,6 +5354,9 @@
                 let content = '';
                 
                 switch (this.currentScreen) {
+                    case 'loading':
+                        this.renderLoadingScreen();
+                        return;
                     case 'auth':
                         content = this.renderAuthScreen();
                         break;
@@ -4702,6 +5385,79 @@
                         
                         // Scroll to bottom
                         this.scrollToBottom();
+                        
+                        // Show message actions if needed
+                        if (this.selectionMode && this.selectedMessages.size > 0) {
+                            this.showMessageActions();
+                        }
+                        
+                        // Setup voice recording swipe to cancel
+                        if (this.isRecording) {
+                            const cancelThreshold = 50; // Pixels to swipe up to cancel
+                            let touchStartY = 0;
+                            
+                            document.addEventListener('touchstart', (e) => {
+                                touchStartY = e.touches[0].clientY;
+                            });
+                            
+                            document.addEventListener('touchmove', (e) => {
+                                if (!this.isRecording) return;
+                                
+                                const currentY = e.touches[0].clientY;
+                                const diffY = touchStartY - currentY;
+                                
+                                if (diffY > cancelThreshold) {
+                                    // Swiped up enough to cancel
+                                    this.stopVoiceRecording(true);
+                                }
+                            });
+                        }
+                        
+                        // Update button based on input
+                        const messageInput = document.getElementById('message-input');
+                        const voiceButton = document.getElementById('send-voice-button');
+                        const sendButton = document.querySelector('.send-button');
+                        
+                        if (messageInput && (voiceButton || sendButton)) {
+                            messageInput.addEventListener('input', () => {
+                                const hasText = messageInput.value.trim().length > 0;
+                                
+                                if (hasText) {
+                                    // Show send button
+                                    if (voiceButton) {
+                                        voiceButton.outerHTML = `
+                                            <button class="send-button" onclick="app.sendMessage()">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                                </svg>
+                                            </button>
+                                        `;
+                                    }
+                                } else {
+                                    // Show voice button
+                                    if (sendButton) {
+                                        sendButton.outerHTML = `
+                                            <button id="send-voice-button" class="voice-button" onmousedown="app.startVoiceRecording()" ontouchstart="app.startVoiceRecording()">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                                </svg>
+                                            </button>
+                                        `;
+                                    }
+                                }
+                            });
+                        }
+                    }, 0);
+                }
+                
+                // Setup swipe actions for conversations
+                if (this.currentScreen === 'main' && this.currentTab === 'conversations') {
+                    setTimeout(() => {
+                        this.setupSwipeActions();
                     }, 0);
                 }
                 
