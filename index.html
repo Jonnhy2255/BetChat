@@ -5414,9 +5414,9 @@
                         }
                         
                         // Update button based on input
-                        const messageInput = document.getElementById('message-input');
-                        const voiceButton = document.getElementById('send-voice-button');
-                        const sendButton = document.querySelector('.send-button');
+const inputField = document.getElementById('message-input');
+const voiceButton = document.getElementById('send-voice-button');
+const sendButton = document.querySelector('.send-button');
                         
                         if (messageInput && (voiceButton || sendButton)) {
                             messageInput.addEventListener('input', () => {
