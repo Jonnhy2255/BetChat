@@ -2185,6 +2185,76 @@
         .chat-bubble-shape-square::before {
             border-radius: 4px;
         }
+        
+        /* Message sending state */
+        .sending-indicator {
+            display: inline-flex;
+            margin-left: 4px;
+            align-items: center;
+        }
+        
+        .sending-dots {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sending-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: currentColor;
+            margin: 0 1px;
+            opacity: 0.7;
+        }
+        
+        .sending-dot:nth-child(1) {
+            animation: sending-dot 1s infinite 0s;
+        }
+        
+        .sending-dot:nth-child(2) {
+            animation: sending-dot 1s infinite 0.2s;
+        }
+        
+        .sending-dot:nth-child(3) {
+            animation: sending-dot 1s infinite 0.4s;
+        }
+        
+        @keyframes sending-dot {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-4px);
+            }
+        }
+        
+        /* Fallback for stuck loading screen */
+        .auth-fallback-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 9999;
+            display: none;
+        }
+        
+        /* Error message for loading screen */
+        .loading-error {
+            color: var(--error-color);
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -2221,10 +2291,27 @@
             measurementId: "G-4HVY16QT8M"
         };
         
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
+        // Initialize Firebase with error handling
+        let auth, db, storage;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            storage = firebase.storage();
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            // Show fallback UI on error
+            document.getElementById('app').innerHTML = `
+                <div class="loading" style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-color);">
+                    <div style="margin-bottom: 40px; text-align: center;">
+                        <h1 style="font-size: 32px; margin-bottom: 10px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BetXchange</h1>
+                        <p style="color: var(--secondary-text);">Erreur de connexion</p>
+                    </div>
+                    <div class="loading-error">Une erreur s'est produite lors de la connexion à Firebase. Veuillez réessayer.</div>
+                    <button onclick="window.location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--accent-gradient); color: white; border: none; border-radius: 8px;">Réessayer</button>
+                </div>
+            `;
+        }
         
         // Check for dark mode
         function checkDarkMode() {
@@ -2256,6 +2343,8 @@
         const app = {
             currentUser: null,
             currentScreen: 'loading', // loading, auth, main, chat
+            isAuthLoaded: false, // Track if auth has finished loading
+            authTimeoutId: null, // For fallback if auth takes too long
             currentTab: 'conversations', // conversations, users, profile, ai
             conversations: [],
             filteredConversations: [],
@@ -2298,11 +2387,20 @@
             reactionPickerTargetId: null,
             totalUserCount: 0, // Track total user count
             maxUserLimit: 55, // Maximum number of users allowed
+            pendingMessages: new Map(), // Track messages being sent
             
             // Initialize app
             init() {
                 // Show loading state first
                 this.renderLoadingScreen();
+                
+                // Set a timeout to show fallback UI if auth takes too long
+                this.authTimeoutId = setTimeout(() => {
+                    if (!this.isAuthLoaded) {
+                        const fallbackBtn = document.querySelector('.auth-fallback-btn');
+                        if (fallbackBtn) fallbackBtn.style.display = 'block';
+                    }
+                }, 10000); // 10 seconds timeout
                 
                 // Then proceed with auth check
                 this.setupAuthListener();
@@ -2407,13 +2505,26 @@
                             <p style="color: var(--secondary-text);">Chargement en cours...</p>
                         </div>
                         <div class="spinner"></div>
+                        <button class="auth-fallback-btn" onclick="app.goToAuth()">Problème de connexion? Appuyez ici</button>
                     </div>
                 `;
+            },
+            
+            // Fallback method to go to auth screen
+            goToAuth() {
+                clearTimeout(this.authTimeoutId);
+                this.isAuthLoaded = true;
+                this.currentScreen = 'auth';
+                this.render();
             },
             
             // Setup authentication listener
             setupAuthListener() {
                 auth.onAuthStateChanged(async (user) => {
+                    // Clear timeout for fallback UI
+                    clearTimeout(this.authTimeoutId);
+                    this.isAuthLoaded = true;
+                    
                     if (user) {
                         // User is signed in
                         try {
@@ -2493,6 +2604,12 @@
                     }
                     
                     this.render();
+                });
+                
+                // Handle auth initialization error
+                auth.signInAnonymously().catch((error) => {
+                    console.error("Auth initialization error:", error);
+                    // We'll show fallback UI if the timeout triggers
                 });
             },
             
@@ -2940,6 +3057,9 @@
                         this.conversations = conversations;
                         this.filterConversations();
                         this.render();
+                    }, error => {
+                        console.error("Error listening to conversations:", error);
+                        this.showBannerNotification("Erreur de connexion aux conversations", "error");
                     });
                     
                 } catch (error) {
@@ -3223,7 +3343,9 @@
                                 timestamp: messageData.timestamp?.toDate() || new Date(),
                                 read: messageData.read,
                                 edited: messageData.edited || false,
-                                reactions: messageData.reactions || {}
+                                reactions: messageData.reactions || {},
+                                sending: this.pendingMessages.has(doc.id) ? 
+                                    this.pendingMessages.get(doc.id) : false
                             });
                         });
                         
@@ -3235,6 +3357,9 @@
                         
                         // Mark messages as read
                         this.markMessagesAsRead(conversationId);
+                    }, error => {
+                        console.error("Error listening to messages:", error);
+                        this.showBannerNotification("Erreur de connexion aux messages", "error");
                     });
                     
                 } catch (error) {
@@ -3558,6 +3683,12 @@
                 if (!text && !this.selectedImage) return;
                 
                 try {
+                    // Create a temporary message ID to track this message
+                    const tempId = `temp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+                    
+                    // Add the message to the pending list
+                    this.pendingMessages.set(tempId, true);
+                    
                     let messageData = {
                         conversationId: this.currentChat.id,
                         senderId: this.currentUser.uid,
@@ -3577,6 +3708,31 @@
                         lastMessageText = text;
                     }
                     
+                    // Clear input immediately to improve responsiveness
+                    if (messageInput) {
+                        messageInput.value = '';
+                        messageInput.blur(); // Close keyboard after sending message
+                    }
+                    
+                    // Show optimistic UI update for text messages
+                    const optimisticMessage = {
+                        id: tempId,
+                        senderId: this.currentUser.uid,
+                        text: text,
+                        timestamp: new Date(),
+                        read: false,
+                        edited: false,
+                        sending: true,
+                        reactions: {}
+                    };
+                    
+                    // Add to local messages array and render
+                    if (text) {
+                        this.messages.push(optimisticMessage);
+                        this.render();
+                        this.scrollToBottom();
+                    }
+                    
                     // Handle image message
                     if (this.selectedImage) {
                         // Convert image to base64
@@ -3590,8 +3746,8 @@
                         }
                     }
                     
-                    // Create message
-                    await db.collection('messages').add(messageData);
+                    // Create message in Firestore
+                    const docRef = await db.collection('messages').add(messageData);
                     
                     // Update conversation
                     await db.collection('conversations').doc(this.currentChat.id).update({
@@ -3601,18 +3757,25 @@
                         lastMessageSenderId: this.currentUser.uid
                     });
                     
-                    // Clear input and selected image
-                    if (messageInput) {
-                        messageInput.value = '';
-                        messageInput.blur(); // Close keyboard after sending message
-                    }
+                    // Update the pending message with the real ID
+                    this.pendingMessages.delete(tempId);
+                    this.pendingMessages.set(docRef.id, false); // Mark as sent
+                    
+                    // Clear selected image
                     this.selectedImage = null;
                     this.imagePreview = null;
+                    
+                    // Render again to update UI
                     this.render();
+                    this.scrollToBottom();
                     
                 } catch (error) {
                     console.error("Error sending message:", error);
                     this.showBannerNotification("Erreur lors de l'envoi du message", "error");
+                    
+                    // Remove the optimistic message
+                    this.messages = this.messages.filter(msg => !msg.sending);
+                    this.render();
                 }
             },
             
@@ -5656,14 +5819,22 @@
                             html += `</div>`;
                         }
                         
-                        // Render time and read status
+                        // Render time and read/sending status
                         html += `
                                 <div class="message-time">
                                     ${time}
                                     ${message.edited ? ' (modifié)' : ''}
                                     ${isSent ? `
                                     <span class="message-status">
-                                        ${message.read ? `
+                                        ${message.sending ? `
+                                            <span class="sending-indicator">
+                                                <span class="sending-dots">
+                                                    <span class="sending-dot"></span>
+                                                    <span class="sending-dot"></span>
+                                                    <span class="sending-dot"></span>
+                                                </span>
+                                            </span>
+                                        ` : message.read ? `
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M7 13l3 3 7-7"></path>
                                                 <path d="M17 13l3 3 7-7" stroke-dasharray="0"></path>
