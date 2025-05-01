@@ -983,24 +983,50 @@
             color: var(--accent-color);
         }
         
+        /* New Android-style emoji picker */
         .emoji-picker {
-            position: absolute;
-            bottom: 70px;
+            position: fixed;
+            bottom: 0;
             left: 0;
             right: 0;
             background-color: var(--card-bg);
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
-            padding: 16px;
-            z-index: 100;
-            animation: slide-up 0.3s ease-out;
-            max-height: 300px;
-            overflow-y: auto;
+            z-index: 1000;
+            height: 240px;
+            border-top: 1px solid var(--border-color);
+            animation: slide-up-emoji 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
         }
         
-        @keyframes slide-up {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        .emoji-picker-header {
+            display: flex;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f5f5f5;
+        }
+        
+        .dark .emoji-picker-header {
+            background-color: #2a2a2a;
+        }
+        
+        .emoji-category-tab {
+            padding: 8px 12px;
+            font-size: 14px;
+            color: var(--secondary-text);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .emoji-category-tab.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .emoji-picker-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
         }
         
         .emoji-category {
@@ -1012,29 +1038,44 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--secondary-text);
+            padding: 0 8px;
         }
         
         .emoji-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(8, 1fr);
             gap: 8px;
         }
         
         .emoji-item {
-            font-size: 20px;
-            height: 36px;
-            width: 36px;
+            font-size: 24px;
+            height: 40px;
+            width: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 4px;
             transition: all 0.2s;
         }
         
         .emoji-item:active {
             background-color: var(--secondary-bg);
             transform: scale(1.1);
+        }
+        
+        @keyframes slide-up-emoji {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes slide-down-emoji {
+            from { transform: translateY(0); }
+            to { transform: translateY(100%); }
+        }
+        
+        .emoji-picker.closing {
+            animation: slide-down-emoji 0.3s forwards;
         }
         
         .message-input-container {
@@ -2236,6 +2277,41 @@
             font-style: italic;
             opacity: 0.9;
         }
+        
+        /* Fix for the chat area on mobile keyboards */
+        @media (max-height: 600px) {
+            .chat-input-container {
+                position: sticky;
+                bottom: 0;
+            }
+            
+            .chat-messages {
+                padding-bottom: 16px;
+            }
+        }
+        
+        /* Make sure chat area adjusts when keyboard appears */
+        body.keyboard-open .chat-messages {
+            padding-bottom: 16px;
+        }
+        
+        body.keyboard-open .chat-input-container {
+            position: sticky;
+            bottom: 0;
+        }
+        
+        /* Toggle emoji keyboard icon */
+        .keyboard-icon {
+            display: none;
+        }
+        
+        .emoji-open .emoji-icon {
+            display: none;
+        }
+        
+        .emoji-open .keyboard-icon {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -2351,6 +2427,8 @@
             maxUserLimit: 55, // Maximum number of users allowed
             sendingMessages: new Set(), // Track sending messages for UI feedback
             onlineStatusInterval: null, // Interval for updating online status
+            activeEmojiCategory: 'recent', // Track active emoji category
+            isKeyboardVisible: false, // Track if keyboard is visible
             
             // Initialize app
             init() {
@@ -2392,6 +2470,67 @@
                 
                 // Start online status ping
                 this.startOnlineStatusInterval();
+                
+                // Setup keyboard visibility detection
+                this.setupKeyboardVisibilityDetection();
+            },
+            
+            // Setup keyboard visibility detection
+            setupKeyboardVisibilityDetection() {
+                // Detect Android keyboard using visual viewport height changes
+                if (window.visualViewport) {
+                    const viewportHandler = () => {
+                        // On Android, when keyboard opens, the visual viewport height becomes smaller
+                        const isKeyboardVisible = window.visualViewport.height < window.innerHeight * 0.75;
+                        if (isKeyboardVisible !== this.isKeyboardVisible) {
+                            this.isKeyboardVisible = isKeyboardVisible;
+                            document.body.classList.toggle('keyboard-open', isKeyboardVisible);
+                            
+                            // If emoji picker is open and keyboard appears, close emoji picker
+                            if (isKeyboardVisible && this.emojiPickerVisible) {
+                                this.closeEmojiPicker();
+                            }
+                            
+                            // Adjust scroll position when keyboard appears
+                            if (isKeyboardVisible) {
+                                this.scrollToBottom();
+                            }
+                        }
+                    };
+                    
+                    window.visualViewport.addEventListener('resize', viewportHandler);
+                }
+                
+                // Focus/blur events as fallback
+                document.addEventListener('focusin', (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                        document.body.classList.add('keyboard-open');
+                        this.isKeyboardVisible = true;
+                        
+                        // If emoji picker is open and keyboard appears, close emoji picker
+                        if (this.emojiPickerVisible) {
+                            this.closeEmojiPicker();
+                        }
+                        
+                        // Scroll to bottom with a delay to ensure the keyboard is fully open
+                        setTimeout(() => {
+                            this.scrollToBottom();
+                        }, 300);
+                    }
+                });
+                
+                document.addEventListener('focusout', (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                        // Use a short delay to avoid flickering when changing between input fields
+                        setTimeout(() => {
+                            const activeElement = document.activeElement;
+                            if (activeElement.tagName !== 'INPUT' && activeElement.tagName !== 'TEXTAREA') {
+                                document.body.classList.remove('keyboard-open');
+                                this.isKeyboardVisible = false;
+                            }
+                        }, 100);
+                    }
+                });
             },
             
             // Start interval to update online status
@@ -3909,40 +4048,71 @@
                     return;
                 }
                 
+                // When showing emoji picker, blur any focused input to hide keyboard
+                if (document.activeElement instanceof HTMLInputElement || 
+                    document.activeElement instanceof HTMLTextAreaElement) {
+                    document.activeElement.blur();
+                }
+                
+                // Create the main picker container
                 const pickerContainer = document.createElement('div');
                 pickerContainer.className = 'emoji-picker';
                 
-                let html = '';
+                // Create tab header
+                let headerHtml = `<div class="emoji-picker-header">`;
                 
-                // Add recently used emojis if available
-                if (this.recentEmojis.length > 0) {
-                    html += `
+                const emojiCategories = [
+                    { id: 'recent', name: '✨ Récents' },
+                    { id: 'smileys', name: '😀 Smileys' },
+                    { id: 'people', name: '👍 Gestes' },
+                    { id: 'animals', name: '🐶 Animaux' },
+                    { id: 'food', name: '🍎 Nourriture' },
+                    { id: 'activities', name: '⚽ Activités' },
+                    { id: 'objects', name: '💻 Objets' },
+                    { id: 'symbols', name: '❤️ Symboles' }
+                ];
+                
+                emojiCategories.forEach(category => {
+                    headerHtml += `
+                        <div class="emoji-category-tab ${this.activeEmojiCategory === category.id ? 'active' : ''}" 
+                             data-category="${category.id}">${category.name}</div>
+                    `;
+                });
+                
+                headerHtml += `</div>`;
+                
+                // Add emoji content container
+                let contentHtml = `<div class="emoji-picker-content">`;
+                
+                // Emoji data
+                const emojisData = {
+                    recent: this.recentEmojis,
+                    smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩'],
+                    people: ['👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪', '🦾', '🦿', '🦵', '🦶'],
+                    animals: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊'],
+                    food: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝'],
+                    activities: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓', '🏸', '🏒', '🏑', '🥍'],
+                    objects: ['⌚', '📱', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '📀', '💿', '💾', '💽', '📼', '📷', '📸'],
+                    symbols: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝']
+                };
+                
+                // Show current category
+                const categoryName = emojiCategories.find(c => c.id === this.activeEmojiCategory)?.name || 'Emojis';
+                const emojis = emojisData[this.activeEmojiCategory] || [];
+                
+                // Only show recent category if there are recent emojis
+                if (this.activeEmojiCategory === 'recent' && emojis.length === 0) {
+                    contentHtml += `
                         <div class="emoji-category">
-                            <div class="emoji-category-title">Récents</div>
-                            <div class="emoji-grid">
-                                ${this.recentEmojis.map(emoji => 
-                                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
-                                ).join('')}
+                            <div class="emoji-category-title">Pas d'emojis récents</div>
+                            <div style="text-align: center; padding: 20px; color: var(--secondary-text);">
+                                Les emojis que vous utilisez apparaîtront ici
                             </div>
                         </div>
                     `;
-                }
-                
-                // Add emoji categories
-                const emojiCategories = {
-                    "Smileys & Émotions": ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩'],
-                    "Gestes & Personnes": ['👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪', '🦾', '🦿', '🦵', '🦶'],
-                    "Animaux & Nature": ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊'],
-                    "Nourriture & Boisson": ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝'],
-                    "Activités": ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓', '🏸', '🏒', '🏑', '🥍'],
-                    "Objets": ['⌚', '📱', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '📀', '💿', '💾', '💽', '📼', '📷', '📸'],
-                    "Symboles": ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝']
-                };
-                
-                for (const [category, emojis] of Object.entries(emojiCategories)) {
-                    html += `
+                } else {
+                    contentHtml += `
                         <div class="emoji-category">
-                            <div class="emoji-category-title">${category}</div>
                             <div class="emoji-grid">
                                 ${emojis.map(emoji => 
                                     `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
@@ -3952,11 +4122,28 @@
                     `;
                 }
                 
-                pickerContainer.innerHTML = html;
+                contentHtml += `</div>`;
+                
+                pickerContainer.innerHTML = headerHtml + contentHtml;
                 
                 document.body.appendChild(pickerContainer);
                 
-                // Add event listeners
+                // Make the emoji button look like it's in an "active" state
+                const emojiButton = document.querySelector('.emoji-button');
+                if (emojiButton) {
+                    emojiButton.classList.add('emoji-open');
+                }
+                
+                // Add event listeners to tabs
+                pickerContainer.querySelectorAll('.emoji-category-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.activeEmojiCategory = e.target.dataset.category;
+                        this.closeEmojiPicker();
+                        this.showEmojiPicker(); // Reopen with new category
+                    });
+                });
+                
+                // Add event listeners to emojis
                 pickerContainer.querySelectorAll('.emoji-item').forEach(item => {
                     item.addEventListener('click', (e) => {
                         const emoji = e.target.dataset.emoji;
@@ -3973,7 +4160,6 @@
                             // Add to recently used emojis
                             this.addToRecentEmojis(emoji);
                         }
-                        this.closeEmojiPicker();
                     });
                 });
                 
@@ -3984,9 +4170,41 @@
             closeEmojiPicker() {
                 const picker = document.querySelector('.emoji-picker');
                 if (picker) {
-                    picker.remove();
+                    picker.classList.add('closing');
+                    setTimeout(() => {
+                        picker.remove();
+                        this.emojiPickerVisible = false;
+                        
+                        // Reset emoji button to normal state
+                        const emojiButton = document.querySelector('.emoji-button');
+                        if (emojiButton) {
+                            emojiButton.classList.remove('emoji-open');
+                        }
+                    }, 300);
+                } else {
+                    this.emojiPickerVisible = false;
+                    
+                    // Reset emoji button to normal state
+                    const emojiButton = document.querySelector('.emoji-button');
+                    if (emojiButton) {
+                        emojiButton.classList.remove('emoji-open');
+                    }
                 }
-                this.emojiPickerVisible = false;
+            },
+            
+            // Toggle emoji/keyboard button
+            toggleEmojiKeyboard() {
+                if (this.emojiPickerVisible) {
+                    // Close emoji picker and focus input to show keyboard
+                    this.closeEmojiPicker();
+                    const messageInput = document.getElementById('message-input');
+                    if (messageInput) {
+                        messageInput.focus();
+                    }
+                } else {
+                    // Hide keyboard and show emoji picker
+                    this.showEmojiPicker();
+                }
             },
             
             // Block/unblock user
@@ -5704,12 +5922,21 @@
                                     </svg>
                                 </button>
                                 
-                                <button class="emoji-button" onclick="app.showEmojiPicker()">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <button class="emoji-button" onclick="app.toggleEmojiKeyboard()">
+                                    <svg class="emoji-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
                                         <line x1="9" y1="9" x2="9.01" y2="9"></line>
                                         <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                    </svg>
+                                                                        <svg class="keyboard-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                        <line x1="6" y1="8" x2="6" y2="8"></line>
+                                        <line x1="10" y1="8" x2="10" y2="8"></line>
+                                        <line x1="14" y1="8" x2="14" y2="8"></line>
+                                        <line x1="18" y1="8" x2="18" y2="8"></line>
+                                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                                        <line x1="8" y1="16" x2="16" y2="16"></line>
                                     </svg>
                                 </button>
                                 
@@ -5926,3 +6153,5 @@
     </script>
 </body>
 </html>
+
+
