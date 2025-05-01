@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ChatXchange</title>
+    <link rel="manifest" href="manifest.json">
     
     <!-- Styles -->
     <style>
@@ -985,19 +986,38 @@
         .emoji-picker {
             position: absolute;
             bottom: 70px;
-            left: 16px;
+            left: 0;
+            right: 0;
             background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            padding: 8px;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+            padding: 16px;
+            z-index: 100;
+            animation: slide-up 0.3s ease-out;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        @keyframes slide-up {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .emoji-category {
+            margin-bottom: 16px;
+        }
+        
+        .emoji-category-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary-text);
+        }
+        
+        .emoji-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
-            z-index: 100;
-            animation: scale-in 0.2s ease-out;
-            max-width: calc(100% - 32px);
-            max-height: 200px;
-            overflow-y: auto;
         }
         
         .emoji-item {
@@ -2244,6 +2264,19 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
         
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
         // Check for dark mode
         function checkDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -2310,7 +2343,8 @@
             emojiPickerVisible: false, // Track emoji picker visibility
             selectedEmojis: {}, // Track selected emojis for messages
             customImagePreview: null,
-            availableEmojis: ['👍', '❤️', '😂', '😮', '😢', '👏', '🔥', '🎉', '🤔', '💯'],
+            availableEmojis: ['👍', '❤️', '😂', '😮', '😢', '👏'],
+            recentEmojis: [], // Track recently used emojis
             reactionPickerVisible: false,
             reactionPickerTargetId: null,
             totalUserCount: 0, // Track total user count
@@ -3783,12 +3817,31 @@
                     // Update message with new reactions
                     await messageRef.update({ reactions });
                     
+                    // Add to recently used emojis list if not already there
+                    if (!existingReaction) {
+                        this.addToRecentEmojis(emoji);
+                    }
+                    
                     // Close reaction picker
                     this.closeReactionPicker();
                     
                 } catch (error) {
                     console.error("Error adding reaction:", error);
                     this.showNotification("Erreur lors de l'ajout de la réaction", "error");
+                }
+            },
+            
+            // Add to recent emojis list
+            addToRecentEmojis(emoji) {
+                // Remove the emoji if it's already in the list
+                this.recentEmojis = this.recentEmojis.filter(e => e !== emoji);
+                
+                // Add emoji to the beginning of the list
+                this.recentEmojis.unshift(emoji);
+                
+                // Keep only the most recent 8 emojis
+                if (this.recentEmojis.length > 8) {
+                    this.recentEmojis = this.recentEmojis.slice(0, 8);
                 }
             },
             
@@ -3859,19 +3912,47 @@
                 const pickerContainer = document.createElement('div');
                 pickerContainer.className = 'emoji-picker';
                 
-                // Add more emojis for the picker
-                const emojis = [
-                    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', 
-                    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', 
-                    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
-                    '👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏',
-                    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '💔', '❣️', '💕',
-                    '🔥', '⭐', '🌟', '✨', '💯', '💢', '💫', '💦', '💤', '🎉'
-                ];
+                let html = '';
                 
-                pickerContainer.innerHTML = emojis.map(emoji => 
-                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
-                ).join('');
+                // Add recently used emojis if available
+                if (this.recentEmojis.length > 0) {
+                    html += `
+                        <div class="emoji-category">
+                            <div class="emoji-category-title">Récents</div>
+                            <div class="emoji-grid">
+                                ${this.recentEmojis.map(emoji => 
+                                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Add emoji categories
+                const emojiCategories = {
+                    "Smileys & Émotions": ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩'],
+                    "Gestes & Personnes": ['👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪', '🦾', '🦿', '🦵', '🦶'],
+                    "Animaux & Nature": ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊'],
+                    "Nourriture & Boisson": ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝'],
+                    "Activités": ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓', '🏸', '🏒', '🏑', '🥍'],
+                    "Objets": ['⌚', '📱', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '📀', '💿', '💾', '💽', '📼', '📷', '📸'],
+                    "Symboles": ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝']
+                };
+                
+                for (const [category, emojis] of Object.entries(emojiCategories)) {
+                    html += `
+                        <div class="emoji-category">
+                            <div class="emoji-category-title">${category}</div>
+                            <div class="emoji-grid">
+                                ${emojis.map(emoji => 
+                                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                pickerContainer.innerHTML = html;
                 
                 document.body.appendChild(pickerContainer);
                 
@@ -3888,6 +3969,9 @@
                             messageInput.focus();
                             messageInput.selectionStart = cursorPos + emoji.length;
                             messageInput.selectionEnd = cursorPos + emoji.length;
+                            
+                            // Add to recently used emojis
+                            this.addToRecentEmojis(emoji);
                         }
                         this.closeEmojiPicker();
                     });
