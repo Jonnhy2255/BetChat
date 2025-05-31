@@ -252,7 +252,7 @@
             display: flex;
             align-items: center;
             padding: 20px 15px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .side-menu-title {
@@ -318,7 +318,7 @@
         
         .header {
             background-color: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -461,7 +461,7 @@
             right: 0;
             height: 50px;
             background-color: var(--action-bar-bg);
-            border-bottom: 1px solid var(--action-bar-border);
+            border-bottom: none;
             display: flex;
             align-items: center;
             padding: 0 15px;
@@ -526,7 +526,7 @@
         
         .bottom-nav {
             background-color: var(--bg-color);
-            border-top: 1px solid var(--border-color);
+            border-top: none;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -656,7 +656,7 @@
         .chat-item, .user-item, .event-item {
             display: flex;
             padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
             align-items: center;
             cursor: pointer;
             position: relative;
@@ -771,7 +771,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
             cursor: pointer;
         }
         
@@ -920,7 +920,7 @@
             display: flex;
             padding: 10px;
             background-color: var(--bg-color);
-            border-top: 1px solid var(--border-color);
+            border-top: none;
             align-items: flex-end;
             min-height: 60px;
             max-height: 150px;
@@ -1078,7 +1078,7 @@
             display: flex;
             align-items: flex-start;
             padding: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .profile-header .profile-pic {
@@ -1177,7 +1177,7 @@
         .auth-tabs {
             display: flex;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .auth-tab {
@@ -1507,7 +1507,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .create-group-title {
@@ -1558,7 +1558,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .edit-title {
@@ -1976,7 +1976,7 @@
         
         .forecasts-tabs {
             display: flex;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
             margin-bottom: 15px;
             background-color: var(--bg-color);
             position: sticky;
@@ -2162,7 +2162,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
             margin-bottom: 10px;
         }
         
@@ -2186,7 +2186,7 @@
             font-size: 12px;
             color: var(--inactive-text);
             text-align: right;
-            border-top: 1px solid var(--border-color);
+            border-top: none;
             margin-top: 10px;
             padding-top: 8px;
         }
@@ -2409,7 +2409,7 @@
             padding: 20px 0;
             font-size: 12px;
             color: var(--inactive-text);
-            border-top: 1px solid var(--border-color);
+            border-top: none;
             margin-top: auto;
         }
         
@@ -2547,7 +2547,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: none;
         }
         
         .terms-title {
@@ -2792,7 +2792,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid var(--group-info-border);
+            border-bottom: none;
         }
         
         .group-info-title {
@@ -3028,6 +3028,26 @@
             font-size: 16px;
             color: var(--primary-color);
         }
+
+        .discussion-type-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .discussion-type-badge.group {
+            background-color: var(--success-color);
+        }
+
+        .discussion-type-badge.direct {
+            background-color: #007aff;
+        }
         </style>
 </head>
 <body>
@@ -3161,7 +3181,7 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </div>
-        <div id="header-title" class="header-title">Groupes</div>
+        <div id="header-title" class="header-title">Discussions</div>
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
@@ -3200,12 +3220,12 @@
     </div>
 
     <div class="content">
-        <div id="groups-section" class="section active">
-            <div class="chat-list" id="groups-list">
+        <div id="discussions-section" class="section active">
+            <div class="chat-list" id="discussions-list">
                 <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <div class="empty-state-title">Aucun groupe</div>
-                    <div class="empty-state-text">Vos groupes apparaîtront ici</div>
+                    <i class="fas fa-comments"></i>
+                    <div class="empty-state-title">Aucune discussion</div>
+                    <div class="empty-state-text">Vos discussions apparaîtront ici</div>
                 </div>
             </div>
             
@@ -3761,9 +3781,9 @@
     </div>
 
     <div class="bottom-nav" id="bottom-nav">
-        <div class="nav-item active" data-section="groups" style="flex: 1;">
-            <i class="nav-icon fas fa-users"></i>
-            <span>Groupes</span>
+        <div class="nav-item active" data-section="discussions" style="flex: 1;">
+            <i class="nav-icon fas fa-comments"></i>
+            <span>Discussions</span>
         </div>
         <div class="nav-item" data-section="users" style="flex: 1;">
             <i class="nav-icon fas fa-address-book"></i>
@@ -3804,7 +3824,7 @@
         let currentGroup = '';
         let currentGroupId = null;
         let currentGroupData = null;
-        let currentSection = 'groups';
+        let currentSection = 'discussions';
         let isOnline = navigator.onLine;
         let messageQueue = [];
         let chatUnsubscribers = {};
@@ -3842,6 +3862,8 @@
         let currentChatPartner = null; // Pour les discussions privées
         let processingMessage = false; // Pour éviter les doubles messages
         let selectedTheme = localStorage.getItem('parisAllianceTheme') || 'default';
+        let directChatsCache = {}; // Cache pour les discussions directes
+        let allDiscussions = []; // Toutes les discussions (groupes + directs)
         
         function setupTheme() {
             // Appliquer le thème stocké
@@ -3909,8 +3931,8 @@
                 isOnline = true;
                 
                 setTimeout(() => {
-                    if (isLoggedIn && currentSection === 'groups') {
-                        loadGroups();
+                    if (isLoggedIn && currentSection === 'discussions') {
+                        loadDiscussions();
                     }
                     processQueuedMessages();
                 }, 1000);
@@ -3931,12 +3953,16 @@
             
             for (const message of processedMessages) {
                 try {
-                    await sendMessageToFirestore(
-                        message.groupId, 
-                        message.text,
-                        message.imageData,
-                        message.replyTo
-                    );
+                    if (message.direct) {
+                        await sendDirectMessage(message.chatId, message.text, message.imageData, message.replyTo);
+                    } else {
+                        await sendMessageToFirestore(
+                            message.groupId, 
+                            message.text,
+                            message.imageData,
+                            message.replyTo
+                        );
+                    }
                 } catch (error) {
                     messageQueue.push(message);
                 }
@@ -4083,19 +4109,19 @@
             
             document.getElementById('close-events-btn').addEventListener('click', function() {
                 if (currentSection === 'events') {
-                    showGroupsSection();
+                    showDiscussionsSection();
                 }
             });
             
             document.getElementById('close-users-btn').addEventListener('click', function() {
                 if (currentSection === 'users') {
-                    showGroupsSection();
+                    showDiscussionsSection();
                 }
             });
             
             document.getElementById('close-interface-btn').addEventListener('click', function() {
                 if (currentSection === 'interface') {
-                    showGroupsSection();
+                    showDiscussionsSection();
                 }
             });
             
@@ -4113,8 +4139,8 @@
                         e.clientY >= rect.top && e.clientY <= rect.bottom) {
                         
                         const section = item.getAttribute('data-section');
-                        if (section === 'groups') {
-                            showGroupsSection();
+                        if (section === 'discussions') {
+                            showDiscussionsSection();
                         } else if (section === 'forecasts') {
                             showForecastsSection();
                         } else if (section === 'users') {
@@ -4226,11 +4252,7 @@
             document.getElementById('header-back-button').addEventListener('click', closeChat);
             
             document.getElementById('create-group-btn').addEventListener('click', function() {
-                if (isAdmin) {
-                    showCreateGroupDialog();
-                } else {
-                    showNotification("Seuls les administrateurs peuvent créer des groupes", "error");
-                }
+                showCreateGroupDialog();
             });
             
             document.getElementById('create-group-back').addEventListener('click', hideCreateGroupDialog);
@@ -4397,8 +4419,8 @@
             }
             
             // If in a section other than main, return to main section
-            if (currentSection !== 'groups') {
-                showGroupsSection();
+            if (currentSection !== 'discussions') {
+                showDiscussionsSection();
                 history.pushState({ page: 'main' }, '');
                 return;
             }
@@ -4430,7 +4452,7 @@
             }
             
             // If already in main section, prevent leaving app
-            if (currentSection === 'groups') {
+            if (currentSection === 'discussions') {
                 history.pushState({ page: 'main' }, '');
             }
         }
@@ -4554,8 +4576,8 @@
                 currentSearchContext = currentSection;
                 
                 // Adapt placeholder based on context
-                if (currentSearchContext === 'groups') {
-                    searchInput.placeholder = 'Rechercher un groupe...';
+                if (currentSearchContext === 'discussions') {
+                    searchInput.placeholder = 'Rechercher une discussion...';
                 } else if (currentSearchContext === 'events') {
                     searchInput.placeholder = 'Rechercher un événement...';
                 } else if (currentSearchContext === 'users') {
@@ -4587,8 +4609,8 @@
         
         // Handle search based on context
         function handleSearch(query) {
-            if (currentSearchContext === 'groups') {
-                filterGroups(query);
+            if (currentSearchContext === 'discussions') {
+                filterDiscussions(query);
             } else if (currentSearchContext === 'events') {
                 filterEvents(query);
             } else if (currentSearchContext === 'users') {
@@ -4920,7 +4942,7 @@
             loadForecastsData(tabId);
         }
         
-        function showGroupsSection() {
+        function showDiscussionsSection() {
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
                 return;
@@ -4930,7 +4952,7 @@
             hideMessageActionsBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('data-section') === 'groups') {
+                if (item.getAttribute('data-section') === 'discussions') {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
@@ -4940,15 +4962,15 @@
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            currentSection = 'groups';
+            currentSection = 'discussions';
             
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            document.getElementById('groups-section').classList.add('active');
+            document.getElementById('discussions-section').classList.add('active');
             
-            document.getElementById('header-title').textContent = 'Groupes';
+            document.getElementById('header-title').textContent = 'Discussions';
             
             document.getElementById('header-action').innerHTML = `
                 <div class="search-button" id="search-button">
@@ -4976,7 +4998,7 @@
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
             
-            loadGroups();
+            loadDiscussions();
         }
         
         function showUsersSection() {
@@ -5060,7 +5082,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showGroupsSection();
+                showDiscussionsSection();
             });
 
             // Hide bottom nav
@@ -5515,7 +5537,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showGroupsSection();
+                showDiscussionsSection();
             });
 
             // Hide bottom nav
@@ -5619,7 +5641,7 @@
                 showNotification('Nom du groupe mis à jour', 'success');
                 groupNameChanged = false;
                 
-                loadGroups();
+                loadDiscussions();
             } catch (error) {
                 showNotification('Erreur lors de la mise à jour du nom', 'error');
             } finally {
@@ -5746,7 +5768,7 @@
                 showNotification('Image du groupe mise à jour', 'success');
                 groupImageFile = null;
                 
-                loadGroups();
+                loadDiscussions();
             } catch (error) {
                 showNotification('Erreur lors de la mise à jour de l\'image', 'error');
             } finally {
@@ -6153,6 +6175,9 @@
             // Load messages
             loadDirectMessages(chatId);
             
+            // Update direct chats cache
+            updateDirectChatInCache(chatId, userData);
+            
             // Add state to history for back button handling
             history.pushState({ page: 'direct-chat' }, '');
         }
@@ -6241,51 +6266,300 @@
             }
         }
         
-        function filterGroups(searchText) {
-            const groupItems = document.querySelectorAll('.chat-item');
+        // Update direct chat in cache when a message is sent/received
+        function updateDirectChatInCache(chatId, userData) {
+            directChatsCache[chatId] = {
+                id: chatId,
+                name: userData.displayName || 'Utilisateur',
+                type: 'direct',
+                partner: userData,
+                lastMessage: null,
+                lastMessageTime: new Date()
+            };
+        }
+        
+        // Load all discussions (groups + direct chats)
+        async function loadDiscussions() {
+            if (isLoadingGroups) return;
+            isLoadingGroups = true;
+            
+            const discussionsList = document.getElementById('discussions-list');
+            if (!discussionsList) return;
+            
+            discussionsList.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
+                    <div style="margin-top: 10px; font-weight: bold;">Chargement des discussions...</div>
+                </div>
+            `;
+            
+            try {
+                allDiscussions = [];
+                
+                // Load groups (visible to everyone now)
+                const groupsRef = collection(db, "groups");
+                const groupsQuery = query(groupsRef, orderBy("lastUpdated", "desc"));
+                const groupsSnap = await getDocs(groupsQuery);
+                
+                groupsSnap.forEach((doc) => {
+                    const groupData = doc.data();
+                    allDiscussions.push({
+                        id: doc.id,
+                        type: 'group',
+                        name: groupData.name || 'Sans nom',
+                        data: groupData,
+                        lastMessageTime: groupData.lastUpdated || groupData.createdAt
+                    });
+                });
+                
+                // Load direct chats
+                const directChatsRef = collection(db, "directChats");
+                const directChatsQuery = query(
+                    directChatsRef, 
+                    where("participants", "array-contains", currentUser.uid),
+                    orderBy("lastMessageTime", "desc")
+                );
+                const directChatsSnap = await getDocs(directChatsQuery);
+                
+                for (const chatDoc of directChatsSnap.docs) {
+                    const chatData = chatDoc.data();
+                    const partnerId = chatData.participants.find(id => id !== currentUser.uid);
+                    
+                    // Get partner data
+                    let partnerData = null;
+                    if (usersCache[partnerId]) {
+                        partnerData = usersCache[partnerId];
+                    } else {
+                        try {
+                            const userDoc = await getDoc(doc(db, "Users", partnerId));
+                            if (userDoc.exists()) {
+                                partnerData = { id: partnerId, ...userDoc.data() };
+                                usersCache[partnerId] = partnerData;
+                            }
+                        } catch (error) {
+                            continue;
+                        }
+                    }
+                    
+                    if (partnerData) {
+                        allDiscussions.push({
+                            id: chatDoc.id,
+                            type: 'direct',
+                            name: partnerData.displayName || 'Utilisateur',
+                            data: chatData,
+                            partner: partnerData,
+                            lastMessageTime: chatData.lastMessageTime
+                        });
+                    }
+                }
+                
+                // Sort by last message time
+                allDiscussions.sort((a, b) => {
+                    const timeA = a.lastMessageTime ? (a.lastMessageTime.toDate ? a.lastMessageTime.toDate() : a.lastMessageTime) : new Date(0);
+                    const timeB = b.lastMessageTime ? (b.lastMessageTime.toDate ? b.lastMessageTime.toDate() : b.lastMessageTime) : new Date(0);
+                    return timeB - timeA;
+                });
+                
+                displayDiscussions();
+                
+            } catch (error) {
+                discussionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="empty-state-title">Erreur</div>
+                        <div class="empty-state-text">Impossible de charger les discussions</div>
+                    </div>
+                `;
+            } finally {
+                isLoadingGroups = false;
+            }
+        }
+        
+        function displayDiscussions() {
+            const discussionsList = document.getElementById('discussions-list');
+            if (!discussionsList) return;
+            
+            if (allDiscussions.length === 0) {
+                discussionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <div class="empty-state-title">Aucune discussion</div>
+                        <div class="empty-state-text">Vos discussions apparaîtront ici</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            discussionsList.innerHTML = '';
+            
+            allDiscussions.forEach(discussion => {
+                const discussionElement = createDiscussionElement(discussion);
+                discussionsList.appendChild(discussionElement);
+            });
+        }
+        
+        function createDiscussionElement(discussion) {
+            const discussionElement = document.createElement('div');
+            discussionElement.className = 'chat-item';
+            discussionElement.setAttribute('data-group', discussion.name);
+            discussionElement.setAttribute('data-id', discussion.id);
+            discussionElement.setAttribute('data-type', discussion.type);
+            
+            let lastMessageText = 'Pas de messages';
+            let lastMessageFrom = '';
+            let lastMessageTime = '';
+            let imageUrl = '';
+            let badgeHtml = '';
+            
+            if (discussion.type === 'group') {
+                const groupData = discussion.data;
+                
+                if (groupData.lastMessage) {
+                    lastMessageText = groupData.lastMessage.text || 'Nouveau message';
+                    lastMessageFrom = groupData.lastMessage.from === currentUser.uid ? 'Vous: ' : '';
+                    
+                    if (groupData.lastMessage.timestamp) {
+                        const now = new Date();
+                        const messageDate = groupData.lastMessage.timestamp.toDate();
+                        
+                        if (messageDate.toDateString() === now.toDateString()) {
+                            // Today, show time
+                            lastMessageTime = messageDate.toLocaleTimeString('fr-FR', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        } else {
+                            // Another day, show date
+                            lastMessageTime = messageDate.toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short'
+                            });
+                        }
+                    }
+                }
+                
+                imageUrl = groupData.imageURL;
+                
+                if (groupData.allowPublicMessages === false) {
+                    badgeHtml = '<span class="restricted-badge">Restreint</span>';
+                }
+                badgeHtml += '<span class="discussion-type-badge group">Groupe</span>';
+                
+            } else if (discussion.type === 'direct') {
+                const partnerData = discussion.partner;
+                imageUrl = partnerData.photoURL;
+                lastMessageText = 'Discussion privée';
+                badgeHtml = '<span class="discussion-type-badge direct">Direct</span>';
+                
+                if (partnerData.statut === 'admin') {
+                    badgeHtml = '<span class="admin-badge">Admin</span>' + badgeHtml;
+                }
+            }
+            
+            discussionElement.innerHTML = `
+                <div class="${discussion.type === 'group' ? 'group-pic' : 'user-pic'}">
+                    ${imageUrl ? `<img src="${imageUrl}" alt="${discussion.name}">` : 
+                      (discussion.type === 'group' ? 
+                        '<i class="fas fa-users" style="color: white; font-size: 20px;"></i>' : 
+                        '<i class="fas fa-user"></i>')}
+                </div>
+                <div class="item-content">
+                    <div class="item-title">
+                        ${discussion.name}
+                        ${badgeHtml}
+                    </div>
+                    <div class="item-subtitle">${lastMessageFrom}${lastMessageText}</div>
+                </div>
+                <div class="item-time">${lastMessageTime}</div>
+            `;
+            
+            // Add click handler
+            discussionElement.addEventListener('click', () => {
+                if (discussion.type === 'group') {
+                    openGroupChat(discussion.id, discussion.name);
+                } else if (discussion.type === 'direct') {
+                    openDirectChat(discussion.partner);
+                }
+            });
+            
+            // Add long press handler for admins (only for groups)
+            if (discussion.type === 'group' && isAdmin) {
+                discussionElement.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showEditGroupDialog(discussion.id, discussion.data);
+                    return false;
+                });
+                
+                let longPressGroupTimer = null;
+                
+                discussionElement.addEventListener('touchstart', () => {
+                    longPressGroupTimer = setTimeout(() => {
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        showEditGroupDialog(discussion.id, discussion.data);
+                    }, 800);
+                });
+                
+                discussionElement.addEventListener('touchend', () => {
+                    if (longPressGroupTimer) {
+                        clearTimeout(longPressGroupTimer);
+                    }
+                });
+                
+                discussionElement.addEventListener('touchmove', () => {
+                    if (longPressGroupTimer) {
+                        clearTimeout(longPressGroupTimer);
+                    }
+                });
+            }
+            
+            return discussionElement;
+        }
+        
+        function filterDiscussions(searchText) {
+            const discussionItems = document.querySelectorAll('.chat-item');
             const lowerSearchText = searchText.toLowerCase();
             
-            groupItems.forEach(item => {
-                const groupName = item.getAttribute('data-group').toLowerCase();
-                if (groupName.includes(lowerSearchText)) {
+            discussionItems.forEach(item => {
+                const discussionName = item.getAttribute('data-group').toLowerCase();
+                if (discussionName.includes(lowerSearchText)) {
                     item.style.display = 'flex';
                 } else {
                     item.style.display = 'none';
                 }
             });
             
-            let visibleGroups = 0;
-            groupItems.forEach(item => {
+            let visibleDiscussions = 0;
+            discussionItems.forEach(item => {
                 if (item.style.display !== 'none') {
-                    visibleGroups++;
+                    visibleDiscussions++;
                 }
             });
             
-            const emptyState = document.querySelector('#groups-list .empty-state');
-            if (visibleGroups === 0 && groupItems.length > 0) {
+            const emptyState = document.querySelector('#discussions-list .empty-state');
+            if (visibleDiscussions === 0 && discussionItems.length > 0) {
                 if (emptyState) {
                     emptyState.style.display = 'block';
                     emptyState.querySelector('.empty-state-title').textContent = 'Aucun résultat';
-                    emptyState.querySelector('.empty-state-text').textContent = `Aucun groupe ne correspond à "${searchText}"`;
+                    emptyState.querySelector('.empty-state-text').textContent = `Aucune discussion ne correspond à "${searchText}"`;
                 } else {
                     const newEmptyState = document.createElement('div');
                     newEmptyState.className = 'empty-state';
                     newEmptyState.innerHTML = `
                         <i class="fas fa-search"></i>
                         <div class="empty-state-title">Aucun résultat</div>
-                        <div class="empty-state-text">Aucun groupe ne correspond à "${searchText}"</div>
+                        <div class="empty-state-text">Aucune discussion ne correspond à "${searchText}"</div>
                     `;
-                    document.getElementById('groups-list').appendChild(newEmptyState);
+                    document.getElementById('discussions-list').appendChild(newEmptyState);
                 }
             } else if (emptyState) {
-                if (groupItems.length === 0) {
+                if (discussionItems.length === 0) {
                     emptyState.style.display = 'block';
-                    emptyState.querySelector('.empty-state-title').textContent = 'Aucun groupe';
-                    emptyState.querySelector('.empty-state-text').textContent = isAdmin ? 
-                        'Créez un nouveau groupe en appuyant sur le bouton +' : 
-                        'Aucun groupe disponible pour le moment';
+                    emptyState.querySelector('.empty-state-title').textContent = 'Aucune discussion';
+                    emptyState.querySelector('.empty-state-text').textContent = 'Vos discussions apparaîtront ici';
                 } else {
-                    emptyState.style.display = visibleGroups > 0 ? 'none' : 'block';
+                    emptyState.style.display = visibleDiscussions > 0 ? 'none' : 'block';
                 }
             }
         }
@@ -6461,7 +6735,7 @@
             document.getElementById('delete-confirmation').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             currentMessageForAction = null;
-        }
+               }
         
         async function confirmDeleteMessage() {
             if (!currentMessageForAction) {
@@ -6469,965 +6743,297 @@
                 return;
             }
             
-            const messageId = currentMessageForAction.id;
-            const messageElement = currentMessageForAction.element;
-            const messageContainer = messageElement.closest('.message-container');
-            const messageFrom = currentMessageForAction.from;
-            
             try {
-                // Check if user has permission to delete this message
-                if (messageFrom !== currentUser.uid && !isAdmin) {
-                    showNotification("Vous ne pouvez pas supprimer les messages des autres utilisateurs", "error");
-                    hideDeleteConfirmation();
-                    return;
-                }
-                
-                // Apply delete animation
-                if (messageContainer) {
-                    messageContainer.style.animation = 'deleteMessage 0.3s ease forwards';
-                }
-                
-                // Determine if it's a direct chat or group chat
-                let messageRef;
-                if (currentGroupId) {
-                    messageRef = doc(db, "groups", currentGroupId, "messages", messageId);
-                } else if (currentChatPartner) {
-                    const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
-                    messageRef = doc(db, "directChats", chatId, "messages", messageId);
-                } else {
-                    throw new Error("No valid chat context found");
-                }
-                
-                // Check if message still exists
-                const messageDoc = await getDoc(messageRef);
-                if (!messageDoc.exists()) {
-                    showNotification("Ce message a déjà été supprimé", "info");
-                    hideDeleteConfirmation();
+                if (currentChatPartner) {
+                    // Direct message deletion
+                    const user1 = currentUser.uid;
+                    const user2 = currentChatPartner.id;
+                    const chatId = [user1, user2].sort().join('_');
                     
-                    // Remove element from UI
-                    if (messageContainer) {
-                        setTimeout(() => {
-                            messageContainer.remove();
-                        }, 300);
-                    }
-                    return;
+                    const messageRef = doc(db, "directChats", chatId, "messages", currentMessageForAction.id);
+                    await deleteDoc(messageRef);
+                } else if (currentGroupId) {
+                    // Group message deletion
+                    const messageRef = doc(db, "groups", currentGroupId, "messages", currentMessageForAction.id);
+                    await deleteDoc(messageRef);
                 }
                 
-                // Delete message from Firestore
-                await deleteDoc(messageRef);
-                
-                // Remove element from UI after animation
-                if (messageContainer) {
+                const messageElement = currentMessageForAction.element;
+                if (messageElement) {
+                    messageElement.classList.add('deleting');
                     setTimeout(() => {
-                        messageContainer.remove();
+                        if (messageElement.parentElement) {
+                            messageElement.parentElement.removeChild(messageElement);
+                        }
                     }, 300);
                 }
                 
-                hideDeleteConfirmation();
                 showNotification('Message supprimé', 'success');
-                
-                // If message was an image, update image cache
-                const messageData = messageDoc.data();
-                if (messageData && messageData.imageData && currentGroupId && groupImageCache[currentGroupId]) {
-                    // Remove from cache
-                    groupImageCache[currentGroupId] = groupImageCache[currentGroupId].filter(
-                        img => img.id !== messageId
-                    );
-                }
-                
             } catch (error) {
-                console.error("Delete error:", error);
-                showNotification("Erreur lors de la suppression", "error");
+                showNotification('Erreur lors de la suppression du message', 'error');
+            } finally {
                 hideDeleteConfirmation();
-                
-                // Restore element if animation was in progress
-                if (messageContainer) {
-                    messageContainer.style.animation = '';
-                }
             }
         }
         
         function copyMessageText() {
-            if (!currentMessageForAction) {
-                if (isMessageActionsVisible) {
-                    hideMessageActionsBar();
-                }
-                return;
-            }
+            if (!currentMessageForAction) return;
             
             try {
-                const messageElement = currentMessageForAction.element;
-                const messageText = messageElement.textContent;
-                
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(messageText).then(() => {
-                        showNotification('Texte copié dans le presse-papiers', 'success');
-                    }).catch(err => {
-                        showNotification('Erreur lors de la copie du texte', 'error');
+                const textToCopy = currentMessageForAction.text;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        showNotification('Texte copié', 'success');
+                    }).catch(() => {
+                        fallbackCopyText(textToCopy);
                     });
                 } else {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = messageText;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    
-                    try {
-                        const successful = document.execCommand('copy');
-                        if (successful) {
-                            showNotification('Texte copié dans le presse-papiers', 'success');
-                        } else {
-                            showNotification('Impossible de copier le texte', 'error');
-                        }
-                    } catch (err) {
-                        showNotification('Erreur lors de la copie du texte', 'error');
-                    }
-                    
-                    document.body.removeChild(textArea);
+                    fallbackCopyText(textToCopy);
                 }
             } catch (error) {
-                showNotification('Erreur lors de la copie du texte', 'error');
-            } finally {
-                if (isMessageActionsVisible) {
-                    hideMessageActionsBar();
-                }
+                showNotification('Erreur lors de la copie', 'error');
             }
         }
         
-        function showCreateGroupDialog() {
-            if (!isAdmin) {
-                showNotification("Seuls les administrateurs peuvent créer des groupes", "error");
-                return;
-            }
-            
-            document.getElementById('group-name').value = '';
-            document.getElementById('group-description').value = '';
-            document.getElementById('group-public-messages').checked = true;
-            document.getElementById('group-name-error').style.display = 'none';
-            
-            groupImageFile = null;
-            document.getElementById('new-group-image-preview').innerHTML = `
-                <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                <div class="group-image-overlay" id="new-group-image-upload">
-                    <i class="fas fa-camera"></i>
-                </div>
-            `;
-            document.getElementById('new-group-image-input').value = '';
-            
-            document.getElementById('new-group-image-upload').addEventListener('click', () => {
-                document.getElementById('new-group-image-input').click();
-            });
-            
-            document.getElementById('create-group-dialog').classList.add('active');
-            document.getElementById('group-name').focus();
-            
-            // Add state to history for back button handling
-            history.pushState({ page: 'create-group' }, '');
-        }
-        
-        function hideCreateGroupDialog() {
-            document.getElementById('create-group-dialog').classList.remove('active');
-        }
-        
-        function showEditGroupDialog(groupId, groupData) {
-            if (!isAdmin) {
-                showNotification("Seuls les administrateurs peuvent modifier le groupe", "error");
-                return;
-            }
-            
-            editingGroupId = groupId;
-            
-            document.getElementById('edit-group-name').value = groupData.name || '';
-            document.getElementById('edit-group-description').value = groupData.description || '';
-            document.getElementById('edit-group-public-messages').checked = groupData.allowPublicMessages !== false;
-            
-            document.getElementById('save-group-name-btn').disabled = true;
-            document.getElementById('save-group-description-btn').disabled = true;
-            document.getElementById('save-group-permissions-btn').disabled = true;
-            document.getElementById('save-group-image-btn').disabled = true;
-            
-            groupNameChanged = false;
-            groupDescriptionChanged = false;
-            groupPermissionsChanged = false;
-            groupImageFile = null;
-            
-            const groupImagePreview = document.getElementById('edit-group-image-preview');
-            if (groupData.imageURL) {
-                groupImagePreview.innerHTML = `
-                    <img src="${groupData.imageURL}" alt="Group Image">
-                    <div class="group-image-overlay" id="edit-group-image-upload">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                `;
-            } else {
-                groupImagePreview.innerHTML = `
-                    <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                    <div class="group-image-overlay" id="edit-group-image-upload">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                `;
-            }
-            
-            document.getElementById('edit-group-image-upload').addEventListener('click', () => {
-                document.getElementById('edit-group-image-input').click();
-            });
-            
-            document.getElementById('edit-group-dialog').classList.add('active');
-            
-            // Add state to history for back button handling
-            history.pushState({ page: 'edit-group' }, '');
-        }
-        
-        function hideEditGroupDialog() {
-            document.getElementById('edit-group-dialog').classList.remove('active');
-            editingGroupId = null;
-            
-            groupNameChanged = false;
-            groupDescriptionChanged = false;
-            groupPermissionsChanged = false;
-            groupImageFile = null;
-            document.getElementById('edit-group-image-input').value = '';
-        }
-        
-        async function createNewGroup() {
-            if (!isAdmin) {
-                showNotification("Seuls les administrateurs peuvent créer des groupes", "error");
-                return;
-            }
-            
-            const groupName = document.getElementById('group-name').value.trim();
-            const groupDescription = document.getElementById('group-description').value.trim();
-            const allowPublicMessages = document.getElementById('group-public-messages').checked;
-            
-            if (!groupName) {
-                document.getElementById('group-name-error').style.display = 'block';
-                return;
-            }
-            
-            document.getElementById('group-name-error').style.display = 'none';
-            
-            setButtonLoading('create-group-submit', true);
+        function fallbackCopyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
             
             try {
-                const groupsRef = collection(db, "groups");
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('Texte copié', 'success');
+                } else {
+                    showNotification('Impossible de copier le texte', 'error');
+                }
+            } catch (error) {
+                showNotification('Erreur lors de la copie', 'error');
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+        
+        function changeAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('login-tab').classList.add('active');
+                document.getElementById('register-tab').classList.remove('active');
+                document.getElementById('login-form').classList.add('active');
+                document.getElementById('register-form').classList.remove('active');
+            } else {
+                document.getElementById('register-tab').classList.add('active');
+                document.getElementById('login-tab').classList.remove('active');
+                document.getElementById('register-form').classList.add('active');
+                document.getElementById('login-form').classList.remove('active');
+            }
+        }
+        
+        function validateLoginEmail() {
+            const email = document.getElementById('login-email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const errorElement = document.getElementById('login-email-error');
+            
+            if (!email || !emailRegex.test(email)) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateLoginPassword() {
+            const password = document.getElementById('login-password').value;
+            const errorElement = document.getElementById('login-password-error');
+            
+            if (!password) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateRegisterEmail() {
+            const email = document.getElementById('register-email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const errorElement = document.getElementById('register-email-error');
+            
+            if (!email || !emailRegex.test(email)) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateRegisterPassword() {
+            const password = document.getElementById('register-password').value;
+            const errorElement = document.getElementById('register-password-error');
+            
+            if (!password || password.length < 6) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateRegisterConfirmPassword() {
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const errorElement = document.getElementById('register-confirm-password-error');
+            
+            if (password !== confirmPassword) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateLoginForm() {
+            const emailValid = validateLoginEmail();
+            const passwordValid = validateLoginPassword();
+            return emailValid && passwordValid;
+        }
+        
+        function validateRegisterForm() {
+            const emailValid = validateRegisterEmail();
+            const passwordValid = validateRegisterPassword();
+            const confirmPasswordValid = validateRegisterConfirmPassword();
+            return emailValid && passwordValid && confirmPasswordValid;
+        }
+        
+        async function loginUser() {
+            if (!validateLoginForm()) return;
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            setButtonLoading('loginBtn', true);
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                showLogMessage('login-log', 'Connexion réussie ! Redirection...', 'success');
                 
-                const newGroupRef = await addDoc(groupsRef, {
-                    name: groupName,
-                    description: groupDescription,
-                    createdBy: currentUser.uid,
+                setTimeout(() => {
+                    document.getElementById('auth-screen').style.display = 'none';
+                }, 1000);
+                
+            } catch (error) {
+                let errorMessage = 'Erreur de connexion';
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'Aucun compte trouvé avec cet email';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Mot de passe incorrect';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Adresse email invalide';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'Ce compte a été désactivé';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Trop de tentatives. Réessayez plus tard';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showLogMessage('login-log', errorMessage, 'error');
+            } finally {
+                setButtonLoading('loginBtn', false);
+            }
+        }
+        
+        async function registerUser() {
+            if (!validateRegisterForm()) return;
+            
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            
+            setButtonLoading('registerBtn', true);
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                const userDoc = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.email.split('@')[0],
                     createdAt: serverTimestamp(),
-                    lastUpdated: serverTimestamp(),
-                    allowPublicMessages: allowPublicMessages,
-                    imageURL: groupImageFile || null,
-                    members: [currentUser.uid],
-                    admins: [currentUser.uid]
-                });
-                
-                await addEventLog({
-                    type: 'group-create',
-                    groupId: newGroupRef.id,
-                    groupName: groupName,
-                    userId: currentUser.uid,
-                    timestamp: new Date()
-                });
-                
-                hideCreateGroupDialog();
-                showNotification("Groupe créé avec succès", "success");
-                
-                // Open the new group
-                openGroupChat(newGroupRef.id, groupName);
-                
-            } catch (error) {
-                showNotification("Erreur lors de la création du groupe", "error");
-            } finally {
-                setButtonLoading('create-group-submit', false);
-            }
-        }
-        
-        async function addEventLog(eventData) {
-            try {
-                await addDoc(collection(db, "events"), eventData);
-            } catch (error) {
-                console.error("Error adding event log:", error);
-            }
-        }
-        
-        function showAdminNotificationDialog() {
-            if (!isAdmin) {
-                showNotification("Seuls les administrateurs peuvent envoyer des notifications", "error");
-                return;
-            }
-            
-            document.getElementById('notif-title').value = '';
-            document.getElementById('notif-content').value = '';
-            document.getElementById('notif-type').value = 'info';
-            
-            document.getElementById('notif-title-error').style.display = 'none';
-            document.getElementById('notif-content-error').style.display = 'none';
-            
-            document.getElementById('admin-notif-dialog').classList.add('active');
-            document.getElementById('notif-title').focus();
-            
-            // Add state to history for back button handling
-            history.pushState({ page: 'admin-notification' }, '');
-        }
-        
-        function hideAdminNotificationDialog() {
-            document.getElementById('admin-notif-dialog').classList.remove('active');
-        }
-        
-        async function sendAdminNotification() {
-            if (!isAdmin) {
-                showNotification("Seuls les administrateurs peuvent envoyer des notifications", "error");
-                hideAdminNotificationDialog();
-                return;
-            }
-            
-            const title = document.getElementById('notif-title').value.trim();
-            const content = document.getElementById('notif-content').value.trim();
-            const type = document.getElementById('notif-type').value;
-            
-            let hasError = false;
-            
-            if (!title) {
-                document.getElementById('notif-title-error').style.display = 'block';
-                hasError = true;
-            } else {
-                document.getElementById('notif-title-error').style.display = 'none';
-            }
-            
-            if (!content) {
-                document.getElementById('notif-content-error').style.display = 'block';
-                hasError = true;
-            } else {
-                document.getElementById('notif-content-error').style.display = 'none';
-            }
-            
-            if (hasError) return;
-            
-            setButtonLoading('send-notification-btn', true);
-            
-            try {
-                const notificationData = {
-                    title: title,
-                    content: content,
-                    type: type,
-                    createdBy: currentUser.uid,
-                    createdAt: serverTimestamp()
+                    statut: 'user',
+                    photoURL: null
                 };
                 
-                await addDoc(collection(db, "events"), {
-                    ...notificationData,
-                    adminNotification: true,
-                    timestamp: new Date()
-                });
+                await setDoc(doc(db, "Users", user.uid), userDoc);
                 
-                hideAdminNotificationDialog();
-                showNotification("Notification envoyée avec succès", "success");
+                showLogMessage('register-log', 'Inscription réussie ! Connexion...', 'success');
+                
+                setTimeout(() => {
+                    document.getElementById('auth-screen').style.display = 'none';
+                }, 1000);
                 
             } catch (error) {
-                showNotification("Erreur lors de l'envoi de la notification", "error");
+                let errorMessage = 'Erreur lors de l\'inscription';
+                
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Cette adresse email est déjà utilisée';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Adresse email invalide';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Le mot de passe est trop faible';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showLogMessage('register-log', errorMessage, 'error');
             } finally {
-                setButtonLoading('send-notification-btn', false);
+                setButtonLoading('registerBtn', false);
             }
         }
         
-        function checkSendPermissions() {
-            const sendButton = document.getElementById('send-button');
-            const chatInput = document.getElementById('chat-input');
-            const imageButton = document.getElementById('image-button');
-            const chatInputContainer = document.getElementById('chat-input-container');
+        function showLogMessage(logId, message, type) {
+            const logElement = document.getElementById(logId);
+            logElement.textContent = message;
+            logElement.className = `log-message ${type}`;
+            logElement.style.display = 'block';
             
-            if (!currentChatPartner && currentGroupData && currentGroupData.allowPublicMessages === false && !isAdmin) {
-                // Group with restricted permissions and not an admin
-                if (chatInputContainer) {
-                    chatInputContainer.style.display = 'none';
-                }
-                
-                const messageRestricted = document.querySelector('.restricted-message');
-                if (!messageRestricted) {
-                    const restrictedMessage = document.createElement('div');
-                    restrictedMessage.className = 'restricted-message';
-                    restrictedMessage.innerHTML = `<i class="fas fa-lock"></i> Seuls les administrateurs peuvent envoyer des messages dans ce groupe`;
-                    
-                    const messagesContainer = document.querySelector('.chat-messages-container');
-                    if (messagesContainer) {
-                        messagesContainer.appendChild(restrictedMessage);
-                    }
-                }
-            } else {
-                // User can send messages
-                if (chatInputContainer) {
-                    chatInputContainer.style.display = 'flex';
-                }
-                
-                const messageRestricted = document.querySelector('.restricted-message');
-                if (messageRestricted) {
-                    messageRestricted.remove();
-                }
-            }
+            setTimeout(() => {
+                logElement.style.display = 'none';
+            }, 5000);
         }
         
-        function setupChatInput() {
-            document.getElementById('chat-input').value = '';
-            document.getElementById('chat-image-input').value = '';
-            
-            chatImageFile = null;
-            
-            const imageButton = document.getElementById('image-button');
-            if (imageButton) {
-                imageButton.style.color = 'var(--primary-color)';
-            }
-            
-            // Reset reply if any
-            cancelReply();
-            
-            checkSendPermissions();
-            
-            // Auto-resize for textarea
-            setupTextareaAutoResize();
-        }
-        
-        function setButtonLoading(buttonId, isLoading) {
+        function setButtonLoading(buttonId, loading) {
             const button = document.getElementById(buttonId);
-            if (!button) return;
+            const loader = button.querySelector('.btn-loader');
+            const text = button.querySelector('.btn-text');
             
-            if (isLoading) {
+            if (loading) {
                 button.classList.add('loading');
+                loader.style.display = 'inline-block';
                 button.disabled = true;
             } else {
                 button.classList.remove('loading');
+                loader.style.display = 'none';
                 button.disabled = false;
             }
-        }
-        
-        function scrollToBottom() {
-            const messagesContainer = document.querySelector('.chat-messages-container');
-            if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-        }
-        
-        async function sendMessage() {
-            if (processingMessage) return; // Empêcher les doubles envois
-            
-            const messageText = document.getElementById('chat-input').value.trim();
-            const hasImage = chatImageFile !== null;
-            
-            if (!messageText && !hasImage) {
-                return; // Nothing to send
-            }
-            
-            if (currentChatPartner) {
-                // Direct message
-                const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
-                await sendDirectMessage(chatId, messageText, hasImage ? chatImageFile : null, replyingToMessage);
-            } else {
-                // Group message
-                await sendGroupMessage(currentGroupId, messageText, hasImage ? chatImageFile : null, replyingToMessage);
-            }
-            
-            // Clear input
-            document.getElementById('chat-input').value = '';
-            if (autoResizeTextarea) {
-                autoResizeTextarea();
-            }
-            
-            // Clear image if any
-            chatImageFile = null;
-            const imageButton = document.getElementById('image-button');
-            if (imageButton) {
-                imageButton.style.color = 'var(--primary-color)';
-            }
-            document.getElementById('chat-image-input').value = '';
-            
-            // Clear reply if any
-            cancelReply();
-        }
-        
-        async function sendDirectMessage(chatId, text, imageData, replyTo) {
-            if (!chatId || (!text && !imageData)) return;
-            
-            processingMessage = true;
-            
-            try {
-                if (!isOnline) {
-                    // Queue message for later if offline
-                    messageQueue.push({
-                        chatId,
-                        text,
-                        imageData,
-                        replyTo,
-                        direct: true
-                    });
-                    
-                    showNotification("Message mis en file d'attente (hors ligne)", "info");
-                    processingMessage = false;
-                    return;
-                }
-                
-                // Prepare message data
-                const messageData = {
-                    text: text || '',
-                    from: currentUser.uid,
-                    createdAt: serverTimestamp(),
-                    read: false
-                };
-                
-                if (imageData) {
-                    messageData.imageData = imageData;
-                }
-                
-                if (replyTo) {
-                    messageData.replyTo = replyTo;
-                }
-                
-                // Add message to Firestore
-                const messagesRef = collection(db, "directChats", chatId, "messages");
-                await addDoc(messagesRef, messageData);
-                
-                // Update last message time
-                const chatRef = doc(db, "directChats", chatId);
-                await updateDoc(chatRef, {
-                    lastMessageTime: serverTimestamp()
-                });
-                
-                // Scroll to bottom
-                scrollToBottom();
-                
-            } catch (error) {
-                console.error("Error sending direct message:", error);
-                showNotification("Erreur lors de l'envoi du message", "error");
-            } finally {
-                processingMessage = false;
-            }
-        }
-        
-        async function sendGroupMessage(groupId, text, imageData, replyTo) {
-            if (!groupId || (!text && !imageData)) return;
-            
-            processingMessage = true;
-            
-            try {
-                if (!isOnline) {
-                    // Queue message for later if offline
-                    messageQueue.push({
-                        groupId,
-                        text,
-                        imageData,
-                        replyTo
-                    });
-                    
-                    showNotification("Message mis en file d'attente (hors ligne)", "info");
-                    processingMessage = false;
-                    return;
-                }
-                
-                await sendMessageToFirestore(groupId, text, imageData, replyTo);
-                
-                // Scroll to bottom
-                scrollToBottom();
-                
-            } catch (error) {
-                console.error("Error sending group message:", error);
-                showNotification("Erreur lors de l'envoi du message", "error");
-            } finally {
-                processingMessage = false;
-            }
-        }
-        
-        async function sendMessageToFirestore(groupId, text, imageData, replyTo) {
-            // Prepare message data
-            const messageData = {
-                text: text || '',
-                from: currentUser.uid,
-                createdAt: serverTimestamp()
-            };
-            
-            if (imageData) {
-                messageData.imageData = imageData;
-            }
-            
-            if (replyTo) {
-                messageData.replyTo = replyTo;
-            }
-            
-            // Add message to Firestore
-            const messagesRef = collection(db, "groups", groupId, "messages");
-            await addDoc(messagesRef, messageData);
-            
-            // Update last message in group
-            const groupRef = doc(db, "groups", groupId);
-            await updateDoc(groupRef, {
-                lastMessage: {
-                    text: text ? (text.length > 30 ? text.substring(0, 30) + '...' : text) : '📷 Image',
-                    from: currentUser.uid,
-                    timestamp: serverTimestamp()
-                },
-                lastUpdated: serverTimestamp()
-            });
-        }
-        
-        function showDeleteEventConfirmation(eventId) {
-            currentEventForDeletion = eventId;
-            document.getElementById('delete-event-confirmation').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-            
-            // Add state to history for back button handling
-            history.pushState({ page: 'delete-event-confirmation' }, '');
-        }
-        
-        function hideDeleteEventConfirmation() {
-            document.getElementById('delete-event-confirmation').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            currentEventForDeletion = null;
-        }
-        
-        async function confirmDeleteEvent() {
-            if (!currentEventForDeletion) {
-                hideDeleteEventConfirmation();
-                return;
-            }
-            
-            try {
-                const eventRef = doc(db, "events", currentEventForDeletion);
-                await deleteDoc(eventRef);
-                
-                hideDeleteEventConfirmation();
-                showNotification('Événement supprimé', 'success');
-            } catch (error) {
-                console.error("Error deleting event:", error);
-                showNotification('Erreur lors de la suppression', 'error');
-                hideDeleteEventConfirmation();
-            }
-        }
-        
-        function listenToEvents() {
-            if (isLoadingEvents) return;
-            isLoadingEvents = true;
-            
-            const eventsList = document.getElementById('events-list');
-            if (!eventsList) return;
-            
-            eventsList.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                    <div style="margin-top: 10px; font-weight: bold;">Chargement des événements...</div>
-                </div>
-            `;
-            
-            if (eventsUnsubscribe) {
-                eventsUnsubscribe();
-                eventsUnsubscribe = null;
-            }
-            
-            const eventsRef = collection(db, "events");
-            const q = query(eventsRef, orderBy("timestamp", "desc"));
-            
-            eventsUnsubscribe = onSnapshot(q, (snapshot) => {
-                if (snapshot.empty) {
-                    eventsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-bell"></i>
-                            <div class="empty-state-title">Aucun événement</div>
-                            <div class="empty-state-text">Les événements apparaîtront ici</div>
-                        </div>
-                    `;
-                    isLoadingEvents = false;
-                    return;
-                }
-                
-                eventsList.innerHTML = '';
-                
-                let latestEventTimestamp = null;
-                
-                snapshot.forEach((doc) => {
-                    const eventData = doc.data();
-                    const eventElement = createEventElement(doc.id, eventData);
-                    eventsList.appendChild(eventElement);
-                    
-                    // Keep track of latest event timestamp for notifications
-                    if (eventData.timestamp && (!latestEventTimestamp || eventData.timestamp.toDate() > latestEventTimestamp.toDate())) {
-                        latestEventTimestamp = eventData.timestamp;
-                    }
-                });
-                
-                isLoadingEvents = false;
-                
-                // Check if we need to show notification dot
-                if (latestEventTimestamp && (!lastViewedEventTimestamp || latestEventTimestamp.toDate() > lastViewedEventTimestamp.toDate())) {
-                    showEventNotificationDot();
-                }
-            });
-        }
-        
-        function createEventElement(eventId, eventData) {
-            const eventElement = document.createElement('div');
-            
-            // Handle admin notifications differently
-            if (eventData.adminNotification) {
-                eventElement.className = 'admin-notification';
-                
-                const date = eventData.createdAt ? eventData.createdAt.toDate() : new Date();
-                const formattedDate = date.toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                let typeIcon = 'fa-info-circle';
-                if (eventData.type === 'alert') {
-                    typeIcon = 'fa-exclamation-circle';
-                } else if (eventData.type === 'update') {
-                    typeIcon = 'fa-sync-alt';
-                }
-                
-                eventElement.innerHTML = `
-                    <div class="admin-notification-header">
-                        <div class="admin-notification-title">
-                            <i class="fas ${typeIcon}"></i> ${eventData.title}
-                        </div>
-                    </div>
-                    <div class="admin-notification-content">${eventData.content}</div>
-                    <div class="admin-notification-footer">${formattedDate}</div>
-                `;
-                
-                // Add close button for admins
-                if (isAdmin) {
-                    const closeBtn = document.createElement('div');
-                    closeBtn.className = 'event-close-btn';
-                    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    closeBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        showDeleteEventConfirmation(eventId);
-                    });
-                    
-                    eventElement.appendChild(closeBtn);
-                }
-                
-                return eventElement;
-            }
-            
-            // Regular events
-            eventElement.className = 'event-item';
-            
-            if (eventData.type) {
-                eventElement.classList.add(eventData.type);
-            }
-            
-            let eventIcon = 'fa-bell';
-            let eventTitle = 'Événement';
-            let eventContent = '';
-            
-            const date = eventData.timestamp ? eventData.timestamp.toDate() : new Date();
-            const formattedDate = date.toLocaleDateString('fr-FR', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            if (eventData.type === 'group-create') {
-                eventIcon = 'fa-users';
-                eventTitle = 'Nouveau groupe';
-                eventContent = `Le groupe "${eventData.groupName}" a été créé.`;
-            } else if (eventData.type === 'permission-change') {
-                eventIcon = 'fa-lock';
-                eventTitle = 'Permissions modifiées';
-                eventContent = `Les permissions du groupe "${eventData.groupName}" ont été modifiées. Messages publics: ${eventData.allowPublicMessages ? 'Activés' : 'Désactivés'}`;
-            } else if (eventData.type === 'user-join') {
-                eventIcon = 'fa-user-plus';
-                eventTitle = 'Nouvel utilisateur';
-                eventContent = `Un nouvel utilisateur a rejoint le groupe "${eventData.groupName}"`;
-            }
-            
-            eventElement.innerHTML = `
-                <div class="event-icon">
-                    <i class="fas ${eventIcon}"></i>
-                </div>
-                <div class="item-content">
-                    <div class="event-header">${eventTitle}</div>
-                    <div class="event-content">${eventContent}</div>
-                    <div class="event-time">${formattedDate}</div>
-                </div>
-            `;
-            
-            // Add delete option for admins
-            if (isAdmin) {
-                const actions = document.createElement('div');
-                actions.className = 'event-actions';
-                actions.innerHTML = `
-                    <div class="event-action-btn delete">
-                        <i class="fas fa-trash-alt"></i>
-                    </div>
-                `;
-                
-                actions.querySelector('.delete').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showDeleteEventConfirmation(eventId);
-                });
-                
-                eventElement.appendChild(actions);
-            }
-            
-            return eventElement;
-        }
-        
-        function updateLastViewedEventTimestamp() {
-            lastViewedEventTimestamp = new Date();
-            localStorage.setItem('lastViewedEventTimestamp', lastViewedEventTimestamp.toISOString());
-        }
-        
-        function showEventNotificationDot() {
-            hasNewEvents = true;
-            
-            const notificationDot = document.getElementById('events-notification-dot');
-            if (notificationDot) {
-                notificationDot.classList.add('active');
-            }
-        }
-        
-        function hideEventNotificationDot() {
-            hasNewEvents = false;
-            
-            const notificationDot = document.getElementById('events-notification-dot');
-            if (notificationDot) {
-                notificationDot.classList.remove('active');
-            }
-        }
-        
-        function createDateSeparator(date) {
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            let dateText = '';
-            
-            if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
-                dateText = 'Aujourd\'hui';
-            } else if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
-                dateText = 'Hier';
-            } else {
-                dateText = date.toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                });
-            }
-            
-            const separator = document.createElement('div');
-            separator.className = 'date-separator';
-            separator.innerHTML = `<span class="date-separator-text">${dateText}</span>`;
-            
-            return separator;
-        }
-        
-        async function createMessageElement(messageId, messageData) {
-            const messageContainer = document.createElement('div');
-            messageContainer.className = 'message-container';
-            
-            const isSent = messageData.from === currentUser.uid;
-            messageContainer.classList.add(isSent ? 'sent' : 'received');
-            
-            let senderName = 'Utilisateur';
-            
-            // Get sender name
-            if (!isSent) {
-                try {
-                    // Check if in direct chat with user
-                    if (currentChatPartner && messageData.from === currentChatPartner.id) {
-                        senderName = currentChatPartner.displayName || 'Utilisateur';
-                    } else {
-                        // Get user data from database
-                        const userDoc = await getDoc(doc(db, "Users", messageData.from));
-                        if (userDoc.exists()) {
-                            const userData = userDoc.data();
-                            senderName = userData.displayName || 'Utilisateur';
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error getting sender info:", error);
-                }
-            } else {
-                senderName = 'Vous';
-            }
-            
-            // Add sender name for received messages in groups
-            if (!isSent && !currentChatPartner) {
-                const senderElement = document.createElement('div');
-                senderElement.className = 'message-sender';
-                senderElement.textContent = senderName;
-                senderElement.classList.add(`sender-${messageData.from}`);
-                messageContainer.appendChild(senderElement);
-            }
-            
-            // Handle messages with replies
-            if (messageData.replyTo) {
-                const quoteElement = document.createElement('div');
-                quoteElement.className = 'message-quote';
-                quoteElement.innerHTML = `
-                    <div class="message-quote-sender">${messageData.replyTo.sender}</div>
-                    <div class="message-quote-content">${messageData.replyTo.text}</div>
-                `;
-                messageContainer.appendChild(quoteElement);
-            }
-            
-            // Handle messages with images
-            if (messageData.imageData) {
-                const messageWithImage = document.createElement('div');
-                messageWithImage.className = 'message-with-image';
-                messageWithImage.setAttribute('data-id', messageId);
-                messageWithImage.setAttribute('data-from', messageData.from);
-                
-                const imageElement = document.createElement('img');
-                imageElement.className = 'message-image';
-                imageElement.src = messageData.imageData;
-                imageElement.alt = 'Image';
-                imageElement.addEventListener('click', () => {
-                    showImageViewer(messageData.imageData);
-                });
-                
-                messageWithImage.appendChild(imageElement);
-                
-                // Add text if present
-                if (messageData.text) {
-                    const textElement = document.createElement('div');
-                    textElement.className = 'message-text';
-                    textElement.textContent = messageData.text;
-                    messageWithImage.appendChild(textElement);
-                }
-                
-                messageContainer.appendChild(messageWithImage);
-            } else {
-                // Text-only message
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${isSent ? 'message-sent' : 'message-received'}`;
-                messageElement.textContent = messageData.text;
-                messageElement.setAttribute('data-id', messageId);
-                messageElement.setAttribute('data-from', messageData.from);
-                
-                messageContainer.appendChild(messageElement);
-            }
-            
-            // Add timestamp
-            const timestamp = document.createElement('div');
-            timestamp.className = 'message-time';
-            
-            let formattedTime = 'Chargement...';
-            if (messageData.createdAt) {
-                const date = messageData.createdAt.toDate();
-                formattedTime = date.toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
-            
-            timestamp.textContent = formattedTime;
-            messageContainer.appendChild(timestamp);
-            
-            return messageContainer;
         }
         
         function showLogoutConfirmation() {
@@ -7444,13 +7050,11 @@
         }
         
         async function logoutUser() {
-            hideLogoutConfirmation();
-            
             try {
                 await signOut(auth);
-                showNotification("Déconnexion réussie", "success");
+                hideLogoutConfirmation();
             } catch (error) {
-                showNotification("Erreur lors de la déconnexion", "error");
+                showNotification('Erreur lors de la déconnexion', 'error');
             }
         }
         
@@ -7468,53 +7072,244 @@
         }
         
         async function deleteAccount() {
-            hideDeleteAccountConfirmation();
-            
-            document.getElementById('loading').style.display = 'flex';
-            
             try {
-                // Delete user data from Firestore
-                if (currentUser) {
-                    try {
-                        await deleteDoc(doc(db, "Users", currentUser.uid));
-                    } catch (error) {
-                        console.error("Error deleting user data:", error);
-                    }
-                }
+                const userRef = doc(db, "Users", currentUser.uid);
+                await deleteDoc(userRef);
                 
-                // Delete Firebase Auth user
                 await deleteUser(currentUser);
-                document.getElementById('loading').style.display = 'none';
-                showNotification("Compte supprimé avec succès", "success");
+                
+                hideDeleteAccountConfirmation();
+                showNotification('Compte supprimé avec succès', 'success');
             } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                showNotification("Erreur lors de la suppression du compte", "error");
+                showNotification('Erreur lors de la suppression du compte', 'error');
             }
         }
         
-        async function openGroupChat(groupId, groupName) {
+        function setupChatInput() {
+            setupTextareaAutoResize();
+            
+            const imageButton = document.getElementById('image-button');
+            const sendButton = document.getElementById('send-button');
+            
+            if (currentChatPartner) {
+                // Direct chat
+                imageButton.disabled = false;
+                sendButton.disabled = false;
+                imageButton.style.color = 'var(--primary-color)';
+            } else if (currentGroupData) {
+                checkSendPermissions();
+            }
+        }
+        
+        function checkSendPermissions() {
+            const imageButton = document.getElementById('image-button');
+            const sendButton = document.getElementById('send-button');
+            const chatInput = document.getElementById('chat-input');
+            
+            if (!currentGroupData) return;
+            
+            const hasWritePermission = currentGroupData.allowPublicMessages !== false || isAdmin;
+            
+            if (hasWritePermission) {
+                imageButton.disabled = false;
+                sendButton.disabled = false;
+                chatInput.disabled = false;
+                chatInput.placeholder = 'Écrire un message...';
+                imageButton.style.color = 'var(--primary-color)';
+            } else {
+                imageButton.disabled = true;
+                sendButton.disabled = true;
+                chatInput.disabled = true;
+                chatInput.placeholder = 'Seuls les administrateurs peuvent écrire ici';
+                imageButton.style.color = 'var(--inactive-text)';
+                
+                const restrictedMessage = document.createElement('div');
+                restrictedMessage.className = 'restricted-message';
+                restrictedMessage.innerHTML = '<i class="fas fa-lock"></i> Écriture limitée aux administrateurs';
+                
+                const messagesContainer = document.getElementById('chat-messages');
+                if (messagesContainer && !messagesContainer.querySelector('.restricted-message')) {
+                    messagesContainer.insertBefore(restrictedMessage, messagesContainer.firstChild);
+                }
+            }
+        }
+        
+        async function sendMessage() {
+            if (processingMessage) return;
+            
+            const chatInput = document.getElementById('chat-input');
+            const messageText = chatInput.value.trim();
+            
+            if (!messageText && !chatImageFile) return;
+            
+            if (currentChatPartner) {
+                // Direct message
+                const user1 = currentUser.uid;
+                const user2 = currentChatPartner.id;
+                const chatId = [user1, user2].sort().join('_');
+                
+                await sendDirectMessage(chatId, messageText, chatImageFile, replyingToMessage);
+            } else if (currentGroupId) {
+                // Group message
+                if (currentGroupData && currentGroupData.allowPublicMessages === false && !isAdmin) {
+                    showNotification('Seuls les administrateurs peuvent écrire ici', 'error');
+                    return;
+                }
+                
+                await sendMessageToFirestore(currentGroupId, messageText, chatImageFile, replyingToMessage);
+            }
+            
+            // Clear input
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            // Reset image
+            if (chatImageFile) {
+                chatImageFile = null;
+                const imageButton = document.getElementById('image-button');
+                imageButton.style.color = 'var(--primary-color)';
+                chatInput.placeholder = 'Écrire un message...';
+            }
+            
+            // Cancel reply
+            cancelReply();
+            
+            if (autoResizeTextarea) {
+                autoResizeTextarea();
+            }
+        }
+        
+        async function sendDirectMessage(chatId, messageText, imageData = null, replyTo = null) {
+            if (processingMessage) return;
+            processingMessage = true;
+            
+            try {
+                const messageData = {
+                    text: messageText,
+                    from: currentUser.uid,
+                    fromName: currentUserData.displayName || 'Utilisateur',
+                    createdAt: serverTimestamp(),
+                    imageData: imageData,
+                    replyTo: replyTo ? {
+                        id: replyTo.id,
+                        sender: replyTo.sender,
+                        text: replyTo.text
+                    } : null
+                };
+                
+                if (!isOnline) {
+                    messageQueue.push({
+                        chatId: chatId,
+                        text: messageText,
+                        imageData: imageData,
+                        replyTo: replyTo,
+                        direct: true
+                    });
+                    showNotification('Message ajouté à la file d\'attente', 'info');
+                    return;
+                }
+                
+                const messagesRef = collection(db, "directChats", chatId, "messages");
+                await addDoc(messagesRef, messageData);
+                
+                // Update last message time
+                const chatRef = doc(db, "directChats", chatId);
+                await updateDoc(chatRef, {
+                    lastMessageTime: serverTimestamp(),
+                    lastMessage: {
+                        text: messageText,
+                        from: currentUser.uid,
+                        timestamp: serverTimestamp()
+                    }
+                });
+                
+            } catch (error) {
+                if (!isOnline) {
+                    messageQueue.push({
+                        chatId: chatId,
+                        text: messageText,
+                        imageData: imageData,
+                        replyTo: replyTo,
+                        direct: true
+                    });
+                    showNotification('Message ajouté à la file d\'attente', 'info');
+                } else {
+                    showNotification('Erreur lors de l\'envoi du message', 'error');
+                }
+            } finally {
+                processingMessage = false;
+            }
+        }
+        
+        async function sendMessageToFirestore(groupId, messageText, imageData = null, replyTo = null) {
+            if (processingMessage) return;
+            processingMessage = true;
+            
+            try {
+                const messageData = {
+                    text: messageText,
+                    from: currentUser.uid,
+                    fromName: currentUserData.displayName || 'Utilisateur',
+                    createdAt: serverTimestamp(),
+                    imageData: imageData,
+                    replyTo: replyTo ? {
+                        id: replyTo.id,
+                        sender: replyTo.sender,
+                        text: replyTo.text
+                    } : null
+                };
+                
+                if (!isOnline) {
+                    messageQueue.push({
+                        groupId: groupId,
+                        text: messageText,
+                        imageData: imageData,
+                        replyTo: replyTo,
+                        direct: false
+                    });
+                    showNotification('Message ajouté à la file d\'attente', 'info');
+                    return;
+                }
+                
+                const messagesRef = collection(db, "groups", groupId, "messages");
+                await addDoc(messagesRef, messageData);
+                
+                const groupRef = doc(db, "groups", groupId);
+                await updateDoc(groupRef, {
+                    lastMessage: {
+                        text: messageText,
+                        from: currentUser.uid,
+                        timestamp: serverTimestamp()
+                    },
+                    lastUpdated: serverTimestamp()
+                });
+                
+            } catch (error) {
+                if (!isOnline) {
+                    messageQueue.push({
+                        groupId: groupId,
+                        text: messageText,
+                        imageData: imageData,
+                        replyTo: replyTo,
+                        direct: false
+                    });
+                    showNotification('Message ajouté à la file d\'attente', 'info');
+                } else {
+                    showNotification('Erreur lors de l\'envoi du message', 'error');
+                }
+            } finally {
+                processingMessage = false;
+            }
+        }
+        
+        function openGroupChat(groupId, groupName) {
             hideSearchBar();
             hideMessageActionsBar();
             
-            // Close direct chat if any
-            currentChatPartner = null;
-            
-            // Set group info
             currentSection = 'chat';
             currentGroupId = groupId;
             currentGroup = groupName;
-            
-            // Get current group data
-            try {
-                const groupRef = doc(db, "groups", groupId);
-                const groupSnap = await getDoc(groupRef);
-                
-                if (groupSnap.exists()) {
-                    currentGroupData = groupSnap.data();
-                }
-            } catch (error) {
-                console.error("Error loading group data:", error);
-            }
+            currentChatPartner = null;
             
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
@@ -7523,16 +7318,18 @@
             
             document.getElementById('chat-interface').style.display = 'block';
             
-            updateGroupHeader();
+            document.getElementById('header-title').innerText = groupName;
             
-            // Add group info button
             document.getElementById('header-action').innerHTML = `
-                <div class="info-button" id="group-info-btn">
+                <div class="info-button" id="info-button">
                     <i class="fas fa-info-circle"></i>
                 </div>
             `;
             
-            document.getElementById('group-info-btn').addEventListener('click', showGroupInfoDialog);
+            const infoButton = document.getElementById('info-button');
+            if (infoButton) {
+                infoButton.addEventListener('click', showGroupInfoDialog);
+            }
             
             document.getElementById('chat-messages').innerHTML = '';
             
@@ -7540,193 +7337,30 @@
             document.getElementById('bottom-nav').style.display = 'none';
             document.querySelector('.content').classList.add('no-bottom-nav');
             
-            // Setup chat input
-            setupChatInput();
-            
+            loadGroupData(groupId);
             loadMessages(groupId);
             
             // Add state to history for back button handling
-            history.pushState({ page: 'chat' }, '');
+            history.pushState({ page: 'group-chat' }, '');
         }
         
-        function closeChat() {
-            if (currentSection === 'chat') {
-                // If in direct chat, go back to users list
-                if (currentChatPartner) {
-                    document.getElementById('chat-interface').style.display = 'none';
-                    showUsersSection();
-                } else {
-                    document.getElementById('chat-interface').style.display = 'none';
-                    showGroupsSection();
-                }
-                
-                // Unsubscribe from messages
-                if (currentGroupId && chatUnsubscribers[currentGroupId]) {
-                    chatUnsubscribers[currentGroupId]();
-                    delete chatUnsubscribers[currentGroupId];
-                } else if (currentChatPartner) {
-                    const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
-                    if (chatUnsubscribers[chatId]) {
-                        chatUnsubscribers[chatId]();
-                        delete chatUnsubscribers[chatId];
-                    }
-                }
-                
-                currentGroupId = null;
-                currentGroup = '';
-                currentGroupData = null;
-                currentChatPartner = null;
-            }
-        }
-        
-        async function loadGroups() {
-            if (isLoadingGroups) return;
-            isLoadingGroups = true;
-            
-            const groupsList = document.getElementById('groups-list');
-            if (!groupsList) return;
-            
-            groupsList.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                    <div style="margin-top: 10px; font-weight: bold;">Chargement des groupes...</div>
-                </div>
-            `;
-            
+        async function loadGroupData(groupId) {
             try {
-                const groupsRef = collection(db, "groups");
+                const groupRef = doc(db, "groups", groupId);
+                const groupDoc = await getDoc(groupRef);
                 
-                // If admin, show all groups, otherwise only groups the user is a member of
-                let q;
-                if (isAdmin) {
-                    q = query(groupsRef, orderBy("lastUpdated", "desc"));
+                if (groupDoc.exists()) {
+                    currentGroupData = groupDoc.data();
+                    updateGroupHeader();
+                    setupChatInput();
                 } else {
-                    q = query(groupsRef, where("members", "array-contains", currentUser.uid), orderBy("lastUpdated", "desc"));
+                    showNotification('Groupe introuvable', 'error');
+                    closeChat();
                 }
-                
-                const groupsSnap = await getDocs(q);
-                
-                if (groupsSnap.empty) {
-                    groupsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <div class="empty-state-title">Aucun groupe</div>
-                            <div class="empty-state-text">${isAdmin ? 
-                                'Créez un nouveau groupe en appuyant sur le bouton +' : 
-                                'Aucun groupe disponible pour le moment'
-                            }</div>
-                        </div>
-                    `;
-                    isLoadingGroups = false;
-                    return;
-                }
-                
-                groupsList.innerHTML = '';
-                
-                groupsSnap.forEach((doc) => {
-                    const groupData = doc.data();
-                    const groupElement = createGroupElement(doc.id, groupData);
-                    groupsList.appendChild(groupElement);
-                });
             } catch (error) {
-                groupsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div class="empty-state-title">Erreur</div>
-                        <div class="empty-state-text">Impossible de charger les groupes</div>
-                    </div>
-                `;
-            } finally {
-                isLoadingGroups = false;
+                showNotification('Erreur lors du chargement du groupe', 'error');
+                closeChat();
             }
-        }
-        
-        function createGroupElement(groupId, groupData) {
-            const groupElement = document.createElement('div');
-            groupElement.className = 'chat-item';
-            groupElement.setAttribute('data-group', groupData.name || 'Sans nom');
-            groupElement.setAttribute('data-id', groupId);
-            
-            let lastMessageText = 'Pas de messages';
-            let lastMessageFrom = '';
-            let lastMessageTime = '';
-            
-            if (groupData.lastMessage) {
-                lastMessageText = groupData.lastMessage.text || 'Nouveau message';
-                lastMessageFrom = groupData.lastMessage.from === currentUser.uid ? 'Vous: ' : '';
-                
-                if (groupData.lastMessage.timestamp) {
-                    const now = new Date();
-                    const messageDate = groupData.lastMessage.timestamp.toDate();
-                    
-                    if (messageDate.toDateString() === now.toDateString()) {
-                        // Today, show time
-                        lastMessageTime = messageDate.toLocaleTimeString('fr-FR', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                    } else {
-                        // Another day, show date
-                        lastMessageTime = messageDate.toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'short'
-                        });
-                    }
-                }
-            }
-            
-            groupElement.innerHTML = `
-                <div class="group-pic">
-                    ${groupData.imageURL ? `<img src="${groupData.imageURL}" alt="${groupData.name}">` : '<i class="fas fa-users" style="color: white; font-size: 20px;"></i>'}
-                </div>
-                <div class="item-content">
-                    <div class="item-title">
-                        ${groupData.name || 'Sans nom'}
-                        ${groupData.allowPublicMessages === false ? '<span class="restricted-badge">Restreint</span>' : ''}
-                    </div>
-                    <div class="item-subtitle">${lastMessageFrom}${lastMessageText}</div>
-                </div>
-                <div class="item-time">${lastMessageTime}</div>
-            `;
-            
-            // Add group click handler
-            groupElement.addEventListener('click', () => {
-                openGroupChat(groupId, groupData.name || 'Sans nom');
-            });
-            
-            // Add long press handler for admins
-            if (isAdmin) {
-                groupElement.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    showEditGroupDialog(groupId, groupData);
-                    return false;
-                });
-                
-                let longPressGroupTimer = null;
-                
-                groupElement.addEventListener('touchstart', () => {
-                    longPressGroupTimer = setTimeout(() => {
-                        if (navigator.vibrate) {
-                            navigator.vibrate(50);
-                        }
-                        showEditGroupDialog(groupId, groupData);
-                    }, 800);
-                });
-                
-                groupElement.addEventListener('touchend', () => {
-                    if (longPressGroupTimer) {
-                        clearTimeout(longPressGroupTimer);
-                    }
-                });
-                
-                groupElement.addEventListener('touchmove', () => {
-                    if (longPressGroupTimer) {
-                        clearTimeout(longPressGroupTimer);
-                    }
-                });
-            }
-            
-            return groupElement;
         }
         
         async function loadMessages(groupId) {
@@ -7746,9 +7380,8 @@
                     delete chatUnsubscribers[groupId];
                 }
                 
-                // Get messages with pagination (limit to 50 most recent)
                 const messagesRef = collection(db, "groups", groupId, "messages");
-                const q = query(messagesRef, orderBy("createdAt", "asc"), limit(50));
+                const q = query(messagesRef, orderBy("createdAt", "asc"));
                 
                 chatUnsubscribers[groupId] = onSnapshot(q, async (snapshot) => {
                     messagesContainer.innerHTML = '';
@@ -7800,220 +7433,619 @@
             }
         }
         
-        function changeAuthTab(tab) {
-            document.getElementById('login-tab').classList.remove('active');
-            document.getElementById('register-tab').classList.remove('active');
-            document.getElementById(`${tab}-tab`).classList.add('active');
+        function createDateSeparator(date) {
+            const separator = document.createElement('div');
+            separator.className = 'date-separator';
             
-            document.getElementById('login-form').classList.remove('active');
-            document.getElementById('register-form').classList.remove('active');
-            document.getElementById(`${tab}-form`).classList.add('active');
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
             
-            // Clear forms
-            if (tab === 'login') {
-                document.getElementById('login-email-error').style.display = 'none';
-                document.getElementById('login-password-error').style.display = 'none';
-                document.getElementById('login-log').style.display = 'none';
+            let dateText = '';
+            if (date.toDateString() === today.toDateString()) {
+                dateText = "Aujourd'hui";
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                dateText = 'Hier';
             } else {
-                document.getElementById('register-email-error').style.display = 'none';
-                document.getElementById('register-password-error').style.display = 'none';
-                document.getElementById('register-confirm-password-error').style.display = 'none';
-                document.getElementById('register-log').style.display = 'none';
+                dateText = date.toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+                });
+            }
+            
+            separator.innerHTML = `<div class="date-separator-text">${dateText}</div>`;
+            return separator;
+        }
+        
+        async function createMessageElement(messageId, messageData) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+            messageContainer.setAttribute('data-id', messageId);
+            messageContainer.setAttribute('data-from', messageData.from);
+            
+            const isCurrentUser = messageData.from === currentUser.uid;
+            messageContainer.classList.add(isCurrentUser ? 'sent' : 'received');
+            
+            let senderName = messageData.fromName || 'Utilisateur';
+            
+            if (!isCurrentUser && !currentChatPartner) {
+                // Group chat: try to get fresh user data
+                try {
+                    if (usersCache[messageData.from]) {
+                        senderName = usersCache[messageData.from].displayName || senderName;
+                    } else {
+                        const userDoc = await getDoc(doc(db, "Users", messageData.from));
+                        if (userDoc.exists()) {
+                            const userData = userDoc.data();
+                            usersCache[messageData.from] = userData;
+                            senderName = userData.displayName || senderName;
+                        }
+                    }
+                } catch (error) {
+                    // Use fallback name
+                }
+            }
+            
+            // Add sender name element for group chats and non-current user messages
+            if (!isCurrentUser && !currentChatPartner) {
+                const senderElement = document.createElement('div');
+                senderElement.className = `message-sender sender-${messageData.from}`;
+                senderElement.textContent = senderName;
+                messageContainer.appendChild(senderElement);
+            }
+            
+            // Create main message element
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.classList.add(isCurrentUser ? 'message-sent' : 'message-received');
+            messageElement.setAttribute('data-id', messageId);
+            messageElement.setAttribute('data-from', messageData.from);
+            
+            let messageContent = '';
+            
+            // Add reply quote if this is a reply
+            if (messageData.replyTo) {
+                messageContent += `
+                    <div class="message-quote">
+                        <div class="message-quote-sender">${messageData.replyTo.sender}</div>
+                        <div class="message-quote-content">${messageData.replyTo.text}</div>
+                    </div>
+                `;
+            }
+            
+            // Handle image messages
+            if (messageData.imageData) {
+                messageElement.classList.remove('message', 'message-sent', 'message-received');
+                messageElement.classList.add('message-with-image');
+                messageElement.classList.add(isCurrentUser ? 'message-sent' : 'message-received');
+                
+                const messageText = messageData.text ? `<div class="message-text">${messageData.text}</div>` : '';
+                
+                messageContent += `
+                    <img src="${messageData.imageData}" 
+                         alt="Image partagée" 
+                         class="message-image"
+                         loading="lazy">
+                    ${messageText}
+                `;
+                
+                // Add click handler for image viewing after element is created
+                setTimeout(() => {
+                    const imageElement = messageElement.querySelector('.message-image');
+                    if (imageElement) {
+                        imageElement.addEventListener('click', () => {
+                            showImageViewer(messageData.imageData);
+                        });
+                    }
+                }, 100);
+            } else {
+                messageContent += messageData.text || '';
+            }
+            
+            messageElement.innerHTML = messageContent;
+            
+            // Add timestamp
+            if (messageData.createdAt) {
+                const timestamp = document.createElement('div');
+                timestamp.className = 'message-time';
+                const messageDate = messageData.createdAt.toDate();
+                timestamp.textContent = messageDate.toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                messageElement.appendChild(timestamp);
+            }
+            
+            messageContainer.appendChild(messageElement);
+            return messageContainer;
+        }
+        
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chat-messages-container');
+            if (messagesContainer) {
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
             }
         }
         
-        function validateLoginEmail() {
-            const email = document.getElementById('login-email').value.trim();
-            const emailError = document.getElementById('login-email-error');
+        function closeChat() {
+            currentGroupId = null;
+            currentGroup = '';
+            currentGroupData = null;
+            currentChatPartner = null;
             
-            if (!email) {
-                emailError.textContent = "L'email est requis";
-                emailError.style.display = 'block';
-                return false;
-            } else if (!isValidEmail(email)) {
-                emailError.textContent = "Veuillez entrer un email valide";
-                emailError.style.display = 'block';
-                return false;
+            // Clear any ongoing unsubscribers
+            Object.values(chatUnsubscribers).forEach(unsubscribe => {
+                if (typeof unsubscribe === 'function') {
+                    unsubscribe();
+                }
+            });
+            chatUnsubscribers = {};
+            
+            // Reset input
+            cancelReply();
+            document.getElementById('chat-input').value = '';
+            chatImageFile = null;
+            
+            document.getElementById('chat-interface').style.display = 'none';
+            
+            showDiscussionsSection();
+        }
+        
+        function showCreateGroupDialog() {
+            document.getElementById('create-group-dialog').classList.add('active');
+            
+            // Reset form
+            document.getElementById('group-name').value = '';
+            document.getElementById('group-description').value = '';
+            document.getElementById('group-public-messages').checked = true;
+            groupImageFile = null;
+            
+            const preview = document.getElementById('new-group-image-preview');
+            preview.innerHTML = `
+                <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
+                <div class="group-image-overlay" id="new-group-image-upload">
+                    <i class="fas fa-camera"></i>
+                </div>
+            `;
+            
+            document.getElementById('new-group-image-upload').addEventListener('click', () => {
+                document.getElementById('new-group-image-input').click();
+            });
+            
+            // Add state to history for back button handling
+            history.pushState({ page: 'create-group' }, '');
+        }
+        
+        function hideCreateGroupDialog() {
+            document.getElementById('create-group-dialog').classList.remove('active');
+            
+            // Reset form
+            document.getElementById('group-name').value = '';
+            document.getElementById('group-description').value = '';
+            document.getElementById('group-public-messages').checked = true;
+            groupImageFile = null;
+            document.getElementById('new-group-image-input').value = '';
+        }
+        
+        async function createNewGroup() {
+            const groupName = document.getElementById('group-name').value.trim();
+            const groupDescription = document.getElementById('group-description').value.trim();
+            const allowPublicMessages = document.getElementById('group-public-messages').checked;
+            
+            if (!groupName) {
+                document.getElementById('group-name-error').style.display = 'block';
+                return;
             } else {
-                emailError.style.display = 'none';
-                return true;
+                document.getElementById('group-name-error').style.display = 'none';
             }
-        }
-        
-        function validateLoginPassword() {
-            const password = document.getElementById('login-password').value;
-            const passwordError = document.getElementById('login-password-error');
             
-            if (!password) {
-                passwordError.textContent = "Le mot de passe est requis";
-                passwordError.style.display = 'block';
-                return false;
-            } else {
-                passwordError.style.display = 'none';
-                return true;
-            }
-        }
-        
-        function validateLoginForm() {
-            const isEmailValid = validateLoginEmail();
-            const isPasswordValid = validateLoginPassword();
-            
-            return isEmailValid && isPasswordValid;
-        }
-        
-        function validateRegisterEmail() {
-            const email = document.getElementById('register-email').value.trim();
-            const emailError = document.getElementById('register-email-error');
-            
-            if (!email) {
-                emailError.textContent = "L'email est requis";
-                emailError.style.display = 'block';
-                return false;
-            } else if (!isValidEmail(email)) {
-                emailError.textContent = "Veuillez entrer un email valide";
-                emailError.style.display = 'block';
-                return false;
-            } else {
-                emailError.style.display = 'none';
-                return true;
-            }
-        }
-        
-        function validateRegisterPassword() {
-            const password = document.getElementById('register-password').value;
-            const passwordError = document.getElementById('register-password-error');
-            
-            if (!password) {
-                passwordError.textContent = "Le mot de passe est requis";
-                passwordError.style.display = 'block';
-                return false;
-            } else if (password.length < 6) {
-                passwordError.textContent = "Le mot de passe doit contenir au moins 6 caractères";
-                passwordError.style.display = 'block';
-                return false;
-            } else {
-                passwordError.style.display = 'none';
-                return true;
-            }
-        }
-        
-        function validateRegisterConfirmPassword() {
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            const confirmPasswordError = document.getElementById('register-confirm-password-error');
-            
-            if (!confirmPassword) {
-                confirmPasswordError.textContent = "La confirmation du mot de passe est requise";
-                confirmPasswordError.style.display = 'block';
-                return false;
-            } else if (password !== confirmPassword) {
-                confirmPasswordError.textContent = "Les mots de passe ne correspondent pas";
-                confirmPasswordError.style.display = 'block';
-                return false;
-            } else {
-                confirmPasswordError.style.display = 'none';
-                return true;
-            }
-        }
-        
-        function validateRegisterForm() {
-            const isEmailValid = validateRegisterEmail();
-            const isPasswordValid = validateRegisterPassword();
-            const isConfirmPasswordValid = validateRegisterConfirmPassword();
-            
-            return isEmailValid && isPasswordValid && isConfirmPasswordValid;
-        }
-        
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        async function loginUser() {
-            if (!validateLoginForm()) return;
-            
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            
-            setButtonLoading('loginBtn', true);
+            setButtonLoading('create-group-submit', true);
             
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                document.getElementById('login-log').style.display = 'none';
-            } catch (error) {
-                let errorMessage = "Erreur lors de la connexion";
+                const groupData = {
+                    name: groupName,
+                    description: groupDescription,
+                    createdBy: currentUser.uid,
+                    createdAt: serverTimestamp(),
+                    lastUpdated: serverTimestamp(),
+                    allowPublicMessages: allowPublicMessages,
+                    imageURL: groupImageFile || null,
+                    admins: [currentUser.uid]
+                };
                 
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    errorMessage = "Email ou mot de passe incorrect";
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = "Trop de tentatives de connexion. Veuillez réessayer plus tard";
+                const docRef = await addDoc(collection(db, "groups"), groupData);
+                
+                try {
+                    await addEventLog({
+                        type: 'group-create',
+                        groupId: docRef.id,
+                        groupName: groupName,
+                        userId: currentUser.uid,
+                        userName: currentUserData.displayName || 'Utilisateur',
+                        timestamp: new Date()
+                    });
+                } catch (eventError) {
+                    // Handle error silently
                 }
                 
-                const logElement = document.getElementById('login-log');
-                logElement.textContent = errorMessage;
-                logElement.className = 'log-message error';
-                logElement.style.display = 'block';
+                hideCreateGroupDialog();
+                showNotification('Groupe créé avec succès', 'success');
+                
+                loadDiscussions();
+                
+            } catch (error) {
+                showNotification('Erreur lors de la création du groupe', 'error');
             } finally {
-                setButtonLoading('loginBtn', false);
+                setButtonLoading('create-group-submit', false);
             }
         }
         
-        async function registerUser() {
-            if (!validateRegisterForm()) return;
+        function showEditGroupDialog(groupId, groupData) {
+            if (!isAdmin) {
+                showNotification("Seuls les administrateurs peuvent modifier les groupes", "error");
+                return;
+            }
             
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
+            editingGroupId = groupId;
             
-            setButtonLoading('registerBtn', true);
+            document.getElementById('edit-group-dialog').classList.add('active');
+            
+            // Fill form with current data
+            document.getElementById('edit-group-name').value = groupData.name || '';
+            document.getElementById('edit-group-description').value = groupData.description || '';
+            document.getElementById('edit-group-public-messages').checked = groupData.allowPublicMessages !== false;
+            
+            // Reset change flags
+            groupNameChanged = false;
+            groupDescriptionChanged = false;
+            groupPermissionsChanged = false;
+            groupImageFile = null;
+            
+            // Disable save buttons initially
+            document.getElementById('save-group-name-btn').disabled = true;
+            document.getElementById('save-group-description-btn').disabled = true;
+            document.getElementById('save-group-permissions-btn').disabled = true;
+            document.getElementById('save-group-image-btn').disabled = true;
+            
+            // Set image preview
+            const preview = document.getElementById('edit-group-image-preview');
+            if (groupData.imageURL) {
+                preview.innerHTML = `
+                    <img src="${groupData.imageURL}" alt="${groupData.name}">
+                    <div class="group-image-overlay" id="edit-group-image-upload">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                `;
+            } else {
+                preview.innerHTML = `
+                    <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
+                    <div class="group-image-overlay" id="edit-group-image-upload">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('edit-group-image-upload').addEventListener('click', () => {
+                document.getElementById('edit-group-image-input').click();
+            });
+            
+            // Add state to history for back button handling
+            history.pushState({ page: 'edit-group' }, '');
+        }
+        
+        function hideEditGroupDialog() {
+            document.getElementById('edit-group-dialog').classList.remove('active');
+            
+            editingGroupId = null;
+            groupNameChanged = false;
+            groupDescriptionChanged = false;
+            groupPermissionsChanged = false;
+            groupImageFile = null;
+            document.getElementById('edit-group-image-input').value = '';
+        }
+        
+        async function listenToEvents() {
+            if (isLoadingEvents) return;
+            isLoadingEvents = true;
+            
+            const eventsList = document.getElementById('events-list');
+            if (!eventsList) return;
+            
+            eventsList.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
+                    <div style="margin-top: 10px; font-weight: bold;">Chargement des événements...</div>
+                </div>
+            `;
             
             try {
-                // Create user with email and password
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                if (eventsUnsubscribe) {
+                    eventsUnsubscribe();
+                    eventsUnsubscribe = null;
+                }
                 
-                // Create user data in Firestore
-                await setDoc(doc(db, "Users", user.uid), {
-                    email: email,
-                    displayName: email.split('@')[0],
-                    createdAt: serverTimestamp(),
-                    lastLogin: serverTimestamp(),
-                    statut: 'user',
-                    photoURL: null
+                const eventsRef = collection(db, "events");
+                const q = query(eventsRef, orderBy("timestamp", "desc"), limit(50));
+                
+                eventsUnsubscribe = onSnapshot(q, (snapshot) => {
+                    displayEvents(snapshot);
+                    isLoadingEvents = false;
+                });
+            } catch (error) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="empty-state-title">Erreur</div>
+                        <div class="empty-state-text">Impossible de charger les événements</div>
+                    </div>
+                `;
+                isLoadingEvents = false;
+            }
+        }
+        
+        function displayEvents(snapshot) {
+            const eventsList = document.getElementById('events-list');
+            if (!eventsList) return;
+            
+            eventsList.innerHTML = '';
+            
+            if (snapshot.empty) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bell"></i>
+                        <div class="empty-state-title">Aucun événement</div>
+                        <div class="empty-state-text">Les événements apparaîtront ici</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            snapshot.forEach((doc) => {
+                const eventData = doc.data();
+                const eventElement = createEventElement(doc.id, eventData);
+                eventsList.appendChild(eventElement);
+            });
+        }
+        
+        function createEventElement(eventId, eventData) {
+            const eventElement = document.createElement('div');
+            
+            if (eventData.type === 'admin-notification') {
+                eventElement.className = 'admin-notification';
+                eventElement.innerHTML = `
+                    <div class="admin-notification-header">
+                        <div class="admin-notification-title">
+                            <i class="fas fa-bullhorn"></i>
+                            ${eventData.title || 'Notification'}
+                        </div>
+                    </div>
+                    <div class="admin-notification-content">
+                        ${eventData.content || ''}
+                    </div>
+                    <div class="admin-notification-footer">
+                        ${formatEventTime(eventData.timestamp)}
+                    </div>
+                    ${isAdmin ? `
+                        <div class="event-close-btn" onclick="deleteEvent('${eventId}')">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    ` : ''}
+                `;
+            } else {
+                let eventText = '';
+                let iconClass = 'fas fa-info-circle';
+                
+                if (eventData.type === 'group-create') {
+                    eventText = `${eventData.userName || 'Un utilisateur'} a créé le groupe "${eventData.groupName}"`;
+                    iconClass = 'fas fa-plus-circle';
+                    eventElement.classList.add('group-create');
+                } else if (eventData.type === 'permission-change') {
+                    const permission = eventData.allowPublicMessages ? 'ouvertes' : 'restreintes';
+                    eventText = `Permissions du groupe "${eventData.groupName}" changées en ${permission}`;
+                    iconClass = 'fas fa-cog';
+                    eventElement.classList.add('permission-change');
+                } else if (eventData.type === 'user-join') {
+                    eventText = `${eventData.userName || 'Un utilisateur'} a rejoint ${eventData.groupName || 'un groupe'}`;
+                    iconClass = 'fas fa-user-plus';
+                    eventElement.classList.add('user-join');
+                }
+                
+                eventElement.className = 'event-item';
+                eventElement.innerHTML = `
+                    <div class="event-icon">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="item-content">
+                        <div class="event-header">${eventData.title || 'Événement'}</div>
+                        <div class="event-content">${eventText}</div>
+                        <div class="event-time">${formatEventTime(eventData.timestamp)}</div>
+                    </div>
+                    ${isAdmin ? `
+                        <div class="event-actions">
+                            <div class="event-action-btn delete" onclick="deleteEvent('${eventId}')">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+            }
+            
+            return eventElement;
+        }
+        
+        function formatEventTime(timestamp) {
+            if (!timestamp) return '';
+            
+            let date;
+            if (timestamp.toDate) {
+                date = timestamp.toDate();
+            } else if (timestamp instanceof Date) {
+                date = timestamp;
+            } else {
+                return '';
+            }
+            
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) {
+                return "À l'instant";
+            } else if (diffMins < 60) {
+                return `Il y a ${diffMins} min`;
+            } else if (diffHours < 24) {
+                return `Il y a ${diffHours}h`;
+            } else if (diffDays < 7) {
+                return `Il y a ${diffDays}j`;
+            } else {
+                return date.toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'short'
+                });
+            }
+        }
+        
+        async function addEventLog(eventData) {
+            try {
+                await addDoc(collection(db, "events"), {
+                    ...eventData,
+                    timestamp: serverTimestamp()
+                });
+            } catch (error) {
+                // Handle error silently
+            }
+        }
+        
+        function showAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.add('active');
+            
+            // Reset form
+            document.getElementById('notif-title').value = '';
+            document.getElementById('notif-content').value = '';
+            document.getElementById('notif-type').value = 'info';
+            
+            // Add state to history for back button handling
+            history.pushState({ page: 'admin-notification' }, '');
+        }
+        
+        function hideAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.remove('active');
+        }
+        
+        async function sendAdminNotification() {
+            const title = document.getElementById('notif-title').value.trim();
+            const content = document.getElementById('notif-content').value.trim();
+            const type = document.getElementById('notif-type').value;
+            
+            if (!title) {
+                document.getElementById('notif-title-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('notif-title-error').style.display = 'none';
+            }
+            
+            if (!content) {
+                document.getElementById('notif-content-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('notif-content-error').style.display = 'none';
+            }
+            
+            setButtonLoading('send-notification-btn', true);
+            
+            try {
+                await addDoc(collection(db, "events"), {
+                    type: 'admin-notification',
+                    title: title,
+                    content: content,
+                    notificationType: type,
+                    userId: currentUser.uid,
+                    userName: currentUserData.displayName || 'Administrateur',
+                    timestamp: serverTimestamp()
                 });
                 
-                document.getElementById('register-log').style.display = 'none';
+                hideAdminNotificationDialog();
+                showNotification('Notification envoyée', 'success');
+                
             } catch (error) {
-                let errorMessage = "Erreur lors de l'inscription";
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = "Cet email est déjà utilisé";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = "Le mot de passe est trop faible";
-                }
-                
-                const logElement = document.getElementById('register-log');
-                logElement.textContent = errorMessage;
-                logElement.className = 'log-message error';
-                logElement.style.display = 'block';
+                showNotification('Erreur lors de l\'envoi de la notification', 'error');
             } finally {
-                setButtonLoading('registerBtn', false);
+                setButtonLoading('send-notification-btn', false);
+            }
+        }
+        
+        // Global function for deleting events (called from onclick)
+        window.deleteEvent = function(eventId) {
+            currentEventForDeletion = eventId;
+            showDeleteEventConfirmation();
+        };
+        
+        function showDeleteEventConfirmation() {
+            document.getElementById('delete-event-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+            
+            // Add state to history for back button handling
+            history.pushState({ page: 'delete-event-confirmation' }, '');
+        }
+        
+        function hideDeleteEventConfirmation() {
+            document.getElementById('delete-event-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            currentEventForDeletion = null;
+        }
+        
+        async function confirmDeleteEvent() {
+            if (!currentEventForDeletion) {
+                hideDeleteEventConfirmation();
+                return;
+            }
+            
+            try {
+                const eventRef = doc(db, "events", currentEventForDeletion);
+                await deleteDoc(eventRef);
+                
+                showNotification('Événement supprimé', 'success');
+            } catch (error) {
+                showNotification('Erreur lors de la suppression de l\'événement', 'error');
+            } finally {
+                hideDeleteEventConfirmation();
+            }
+        }
+        
+        function updateLastViewedEventTimestamp() {
+            lastViewedEventTimestamp = new Date();
+            hasNewEvents = false;
+        }
+        
+        function hideEventNotificationDot() {
+            const notificationDot = document.getElementById('events-notification-dot');
+            if (notificationDot) {
+                notificationDot.classList.remove('active');
             }
         }
         
         function updateProfileInfo() {
-            const profileNameText = document.getElementById('profile-name-text');
-            const profileEmail = document.getElementById('profile-email');
-            const adminBadge = document.getElementById('admin-badge');
-            const profilePic = document.querySelector('#profile-section .profile-pic');
+            if (!currentUserData) return;
             
+            // Update profile name
+            const profileNameText = document.getElementById('profile-name-text');
             if (profileNameText) {
                 profileNameText.textContent = currentUserData.displayName || 'Utilisateur';
             }
             
+            // Update profile email
+            const profileEmail = document.getElementById('profile-email');
             if (profileEmail) {
                 profileEmail.textContent = currentUserData.email || '';
             }
             
+            // Update admin badge
+            const adminBadge = document.getElementById('admin-badge');
             if (adminBadge) {
                 if (isAdmin) {
                     adminBadge.style.display = 'inline-block';
@@ -8022,139 +8054,103 @@
                 }
             }
             
+            // Update profile picture
+            const profilePic = document.querySelector('.profile-header .profile-pic');
             if (profilePic) {
                 if (currentUserData.photoURL) {
-                    profilePic.innerHTML = `<img src="${currentUserData.photoURL}" alt="Profil">
+                    profilePic.innerHTML = `
+                        <img src="${currentUserData.photoURL}" alt="${currentUserData.displayName || 'Utilisateur'}">
                         <div class="profile-pic-edit" id="edit-profile-pic">
                             <i class="fas fa-pencil-alt"></i>
-                        </div>`;
+                        </div>
+                    `;
                 } else {
-                    profilePic.innerHTML = `<i class="fas fa-user"></i>
+                    profilePic.innerHTML = `
+                        <i class="fas fa-user"></i>
                         <div class="profile-pic-edit" id="edit-profile-pic">
                             <i class="fas fa-pencil-alt"></i>
-                        </div>`;
+                        </div>
+                    `;
                 }
                 
-                // Reattach event listener
+                // Reattach event handler
                 document.getElementById('edit-profile-pic').addEventListener('click', showProfileEditDialog);
             }
         }
         
-        async function initApp() {
-            onAuthStateChanged(auth, async (user) => {
-                document.getElementById('loading').style.display = 'flex';
+        // Initialize the app
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                isLoggedIn = true;
                 
-                if (user) {
-                    currentUser = user;
-                    isLoggedIn = true;
+                // Hide loading animation
+                document.getElementById('verify-animation').style.display = 'none';
+                
+                try {
+                    const userRef = doc(db, "Users", user.uid);
+                    const userDoc = await getDoc(userRef);
                     
-                    // Get user data from Firestore
-                    try {
-                        const userRef = doc(db, "Users", user.uid);
-                        const userSnap = await getDoc(userRef);
+                    if (userDoc.exists()) {
+                        currentUserData = userDoc.data();
+                        isAdmin = currentUserData.statut === 'admin';
                         
-                        if (userSnap.exists()) {
-                            currentUserData = userSnap.data();
-                            isAdmin = currentUserData.statut === 'admin';
-                            
-                            // Update last login
-                            await updateDoc(userRef, {
-                                lastLogin: serverTimestamp()
-                            });
-                        } else {
-                            // Create user data if not exists
-                            const userData = {
-                                email: user.email,
-                                displayName: user.email.split('@')[0],
-                                createdAt: serverTimestamp(),
-                                lastLogin: serverTimestamp(),
-                                statut: 'user',
-                                photoURL: null
-                            };
-                            
-                            await setDoc(userRef, userData);
-                            currentUserData = userData;
-                        }
-                        
-                        // Update profile info
                         updateProfileInfo();
                         
-                        // Hide auth screen
                         document.getElementById('auth-screen').style.display = 'none';
-                        
-                        // Get last viewed event timestamp
-                        const lastViewedTimestamp = localStorage.getItem('lastViewedEventTimestamp');
-                        if (lastViewedTimestamp) {
-                            lastViewedEventTimestamp = new Date(lastViewedTimestamp);
-                        }
-                        
-                        // Load groups
-                        loadGroups();
-                        
                         document.getElementById('loading').style.display = 'none';
                         
-                        setTimeout(() => {
-                            document.getElementById('verify-animation').style.display = 'none';
-                        }, 1000);
+                        showDiscussionsSection();
                         
-                    } catch (error) {
-                        console.error("Error loading user data:", error);
+                    } else {
+                        const userDocData = {
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.email.split('@')[0],
+                            createdAt: serverTimestamp(),
+                            statut: 'user',
+                            photoURL: null
+                        };
+                        
+                        await setDoc(userRef, userDocData);
+                        currentUserData = userDocData;
+                        isAdmin = false;
+                        
+                        updateProfileInfo();
+                        
+                        document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
-                        showNotification("Erreur lors du chargement des données", "error");
+                        
+                        showDiscussionsSection();
                     }
-                } else {
-                    isLoggedIn = false;
-                    currentUser = null;
-                    currentUserData = null;
-                    isAdmin = false;
-                    
-                    // Clear all subscriptions
-                    for (const key in chatUnsubscribers) {
-                        if (chatUnsubscribers[key]) {
-                            chatUnsubscribers[key]();
-                            delete chatUnsubscribers[key];
-                        }
-                    }
-                    
-                    if (eventsUnsubscribe) {
-                        eventsUnsubscribe();
-                        eventsUnsubscribe = null;
-                    }
-                    
-                    if (forecastsUnsubscribe) {
-                        forecastsUnsubscribe();
-                        forecastsUnsubscribe = null;
-                    }
-                    
-                    if (usersUnsubscribe) {
-                        usersUnsubscribe();
-                        usersUnsubscribe = null;
-                    }
-                    
-                    // Clear cached data
-                    groupImageCache = {};
-                    forecastsCache = {};
-                    usersCache = {};
-                    
-                    // Show auth screen
-                    document.getElementById('auth-screen').style.display = 'flex';
-                    document.getElementById('loading').style.display = 'none';
-                    
-                    // Hide verify animation
+                } catch (error) {
                     document.getElementById('verify-animation').style.display = 'none';
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('auth-screen').style.display = 'flex';
                 }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize app
-            setupTheme();
-            setupDarkMode();
-            setupConnectionMonitoring();
-            setupAuthEvents();
-            setupUIEvents();
-            initApp();
+            } else {
+                currentUser = null;
+                currentUserData = null;
+                isLoggedIn = false;
+                isAdmin = false;
+                
+                document.getElementById('verify-animation').style.display = 'none';
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('auth-screen').style.display = 'flex';
+            }
         });
+        
+        // Setup all event listeners and initialization
+        setupTheme();
+        setupDarkMode();
+        setupConnectionMonitoring();
+        setupUIEvents();
+        setupAuthEvents();
+        
+        // Show verify animation initially
+        document.getElementById('verify-animation').style.display = 'flex';
     </script>
 </body>
 </html>
+ 
+
