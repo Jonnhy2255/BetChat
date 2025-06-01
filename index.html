@@ -8624,46 +8624,57 @@
             
         </script>
 <script>
-async function loadAllDiscussions() {
-  const groupsSnap = await getDocs(collection(db, "groups"));
-  const privateSnap = await getDocs(collection(db, "privateChats"));
+let groupUnsub = null;
+let privateUnsub = null;
 
-  const discussions = [];
+function initDiscussionListeners() {
+  if (groupUnsub) groupUnsub();
+  if (privateUnsub) privateUnsub();
 
-  groupsSnap.forEach(doc => {
-    discussions.push({
-      type: "group",
-      id: doc.id,
-      ...doc.data()
+  const discussions = new Map();
+
+  groupUnsub = onSnapshot(collection(db, "groups"), snapshot => {
+    snapshot.docChanges().forEach(change => {
+      const data = { type: "group", id: change.doc.id, ...change.doc.data() };
+      if (change.type === "removed") {
+        discussions.delete(change.doc.id);
+      } else {
+        discussions.set(change.doc.id, data);
+      }
     });
+    renderDiscussions(discussions);
   });
 
-  privateSnap.forEach(doc => {
-    discussions.push({
-      type: "private",
-      id: doc.id,
-      ...doc.data()
+  privateUnsub = onSnapshot(collection(db, "privateChats"), snapshot => {
+    snapshot.docChanges().forEach(change => {
+      const data = { type: "private", id: change.doc.id, ...change.doc.data() };
+      if (change.type === "removed") {
+        discussions.delete(change.doc.id + "_private");
+      } else {
+        discussions.set(change.doc.id + "_private", data);
+      }
     });
+    renderDiscussions(discussions);
   });
-
-  discussions.sort((a, b) => b.updatedAt?.toMillis?.() - a.updatedAt?.toMillis?.());
-
-  displayDiscussions(discussions);
 }
 
-function displayDiscussions(list) {
+function renderDiscussions(discussionMap) {
   const container = document.getElementById("discussion-list");
   if (!container) return;
-  container.innerHTML = "";
 
+  const list = Array.from(discussionMap.values()).sort((a, b) =>
+    (b.updatedAt?.toMillis?.() || 0) - (a.updatedAt?.toMillis?.() || 0)
+  );
+
+  container.innerHTML = "";
   list.forEach(item => {
     const el = document.createElement("div");
     el.classList.add("chat-item");
 
     if (item.type === "group") {
       el.innerHTML = `<div class="item-title">${item.name} <span class="admin-badge">Groupe</span></div>`;
-    } else if (item.type === "private") {
-      const otherUser = item.userIds.find(uid => uid !== currentUser.uid);
+    } else {
+      const otherUser = item.userIds?.find(uid => uid !== currentUser.uid);
       el.innerHTML = `<div class="item-title">Chat privé avec ${getUserNameById(otherUser)}</div>`;
     }
 
@@ -8672,12 +8683,8 @@ function displayDiscussions(list) {
   });
 }
 
-function openChat(chatId, type) {
-  if (type === "group") {
-    openGroupChat(chatId);
-  } else if (type === "private") {
-    openPrivateChat(chatId);
-  }
-}
+window.addEventListener("load", () => {
+  initDiscussionListeners();
+});
 </script></body>
 </html>
