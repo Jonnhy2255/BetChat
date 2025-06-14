@@ -1976,50 +1976,6 @@
             font-size: 11px;
             opacity: 0.8;
         }
-
-        .match-leagues {
-            background-color: rgba(0,0,0,0.05);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .match-leagues-title {
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .league-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            padding: 8px;
-            background-color: var(--bg-color);
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .league-number {
-            background-color: var(--primary-color);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-
-        .league-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
         
         .no-forecasts {
             text-align: center;
@@ -3346,12 +3302,12 @@
             <div style="height: 100%; overflow-y: auto;">
                 <div class="current-plan">
                     <div class="current-plan-title">Plan Actuel</div>
-                    <div class="current-plan-info">Plan Gratuit</div>
+                    <div class="current-plan-info" id="current-plan-name">Plan Gratuit</div>
                     <div class="sats-balance">
                         <i class="fab fa-bitcoin bitcoin-icon"></i>
                         <span id="user-sats-balance">0</span> sats
                     </div>
-                    <div style="font-size: 14px; color: var(--inactive-text);">
+                    <div style="font-size: 14px; color: var(--inactive-text);" id="plan-expiry-info">
                         Rechargez vos sats pour accéder aux plans premium
                     </div>
                 </div>
@@ -3840,11 +3796,15 @@
                 
                 let messageContent = log.message;
                 
-                // Handle Firestore index links
+                // Handle Firestore index links - make them clickable
                 if (log.linkUrl) {
+                    const linkText = `<a href="${log.linkUrl}" target="_blank" rel="noopener noreferrer" class="debug-log-link">Créer l'index requis ici</a>`;
+                    messageContent = messageContent.replace(log.linkUrl, linkText);
+                } else {
+                    // Look for URLs in the message and make them clickable
                     const linkPattern = /https:\/\/console\.firebase\.google\.com[^\s)]+/g;
                     messageContent = messageContent.replace(linkPattern, (url) => {
-                        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="debug-log-link">${url}</a>`;
+                        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="debug-log-link">Créer l'index requis ici</a>`;
                     });
                 }
                 
@@ -3887,6 +3847,7 @@
             logs.textContent += `[${now}] ${message}\n`;
             logs.scrollTop = logs.scrollHeight;
             console.log(`[Lightning] ${message}`);
+            addDebugLog(`[Lightning] ${message}`, 'info');
         }
 
         async function generateLightningInvoice(amount, planType) {
@@ -4026,6 +3987,8 @@
 
             modal.classList.add('active');
 
+            addDebugLog(`Ouverture du modal de paiement Lightning pour ${amount} sats (plan ${planType})`, 'info');
+
             // Generate invoice
             generateLightningInvoice(amount, planType)
                 .then(invoice => {
@@ -4050,6 +4013,7 @@
             
             currentPaymentRequest = '';
             currentPlanTypeForPayment = '';
+            addDebugLog('Fermeture du modal de paiement Lightning', 'info');
         }
 
         function copyLightningInvoice() {
@@ -4068,25 +4032,93 @@
             if (!currentUser) return;
             
             try {
-                const requiredSats = planType === 'daily' ? 10 : 60;
-                const duration = planType === 'daily' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+                addDebugLog(`💼 Début du traitement de l'abonnement ${planType}`, 'info');
                 
+                const now = new Date();
+                const duration = planType === 'daily' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+                const expiryDate = new Date(now.getTime() + duration);
+                
+                // Update user data
                 const userRef = doc(db, "Users", currentUser.uid);
                 await updateDoc(userRef, {
                     currentPlan: planType,
-                    planExpiryDate: new Date(Date.now() + duration),
-                    lastPaymentDate: new Date()
+                    planExpiryDate: expiryDate,
+                    lastPaymentDate: now
                 });
                 
+                addDebugLog(`✅ Données utilisateur mises à jour: plan=${planType}, expiration=${expiryDate.toISOString()}`, 'success');
+                
+                // Add to Premium collection
+                const premiumCollection = planType === 'daily' ? 'Quotidien' : 'Hebdomadaire';
+                const premiumRef = doc(db, `Premium/${premiumCollection}`, currentUser.uid);
+                
+                const premiumData = {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    planType: planType,
+                    activatedAt: now,
+                    expiresAt: expiryDate,
+                    status: 'active'
+                };
+                
+                await setDoc(premiumRef, premiumData);
+                addDebugLog(`✅ Utilisateur ajouté à la collection Premium/${premiumCollection}`, 'success');
+                
                 currentPlanType = planType;
-                lightningLog(`✅ Abonnement ${planType} activé !`);
+                lightningLog(`✅ Abonnement ${planType} activé jusqu'au ${expiryDate.toLocaleDateString('fr-FR')} !`);
                 
                 // Update UI
                 await loadUserSubscriptionData();
                 
             } catch (error) {
-                console.error('Erreur lors du traitement de l\'abonnement:', error);
+                const errorMsg = handleFirestoreError(error, 'traitement de l\'abonnement');
                 lightningLog('❌ Erreur traitement abonnement: ' + error.message);
+                showNotification('Erreur lors de l\'activation de l\'abonnement', 'error');
+            }
+        }
+
+        // Check if user's subscription has expired and remove from Premium collection
+        async function checkSubscriptionExpiry() {
+            if (!currentUser || !currentUserData) return;
+            
+            try {
+                if (currentUserData.currentPlan && currentUserData.currentPlan !== 'free') {
+                    const expiryDate = currentUserData.planExpiryDate?.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
+                    const now = new Date();
+                    
+                    if (now > expiryDate) {
+                        addDebugLog(`⏰ Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
+                        
+                        // Remove from Premium collection
+                        const premiumCollection = currentUserData.currentPlan === 'daily' ? 'Quotidien' : 'Hebdomadaire';
+                        const premiumRef = doc(db, `Premium/${premiumCollection}`, currentUser.uid);
+                        
+                        try {
+                            await deleteDoc(premiumRef);
+                            addDebugLog(`✅ Utilisateur retiré de Premium/${premiumCollection}`, 'success');
+                        } catch (deleteError) {
+                            addDebugLog(`⚠️ Erreur suppression de Premium/${premiumCollection}: ${deleteError.message}`, 'warning');
+                        }
+                        
+                        // Update user to free plan
+                        const userRef = doc(db, "Users", currentUser.uid);
+                        await updateDoc(userRef, {
+                            currentPlan: 'free',
+                            planExpiryDate: null
+                        });
+                        
+                        currentUserData.currentPlan = 'free';
+                        currentUserData.planExpiryDate = null;
+                        currentPlanType = 'free';
+                        
+                        addDebugLog('✅ Utilisateur remis au plan gratuit', 'success');
+                        showNotification('Votre abonnement a expiré. Vous êtes maintenant sur le plan gratuit.', 'info');
+                        
+                        await loadUserSubscriptionData();
+                    }
+                }
+            } catch (error) {
+                handleFirestoreError(error, 'vérification de l\'expiration de l\'abonnement');
             }
         }
 
@@ -4440,10 +4472,14 @@
                     userSatsBalance = userData.satsBalance || 0;
                     currentPlanType = userData.currentPlan || 'free';
                     
+                    // Check if subscription has expired
+                    await checkSubscriptionExpiry();
+                    
                     updateSubscriptionDisplay();
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
+                addDebugLog(`Erreur chargement abonnement: ${error.message}`, 'error');
             }
         }
 
@@ -4453,14 +4489,40 @@
                 satsBalanceElement.textContent = userSatsBalance;
             }
             
+            // Update current plan display
+            const currentPlanNameElement = document.getElementById('current-plan-name');
+            const planExpiryInfoElement = document.getElementById('plan-expiry-info');
+            
+            if (currentPlanNameElement && planExpiryInfoElement) {
+                if (currentPlanType === 'free') {
+                    currentPlanNameElement.textContent = 'Plan Gratuit';
+                    planExpiryInfoElement.textContent = 'Rechargez vos sats pour accéder aux plans premium';
+                } else {
+                    const planNames = {
+                        'daily': 'Plan Quotidien',
+                        'weekly': 'Plan Hebdomadaire'
+                    };
+                    currentPlanNameElement.textContent = planNames[currentPlanType] || 'Plan Premium';
+                    
+                    if (currentUserData?.planExpiryDate) {
+                        const expiryDate = currentUserData.planExpiryDate.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
+                        planExpiryInfoElement.textContent = `Expire le ${expiryDate.toLocaleDateString('fr-FR')}`;
+                    } else {
+                        planExpiryInfoElement.textContent = 'Plan actif';
+                    }
+                }
+            }
+            
             // Update plan buttons
             const planButtons = document.querySelectorAll('.plan-button');
             planButtons.forEach(button => {
                 button.disabled = false;
                 if (button.id === 'daily-plan-btn') {
-                    button.textContent = 'S\'abonner au plan quotidien';
+                    button.textContent = currentPlanType === 'daily' ? 'Plan actuel' : 'S\'abonner au plan quotidien';
+                    button.disabled = currentPlanType === 'daily';
                 } else {
-                    button.textContent = 'S\'abonner au plan hebdomadaire';
+                    button.textContent = currentPlanType === 'weekly' ? 'Plan actuel' : 'S\'abonner au plan hebdomadaire';
+                    button.disabled = currentPlanType === 'weekly';
                 }
             });
         }
@@ -4628,11 +4690,15 @@
 
             // Subscription plan events with Lightning payment
             document.getElementById('daily-plan-btn').addEventListener('click', function() {
-                showLightningPaymentModal(10, 'daily');
+                if (currentPlanType !== 'daily') {
+                    showLightningPaymentModal(10, 'daily');
+                }
             });
 
             document.getElementById('weekly-plan-btn').addEventListener('click', function() {
-                showLightningPaymentModal(60, 'weekly');
+                if (currentPlanType !== 'weekly') {
+                    showLightningPaymentModal(60, 'weekly');
+                }
             });
 
             document.getElementById('plan-cancel').addEventListener('click', hidePlanConfirmation);
@@ -5255,7 +5321,7 @@
                     </div>
                 `;
 
-                // 2ème face - Description avec les ligues des matchs
+                // 2ème face - Description sans les ligues des matchs
                 detailsContent = `
                     <div class="forecast-description">
                         <h3 style="color: var(--primary-color); margin-bottom: 15px;">Description complète</h3>
@@ -5263,17 +5329,6 @@
                             ${forecastData.description || 'Aucune description disponible pour ce combiné.'}
                         </div>
                     </div>
-                    ${forecastData.matches && forecastData.matches.length > 0 ? `
-                        <div class="match-leagues">
-                            <div class="match-leagues-title">Ligues des matchs :</div>
-                            ${forecastData.matches.map((match, index) => 
-                                `<div class="league-item">
-                                    <div class="league-number">${index + 1}</div>
-                                    <div class="league-name">${match.league || 'Ligue non spécifiée'}</div>
-                                </div>`
-                            ).join('')}
-                        </div>
-                    ` : ''}
                     ${forecastData.estimated_odds ? `
                         <div class="estimated-odds">
                             Cote estimée: ${forecastData.estimated_odds}
@@ -5680,8 +5735,9 @@
             try {
                 await deleteDoc(doc(db, "Events", eventId));
                 showNotification('Événement supprimé', 'success');
+                addDebugLog(`Événement ${eventId} supprimé par l'admin`, 'info');
             } catch (error) {
-                console.error('Erreur lors de la suppression de l\'événement:', error);
+                handleFirestoreError(error, 'suppression de l\'événement');
                 showNotification('Erreur lors de la suppression de l\'événement', 'error');
             }
         }
@@ -5729,6 +5785,7 @@
                 await addDoc(collection(db, "Events"), eventData);
                 
                 showNotification('Notification envoyée avec succès', 'success');
+                addDebugLog(`Notification "${title}" envoyée par l'admin`, 'success');
                 hideAdminNotificationDialog();
                 
                 // Clear form
@@ -5737,7 +5794,7 @@
                 document.getElementById('notif-type').value = 'info';
                 
             } catch (error) {
-                console.error('Erreur lors de l\'envoi de la notification:', error);
+                handleFirestoreError(error, 'envoi de la notification');
                 showNotification('Erreur lors de l\'envoi de la notification', 'error');
             } finally {
                 setButtonLoading('send-notification-btn', false);
@@ -5770,6 +5827,7 @@
                 
                 showNotification('Nom d\'utilisateur mis à jour', 'success');
                 profileNameChanged = false;
+                addDebugLog(`Nom d'utilisateur mis à jour: ${displayName}`, 'success');
             } catch (error) {
                 handleFirestoreError(error, 'mise à jour du nom d\'utilisateur');
                 showNotification('Erreur lors de la mise à jour du nom d\'utilisateur', 'error');
@@ -5798,6 +5856,7 @@
                 
                 showNotification('Photo de profil mise à jour', 'success');
                 profileImageFile = null;
+                addDebugLog('Photo de profil mise à jour', 'success');
                 
                 const imageButton = document.getElementById('save-profile-image-btn');
                 imageButton.textContent = 'Image enregistrée';
@@ -5895,11 +5954,14 @@
             
             try {
                 showNotification('Suppression du compte en cours...', 'info');
+                addDebugLog('Début de la suppression du compte utilisateur', 'warning');
                 
                 const userRef = doc(db, "Users", currentUser.uid);
                 await deleteDoc(userRef);
+                addDebugLog('Données utilisateur supprimées de Firestore', 'success');
                 
                 await deleteUser(currentUser);
+                addDebugLog('Compte utilisateur supprimé de Firebase Auth', 'success');
                 
                 showNotification('Compte supprimé avec succès', 'success');
                 
@@ -5909,6 +5971,7 @@
                 
             } catch (error) {
                 console.error('Erreur lors de la suppression du compte:', error);
+                addDebugLog(`Erreur suppression du compte: ${error.message}`, 'error');
                 
                 let errorMessage = 'Erreur lors de la suppression du compte';
                 
@@ -5944,6 +6007,7 @@
                 isAdmin = false;
                 
                 showNotification('Déconnexion réussie', 'success');
+                addDebugLog('Utilisateur déconnecté', 'info');
                 
                 setTimeout(() => {
                     window.location.reload();
@@ -5951,6 +6015,7 @@
                 
             } catch (error) {
                 console.error('Erreur lors de la déconnexion:', error);
+                addDebugLog(`Erreur déconnexion: ${error.message}`, 'error');
                 showNotification('Erreur lors de la déconnexion', 'error');
             }
         }
@@ -6027,8 +6092,11 @@
                     if (oldestUser.id === currentUser.uid) {
                         isAdmin = true;
                         updateAdminStatus();
+                        addDebugLog('Utilisateur identifié comme administrateur', 'info');
                     }
                 }
+                
+                addDebugLog(`${users.length} utilisateurs chargés depuis Firestore`, 'success');
                 
             } catch (error) {
                 handleFirestoreError(error, 'chargement des utilisateurs');
@@ -6072,7 +6140,7 @@
         
         // Initialize app
         function initApp() {
-            addDebugLog('Initialisation de l\'application', 'info');
+            addDebugLog('Initialisation de l\'application Pari Alliance', 'info');
             
             setupDarkMode();
             setupTheme();
@@ -6100,6 +6168,7 @@
                         
                         if (userDoc.exists()) {
                             currentUserData = userDoc.data();
+                            addDebugLog('Données utilisateur récupérées depuis Firestore', 'success');
                         } else {
                             currentUserData = {
                                 email: user.email,
@@ -6111,10 +6180,12 @@
                             };
                             
                             await setDoc(userRef, currentUserData);
+                            addDebugLog('Nouveau profil utilisateur créé dans Firestore', 'success');
                         }
                         
                         updateProfileInfo();
                         await loadUsers(); // Charger les utilisateurs pour déterminer qui est admin
+                        await checkSubscriptionExpiry(); // Vérifier l'expiration de l'abonnement
                         
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
@@ -6187,11 +6258,14 @@
             if (hasError) return;
             
             setButtonLoading('loginBtn', true);
+            addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
+                addDebugLog('Connexion réussie', 'success');
             } catch (error) {
                 console.error('Erreur de connexion:', error);
+                addDebugLog(`Erreur de connexion: ${error.code} - ${error.message}`, 'error');
                 
                 let errorMessage = 'Erreur de connexion';
                 if (error.code === 'auth/user-not-found') {
@@ -6244,11 +6318,14 @@
             if (hasError) return;
             
             setButtonLoading('registerBtn', true);
+            addDebugLog(`Tentative d'inscription pour: ${email}`, 'info');
             
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
+                addDebugLog('Inscription réussie', 'success');
             } catch (error) {
                 console.error('Erreur d\'inscription:', error);
+                addDebugLog(`Erreur d'inscription: ${error.code} - ${error.message}`, 'error');
                 
                 let errorMessage = 'Erreur d\'inscription';
                 if (error.code === 'auth/email-already-in-use') {
