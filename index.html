@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pari Alliance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
@@ -1977,6 +1976,50 @@
             font-size: 11px;
             opacity: 0.8;
         }
+
+        .match-leagues {
+            background-color: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .match-leagues-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .league-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .league-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .league-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
         
         .no-forecasts {
             text-align: center;
@@ -2779,16 +2822,6 @@
             font-size: 14px;
         }
 
-        .qr-code-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .qr-code-canvas {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-        }
-
         .invoice-container {
             margin-bottom: 20px;
         }
@@ -3106,10 +3139,6 @@
             <div class="payment-amount">
                 <div class="payment-amount-value" id="payment-amount-value">10 sats</div>
                 <div class="payment-amount-label">Plan Quotidien</div>
-            </div>
-            
-            <div class="qr-code-container">
-                <canvas id="qr-code-canvas" class="qr-code-canvas"></canvas>
             </div>
             
             <div class="invoice-container">
@@ -3908,6 +3937,11 @@
                 currentPaymentRequest = invoice.paymentRequest;
                 lightningLog("✅ Invoice générée avec succès");
 
+                // Start checking payment status every 3 seconds automatically
+                if (autoCheckInterval) clearInterval(autoCheckInterval);
+                autoCheckInterval = setInterval(checkLightningPaymentStatus, 3000);
+                lightningLog("🔄 Démarrage de la vérification automatique du paiement (toutes les 3 secondes)");
+
                 return currentPaymentRequest;
 
             } catch (error) {
@@ -3974,25 +4008,6 @@
             }
         }
 
-        function generateQRCode(text) {
-            const canvas = document.getElementById('qr-code-canvas');
-            QRCode.toCanvas(canvas, text, {
-                width: 256,
-                margin: 2,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            }, function (error) {
-                if (error) {
-                    console.error('Erreur génération QR code:', error);
-                    lightningLog('❌ Erreur génération QR code: ' + error.message);
-                } else {
-                    lightningLog('✅ QR code généré avec succès');
-                }
-            });
-        }
-
         function showLightningPaymentModal(amount, planType) {
             currentPlanTypeForPayment = planType;
             const modal = document.getElementById('lightning-payment-modal');
@@ -4015,12 +4030,7 @@
             generateLightningInvoice(amount, planType)
                 .then(invoice => {
                     invoiceElement.textContent = invoice;
-                    generateQRCode(invoice);
                     statusElement.innerHTML = '⏳ En attente de paiement...';
-                    
-                    // Start checking payment status every 3 seconds
-                    if (autoCheckInterval) clearInterval(autoCheckInterval);
-                    autoCheckInterval = setInterval(checkLightningPaymentStatus, 3000);
                 })
                 .catch(error => {
                     statusElement.className = 'payment-status error';
@@ -5245,7 +5255,7 @@
                     </div>
                 `;
 
-                // 2ème face - Description
+                // 2ème face - Description avec les ligues des matchs
                 detailsContent = `
                     <div class="forecast-description">
                         <h3 style="color: var(--primary-color); margin-bottom: 15px;">Description complète</h3>
@@ -5253,6 +5263,17 @@
                             ${forecastData.description || 'Aucune description disponible pour ce combiné.'}
                         </div>
                     </div>
+                    ${forecastData.matches && forecastData.matches.length > 0 ? `
+                        <div class="match-leagues">
+                            <div class="match-leagues-title">Ligues des matchs :</div>
+                            ${forecastData.matches.map((match, index) => 
+                                `<div class="league-item">
+                                    <div class="league-number">${index + 1}</div>
+                                    <div class="league-name">${match.league || 'Ligue non spécifiée'}</div>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    ` : ''}
                     ${forecastData.estimated_odds ? `
                         <div class="estimated-odds">
                             Cote estimée: ${forecastData.estimated_odds}
