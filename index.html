@@ -4048,9 +4048,9 @@
                 
                 addDebugLog(`✅ Données utilisateur mises à jour: plan=${planType}, expiration=${expiryDate.toISOString()}`, 'success');
                 
-                // Add to Premium collection
-                const premiumCollection = planType === 'daily' ? 'Quotidien' : 'Hebdomadaire';
-                const premiumRef = doc(db, `Premium/${premiumCollection}`, currentUser.uid);
+                // Add to Premium collection - Fixed collection name structure
+                const premiumCollectionName = planType === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
+                const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
                 
                 const premiumData = {
                     userId: currentUser.uid,
@@ -4062,7 +4062,7 @@
                 };
                 
                 await setDoc(premiumRef, premiumData);
-                addDebugLog(`✅ Utilisateur ajouté à la collection Premium/${premiumCollection}`, 'success');
+                addDebugLog(`✅ Utilisateur ajouté à la collection ${premiumCollectionName}`, 'success');
                 
                 currentPlanType = planType;
                 lightningLog(`✅ Abonnement ${planType} activé jusqu'au ${expiryDate.toLocaleDateString('fr-FR')} !`);
@@ -4089,15 +4089,15 @@
                     if (now > expiryDate) {
                         addDebugLog(`⏰ Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
                         
-                        // Remove from Premium collection
-                        const premiumCollection = currentUserData.currentPlan === 'daily' ? 'Quotidien' : 'Hebdomadaire';
-                        const premiumRef = doc(db, `Premium/${premiumCollection}`, currentUser.uid);
+                        // Remove from Premium collection - Fixed collection name structure
+                        const premiumCollectionName = currentUserData.currentPlan === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
+                        const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
                         
                         try {
                             await deleteDoc(premiumRef);
-                            addDebugLog(`✅ Utilisateur retiré de Premium/${premiumCollection}`, 'success');
+                            addDebugLog(`✅ Utilisateur retiré de ${premiumCollectionName}`, 'success');
                         } catch (deleteError) {
-                            addDebugLog(`⚠️ Erreur suppression de Premium/${premiumCollection}: ${deleteError.message}`, 'warning');
+                            addDebugLog(`⚠️ Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
                         }
                         
                         // Update user to free plan
