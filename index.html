@@ -3061,33 +3061,6 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .fab {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 100;
-            transition: all 0.3s ease;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-        }
-
-        .fab:active {
-            transform: scale(0.95);
-        }
-        
         @media (max-height: 640px) {
             .fab {
                 bottom: 70px;
@@ -3392,9 +3365,10 @@
             </div>
         </div>
 
-        <!-- Section Prédictions IA pour abonnés seulement -->
+        <!-- Section Prédictions IA - Différent contenu selon le statut utilisateur -->
         <div id="ai-forecasts-section" class="section">
-            <div class="subscription-required-page">
+            <!-- Page d'abonnement requis (par défaut) -->
+            <div id="ai-subscription-required" class="subscription-required-page">
                 <div class="subscription-required-icon">
                     <i class="fas fa-crown"></i>
                 </div>
@@ -3405,6 +3379,30 @@
                 <button class="subscription-required-button" onclick="showSubscriptionFromAI()">
                     Voir les abonnements
                 </button>
+            </div>
+
+            <!-- Contenu Premium réel (masqué par défaut) -->
+            <div id="ai-premium-content" class="ai-forecasts-content" style="display: none; height: 100%;">
+                <div class="ai-forecasts-tabs">
+                    <div class="ai-forecast-tab active" data-tab="combines">Combinés IA</div>
+                    <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
+                    <div class="ai-forecast-tab" data-tab="safes">Safes</div>
+                </div>
+                
+                <div class="ai-forecasts-content active" id="combines-content">
+                    <div class="ai-forecasts-list" id="combines-list">
+                    </div>
+                </div>
+                
+                <div class="ai-forecasts-content" id="sures-content">
+                    <div class="ai-forecasts-list" id="sures-list">
+                    </div>
+                </div>
+                
+                <div class="ai-forecasts-content" id="safes-content">
+                    <div class="ai-forecasts-list" id="safes-list">
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -4762,6 +4760,7 @@
                     
                     updateSubscriptionDisplay();
                     updatePremiumBadge();
+                    updateAIForecastsAccess(); // Nouveau: mise à jour de l'accès AI
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
@@ -4821,6 +4820,24 @@
                 } else {
                     premiumBadge.style.display = 'none';
                 }
+            }
+        }
+
+        // Nouvelle fonction pour gérer l'accès aux prédictions IA
+        function updateAIForecastsAccess() {
+            const subscriptionRequiredDiv = document.getElementById('ai-subscription-required');
+            const premiumContentDiv = document.getElementById('ai-premium-content');
+            
+            if (hasPremiumAccess()) {
+                // L'utilisateur a accès premium (admin ou abonné)
+                subscriptionRequiredDiv.style.display = 'none';
+                premiumContentDiv.style.display = 'flex';
+                addDebugLog('Accès premium accordé - Affichage du contenu IA', 'success');
+            } else {
+                // L'utilisateur n'a pas accès premium
+                subscriptionRequiredDiv.style.display = 'flex';
+                premiumContentDiv.style.display = 'none';
+                addDebugLog('Accès premium requis - Affichage de la page d\'abonnement', 'info');
             }
         }
 
@@ -4984,6 +5001,36 @@
                 if (currentPlanType !== 'weekly') {
                     showLightningPaymentModal(60, 'weekly');
                 }
+            });
+
+            // AI Forecasts tabs events
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabType = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    document.querySelectorAll('.ai-forecast-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active content
+                    document.querySelectorAll('.ai-forecasts-content').forEach(content => {
+                        content.classList.remove('active');
+                        content.style.display = 'none';
+                    });
+                    
+                    const targetContent = document.getElementById(`${tabType}-content`);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                        targetContent.style.display = 'flex';
+                    }
+                    
+                    currentForecastTab = tabType;
+                    
+                    // Load data for this tab if user has premium access
+                    if (hasPremiumAccess()) {
+                        loadForecastsData(tabType);
+                    }
+                });
             });
             
             document.getElementById('dark-toggle').addEventListener('change', function() {
@@ -5384,6 +5431,14 @@
 
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
+
+            // Mise à jour de l'accès en fonction du statut utilisateur
+            updateAIForecastsAccess();
+
+            // Si l'utilisateur a accès premium, charger les données
+            if (hasPremiumAccess()) {
+                loadForecastsData(currentForecastTab);
+            }
         }
         
         function showInterfaceSection() {
@@ -6317,6 +6372,7 @@
         function updateAdminStatus() {
             // Mettre à jour l'interface pour refléter le statut d'admin
             updateProfileInfo();
+            updateAIForecastsAccess(); // Mise à jour de l'accès AI quand le statut admin change
         }
         
         function setButtonLoading(buttonId, loading) {
