@@ -1500,7 +1500,7 @@
 
         .restricted-message {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px;
             margin: 20px;
             background-color: rgba(255, 193, 7, 0.1);
             border-radius: 15px;
@@ -1662,91 +1662,75 @@
             flex: 1;
         }
         
-        /* Section Prédictions IA - Structure simplifiée */
-        .ai-forecasts-section {
+        .forecasts-section {
+            padding: 0;
             height: 100%;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden;
         }
         
-        /* Navigation des onglets */
-        .ai-forecasts-tabs {
+        .ai-forecasts-section {
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .forecasts-tabs, .ai-forecasts-tabs {
             display: flex;
-            background-color: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
+            margin: 0;
+            background-color: var(--bg-color);
             position: sticky;
             top: 0;
             z-index: 5;
+            flex-shrink: 0;
         }
         
-        .ai-forecast-tab {
+        .forecast-tab, .ai-forecast-tab {
             flex: 1;
             text-align: center;
-            padding: 15px 8px;
+            padding: 12px 0;
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
             position: relative;
             color: var(--inactive-text);
-            transition: color 0.3s ease;
-            border-bottom: 3px solid transparent;
+            transition: color 0.3s, background-color 0.2s ease;
         }
         
-        .ai-forecast-tab.active {
+        .forecast-tab.active, .ai-forecast-tab.active {
             color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
         }
         
-        /* Conteneur principal pour le contenu AI */
-        .ai-content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .forecast-tab.active::after, .ai-forecast-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+            animation: slideIn 0.3s ease;
         }
         
-        /* Contenus individuels des onglets */
-        .ai-tab-content {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+        .forecasts-content, .ai-forecasts-content {
             display: none;
-        }
-        
-        .ai-tab-content.active {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Listes des prédictions */
-        .ai-forecasts-list {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            min-height: 100%;
-        }
-        
-        /* Section des pronostics simples */
-        .forecasts-section {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .forecasts-content {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            padding: 0;
         }
         
-        .forecasts-list {
-            padding: 15px;
+        .forecasts-content.active, .ai-forecasts-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .forecasts-list, .ai-forecasts-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            padding: 15px;
             min-height: 100%;
         }
         
@@ -2219,8 +2203,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             font-weight: bold;
-            font-size: 24px;
-            position: relative;
+            font-size: 14px;
         }
         
         .social-button:active {
@@ -2233,18 +2216,15 @@
         }
         
         .social-button.whatsapp {
-            background-color: var(--social-whatsapp);
-            color: white;
+            color: var(--social-whatsapp);
         }
         
         .social-button.telegram {
-            background-color: var(--social-telegram);
-            color: white;
+            color: var(--social-telegram);
         }
         
         .social-button.youtube {
-            background-color: var(--social-youtube);
-            color: white;
+            color: var(--social-youtube);
         }
 
         .about-dialog {
@@ -3077,6 +3057,33 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+        
         @media (max-height: 640px) {
             .fab {
                 bottom: 70px;
@@ -3092,118 +3099,6 @@
             .confirmation-button {
                 width: 100%;
             }
-        }
-
-        /* Pop-up d'abonnement requis pour AI */
-        .subscription-required-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .subscription-required-modal.active {
-            display: flex;
-        }
-
-        .subscription-required-content {
-            background-color: var(--bg-color);
-            border-radius: 15px;
-            padding: 30px 20px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .subscription-required-modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: var(--text-color);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-
-        .subscription-required-modal-close:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .subscription-required-modal-icon {
-            font-size: 60px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        .subscription-required-modal-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .subscription-required-modal-text {
-            font-size: 16px;
-            color: var(--text-color);
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .subscription-required-modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .subscription-required-modal-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            max-width: 150px;
-        }
-
-        .subscription-required-modal-button:hover {
-            background-color: #4a49c0;
-            transform: translateY(-2px);
-        }
-
-        .subscription-required-modal-button.secondary {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-
-        .subscription-required-modal-button.secondary:hover {
-            background-color: var(--border-color);
         }
 
         /* Scrollbar styling */
@@ -3246,30 +3141,6 @@
 
     <div id="debug-toggle-btn" class="debug-toggle-btn">
         <i class="fas fa-bug"></i>
-    </div>
-
-    <!-- Pop-up d'abonnement requis -->
-    <div id="subscription-required-modal" class="subscription-required-modal">
-        <div class="subscription-required-content">
-            <div class="subscription-required-modal-close" id="subscription-required-modal-close">
-                <i class="fas fa-times"></i>
-            </div>
-            <div class="subscription-required-modal-icon">
-                <i class="fas fa-crown"></i>
-            </div>
-            <div class="subscription-required-modal-title">Abonnement Premium requis</div>
-            <div class="subscription-required-modal-text">
-                Accédez aux prédictions IA avancées, aux combinés intelligents et aux analyses premium avec un abonnement Pari Alliance !
-            </div>
-            <div class="subscription-required-modal-buttons">
-                <button class="subscription-required-modal-button secondary" id="subscription-modal-cancel">
-                    Annuler
-                </button>
-                <button class="subscription-required-modal-button" id="subscription-modal-subscribe">
-                    Voir les plans
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- Lightning Payment Modal -->
@@ -3458,37 +3329,32 @@
     <div class="content">
         <!-- Section des pronostics simples maintenant par défaut -->
         <div id="forecasts-section" class="section active">
-            <div class="forecasts-content" style="height: 100%; overflow-y: auto;">
+            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
                 <div class="forecasts-list" id="simple-forecasts-list">
                 </div>
             </div>
         </div>
 
-        <!-- Section Prédictions IA - Structure simplifiée -->
-        <div id="ai-forecasts-section" class="section ai-forecasts-section">
-            <!-- Navigation des onglets -->
+        <!-- Section Prédictions IA pour abonnés seulement -->
+        <div id="ai-forecasts-section" class="section">
             <div class="ai-forecasts-tabs">
-                <div class="ai-forecast-tab active" data-tab="combines">Combinés IA</div>
+                <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
                 <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
                 <div class="ai-forecast-tab" data-tab="safes">Safes</div>
             </div>
             
-            <!-- Conteneur principal pour le contenu AI -->
-            <div class="ai-content-wrapper">
-                <!-- Contenu des onglets -->
-                <div class="ai-tab-content active" id="combines-content">
-                    <div class="ai-forecasts-list" id="combines-list">
-                    </div>
+            <div class="ai-forecasts-content active" id="combines-content">
+                <div class="ai-forecasts-list" id="combines-list">
                 </div>
-                
-                <div class="ai-tab-content" id="sures-content">
-                    <div class="ai-forecasts-list" id="sures-list">
-                    </div>
+            </div>
+            
+            <div class="ai-forecasts-content" id="sures-content">
+                <div class="ai-forecasts-list" id="sures-list">
                 </div>
-                
-                <div class="ai-tab-content" id="safes-content">
-                    <div class="ai-forecasts-list" id="safes-list">
-                    </div>
+            </div>
+
+            <div class="ai-forecasts-content" id="safes-content">
+                <div class="ai-forecasts-list" id="safes-list">
                 </div>
             </div>
         </div>
@@ -3704,13 +3570,13 @@
                     
                     <div class="social-buttons">
                         <div class="social-button whatsapp" id="whatsapp-btn">
-                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
                         </div>
                         <div class="social-button telegram" id="telegram-btn">
-                            <i class="fab fa-telegram-plane"></i>
+                            Telegram
                         </div>
                         <div class="social-button youtube" id="youtube-btn">
-                            <i class="fab fa-youtube"></i>
+                            YouTube
                         </div>
                     </div>
                     
@@ -3986,8 +3852,10 @@
             <div class="video-close" id="video-close">
                 <i class="fas fa-times"></i>
             </div>
-            <iframe class="video-player" id="video-player" frameborder="0" allowfullscreen>
-            </iframe>
+            <video class="video-player" id="video-player" controls>
+                <source src="" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
         </div>
     </div>
 
@@ -4038,13 +3906,6 @@
         // Debug system
         let debugLogs = [];
         let debugPanelVisible = false;
-
-        // Videos YouTube URLs
-        const TUTORIAL_VIDEOS = {
-            'free-sats': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-            'buy-plan': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-            'understand-predictions': 'https://www.youtube.com/embed/dQw4w9WgXcQ'
-        };
 
         function addDebugLog(message, type = 'info', linkUrl = null) {
             const timestamp = new Date().toLocaleTimeString('fr-FR');
@@ -4398,18 +4259,6 @@
         // Function to check if user has premium access
         function hasPremiumAccess() {
             return isAdmin || (currentPlanType && currentPlanType !== 'free');
-        }
-
-        // Function to show subscription required modal
-        function showSubscriptionRequiredModal() {
-            const modal = document.getElementById('subscription-required-modal');
-            modal.classList.add('active');
-            addDebugLog('Affichage du modal d\'abonnement requis', 'info');
-        }
-
-        function hideSubscriptionRequiredModal() {
-            const modal = document.getElementById('subscription-required-modal');
-            modal.classList.remove('active');
         }
 
         // Initialize or check Admin collection
@@ -4920,12 +4769,26 @@
             const videoModal = document.getElementById('video-modal');
             const videoPlayer = document.getElementById('video-player');
             
-            if (TUTORIAL_VIDEOS[videoType]) {
-                videoPlayer.src = TUTORIAL_VIDEOS[videoType];
+            // Simulate video URLs (replace with actual video URLs)
+            const videoUrls = {
+                'free-sats': 'https://example.com/free-sats-tutorial.mp4',
+                'buy-plan': 'https://example.com/buy-plan-tutorial.mp4',
+                'understand-predictions': 'https://example.com/understand-predictions-tutorial.mp4'
+            };
+            
+            if (videoUrls[videoType]) {
+                videoPlayer.src = videoUrls[videoType];
                 videoModal.classList.add('active');
                 history.pushState({ page: 'video-tutorial' }, '');
             } else {
-                showNotification('Vidéo non disponible', 'error');
+                // Fallback: show notification for demo
+                const videoTitles = {
+                    'free-sats': 'Comment obtenir des sats gratuitement',
+                    'buy-plan': 'Comment acheter un plan d\'abonnement',
+                    'understand-predictions': 'Comment comprendre nos prédictions'
+                };
+                
+                showNotification(`Vidéo "${videoTitles[videoType]}" bientôt disponible`, 'info');
             }
         }
 
@@ -4934,6 +4797,7 @@
             const videoPlayer = document.getElementById('video-player');
             
             videoModal.classList.remove('active');
+            videoPlayer.pause();
             videoPlayer.src = '';
         }
         
@@ -4953,14 +4817,6 @@
             document.getElementById('debug-log-close').addEventListener('click', function() {
                 debugPanelVisible = false;
                 document.getElementById('debug-log-panel').classList.remove('active');
-            });
-
-            // Subscription required modal events
-            document.getElementById('subscription-required-modal-close').addEventListener('click', hideSubscriptionRequiredModal);
-            document.getElementById('subscription-modal-cancel').addEventListener('click', hideSubscriptionRequiredModal);
-            document.getElementById('subscription-modal-subscribe').addEventListener('click', function() {
-                hideSubscriptionRequiredModal();
-                showSubscriptionSection();
             });
 
             // Lightning payment modal events
@@ -4983,7 +4839,6 @@
                 document.getElementById('side-menu-overlay').classList.remove('active');
             });
             
-            // Menu items fixed - removed the direct section switching
             document.getElementById('menu-profile').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
@@ -5056,11 +4911,11 @@
                         if (section === 'forecasts') {
                             showForecastsSection();
                         } else if (section === 'ai-forecasts') {
-                            // Vérifier l'accès premium avant d'afficher la section
+                            // Vérifier l'accès premium
                             if (hasPremiumAccess()) {
                                 showAIForecastsSection();
                             } else {
-                                showSubscriptionRequiredModal();
+                                showPremiumRequiredMessage();
                             }
                         }
                         
@@ -5091,32 +4946,11 @@
                     showLightningPaymentModal(60, 'weekly');
                 }
             });
-
-            // AI Forecasts tabs events
+            
             document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    const tabType = this.getAttribute('data-tab');
-                    
-                    // Update active tab
-                    document.querySelectorAll('.ai-forecast-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update active content
-                    document.querySelectorAll('.ai-tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    const targetContent = document.getElementById(`${tabType}-content`);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                    }
-                    
-                    currentForecastTab = tabType;
-                    
-                    // Load data for this tab if user has premium access
-                    if (hasPremiumAccess()) {
-                        loadForecastsData(tabType);
-                    }
+                    const tabId = this.getAttribute('data-tab');
+                    switchAIForecastTab(tabId);
                 });
             });
             
@@ -5227,12 +5061,6 @@
         
         function handleBackButton(event) {
             event.preventDefault();
-            
-            if (document.getElementById('subscription-required-modal').classList.contains('active')) {
-                hideSubscriptionRequiredModal();
-                history.pushState({ page: 'main' }, '');
-                return;
-            }
             
             if (document.getElementById('lightning-payment-modal').classList.contains('active')) {
                 hideLightningPaymentModal();
@@ -5387,12 +5215,15 @@
             switch(platform) {
                 case 'whatsapp':
                     url = 'https://wa.me/';
+                    showNotification('Ouverture de WhatsApp', 'info');
                     break;
                 case 'telegram':
                     url = 'https://t.me/';
+                    showNotification('Ouverture de Telegram', 'info');
                     break;
                 case 'youtube':
                     url = 'https://www.youtube.com/';
+                    showNotification('Ouverture de YouTube', 'info');
                     break;
                 default:
                     return;
@@ -5437,10 +5268,7 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            // Reset back button event listener
-            const backButton = document.getElementById('header-back-button');
-            backButton.onclick = null;
-            backButton.addEventListener('click', function() {
+            document.getElementById('header-back-button').addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5470,10 +5298,7 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            // Reset back button event listener
-            const backButton = document.getElementById('header-back-button');
-            backButton.onclick = null;
-            backButton.addEventListener('click', function() {
+            document.getElementById('header-back-button').addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5483,14 +5308,75 @@
             history.pushState({ page: 'tutorials' }, '');
         }
         
-        function showAIForecastsSection() {
-            hideSearchBar();
+        function switchAIForecastTab(tabId) {
+            currentForecastTab = tabId;
             
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.ai-forecasts-content').forEach(content => {
+                if (content.id === `${tabId}-content`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            loadForecastsData(tabId);
+        }
+
+        function showPremiumRequiredMessage() {
+            const aiSection = document.getElementById('ai-forecasts-section');
+            aiSection.innerHTML = `
+                <div class="restricted-message">
+                    <i class="fas fa-crown"></i>
+                    <strong>Contenu Premium</strong><br>
+                    Accédez aux prédictions IA avancées avec un abonnement premium !
+                    <button class="subscribe-button" onclick="showSubscriptionFromRestricted()">
+                        Voir les abonnements
+                    </button>
+                </div>
+            `;
+        }
+
+        // Make this function global for the onclick
+        window.showSubscriptionFromRestricted = function() {
+            showSubscriptionSection();
+        };
+        
+        function showAIForecastsSection() {
             // Vérifier l'accès premium
             if (!hasPremiumAccess()) {
-                showSubscriptionRequiredModal();
+                showPremiumRequiredMessage();
+                
+                // Update nav to show AI forecasts section is selected
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    if (item.getAttribute('data-section') === 'ai-forecasts') {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+                
+                currentSection = 'ai-forecasts';
+                
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById('ai-forecasts-section').classList.add('active');
+                
+                document.getElementById('header-title').textContent = 'Prédictions IA';
+                
                 return;
             }
+
+            hideSearchBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'ai-forecasts') {
@@ -5510,6 +5396,38 @@
             });
             
             document.getElementById('ai-forecasts-section').classList.add('active');
+            
+            // Restore normal AI section structure
+            document.getElementById('ai-forecasts-section').innerHTML = `
+                <div class="ai-forecasts-tabs">
+                    <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
+                    <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
+                    <div class="ai-forecast-tab" data-tab="safes">Safes</div>
+                </div>
+                
+                <div class="ai-forecasts-content active" id="combines-content">
+                    <div class="ai-forecasts-list" id="combines-list">
+                    </div>
+                </div>
+                
+                <div class="ai-forecasts-content" id="sures-content">
+                    <div class="ai-forecasts-list" id="sures-list">
+                    </div>
+                </div>
+
+                <div class="ai-forecasts-content" id="safes-content">
+                    <div class="ai-forecasts-list" id="safes-list">
+                    </div>
+                </div>
+            `;
+            
+            // Re-bind tab events
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchAIForecastTab(tabId);
+                });
+            });
             
             document.getElementById('header-title').textContent = 'Prédictions IA';
             
@@ -5536,8 +5454,7 @@
 
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
-
-            // Charger les données de l'onglet actuel
+            
             loadForecastsData(currentForecastTab);
         }
         
@@ -5559,10 +5476,7 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            // Reset back button event listener
-            const backButton = document.getElementById('header-back-button');
-            backButton.onclick = null;
-            backButton.addEventListener('click', function() {
+            document.getElementById('header-back-button').addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5963,10 +5877,7 @@
             
             document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
-            // Reset back button event listener
-            const backButton = document.getElementById('header-back-button');
-            backButton.onclick = null;
-            backButton.addEventListener('click', function() {
+            document.getElementById('header-back-button').addEventListener('click', function() {
                 showForecastsSection();
             });
             
@@ -5996,10 +5907,7 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            // Reset back button event listener
-            const backButton = document.getElementById('header-back-button');
-            backButton.onclick = null;
-            backButton.addEventListener('click', function() {
+            document.getElementById('header-back-button').addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -6632,7 +6540,8 @@
             setButtonLoading('loginBtn', true);
             addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
             
-            await signInWithEmailAndPassword(auth, email, password);
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
                 addDebugLog('Connexion réussie', 'success');
             } catch (error) {
                 console.error('Erreur de connexion:', error);
