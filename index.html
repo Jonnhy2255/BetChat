@@ -96,6 +96,8 @@
             --sats-color: #F7931A;
             --plan-active-bg: rgba(93, 92, 222, 0.1);
             --plan-active-border: var(--primary-color);
+            --premium-badge-bg: #FFD700;
+            --premium-badge-text: #000000;
         }
         
         /* Thème vert */
@@ -1425,6 +1427,18 @@
             text-transform: uppercase;
         }
 
+        .premium-badge {
+            display: inline-block;
+            background-color: var(--premium-badge-bg);
+            color: var(--premium-badge-text);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         .restricted-badge {
             display: inline-block;
             background-color: var(--restricted-badge-bg);
@@ -1486,12 +1500,37 @@
 
         .restricted-message {
             text-align: center;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 20px;
+            margin: 20px;
             background-color: rgba(255, 193, 7, 0.1);
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 15px;
+            font-size: 16px;
             color: var(--text-color);
+            border: 2px solid var(--restricted-badge-bg);
+        }
+
+        .restricted-message i {
+            font-size: 30px;
+            color: var(--restricted-badge-bg);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .restricted-message .subscribe-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .restricted-message .subscribe-button:hover {
+            background-color: #4a49c0;
+            transform: translateY(-2px);
         }
         
         .profile-edit-dialog {
@@ -2840,16 +2879,38 @@
             color: var(--danger-color);
         }
 
-        .lightning-logs {
-            background-color: var(--log-bg);
-            color: var(--log-text);
+        .payment-warning {
+            background-color: var(--warning-bg);
+            border: 2px solid var(--warning-text);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--warning-text);
+        }
+
+        .payment-warning i {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .cancel-payment-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
             border-radius: 8px;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            white-space: pre-wrap;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .cancel-payment-btn:hover {
+            background-color: #d32f2f;
         }
 
         /* Tutorials Section Styles */
@@ -3092,6 +3153,12 @@
                 </div>
             </div>
             
+            <div class="payment-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>IMPORTANT :</strong> Ne fermez pas cette fenêtre pendant le paiement !
+                Le processus peut prendre quelques minutes.
+            </div>
+            
             <div class="payment-amount">
                 <div class="payment-amount-value" id="payment-amount-value">10 sats</div>
                 <div class="payment-amount-label">Plan Quotidien</div>
@@ -3107,7 +3174,9 @@
                 ⏳ En attente de paiement...
             </div>
             
-            <div class="lightning-logs" id="lightning-logs"></div>
+            <button class="cancel-payment-btn" id="cancel-lightning-payment">
+                Annuler le paiement
+            </button>
         </div>
     </div>
     
@@ -3238,7 +3307,7 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </div>
-        <div id="header-title" class="header-title">Prédictions IA</div>
+        <div id="header-title" class="header-title">Simples</div>
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
@@ -3258,7 +3327,16 @@
     </div>
 
     <div class="content">
-        <div id="ai-forecasts-section" class="section active">
+        <!-- Section des pronostics simples maintenant par défaut -->
+        <div id="forecasts-section" class="section active">
+            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
+                <div class="forecasts-list" id="simple-forecasts-list">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Prédictions IA pour abonnés seulement -->
+        <div id="ai-forecasts-section" class="section">
             <div class="ai-forecasts-tabs">
                 <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
                 <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
@@ -3291,13 +3369,6 @@
             </div>
         </div>
         
-        <div id="forecasts-section" class="section">
-            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
-                <div class="forecasts-list" id="simple-forecasts-list">
-                </div>
-            </div>
-        </div>
-        
         <div id="subscription-section" class="section">
             <div style="height: 100%; overflow-y: auto;">
                 <div class="current-plan">
@@ -3322,8 +3393,11 @@
                         10 <span class="plan-duration">sats/jour</span>
                     </div>
                     <ul class="plan-features">
-                        <li>Accès aux pronostics du jour</li>
-                        <li>Notifications en temps réel</li>
+                        <li>Accès aux prédictions IA du jour</li>
+                        <li>Combinés intelligents</li>
+                        <li>Pronostics sûrs premium</li>
+                        <li>Analyses safes avancées</li>
+                        <li>Badge Premium</li>
                         <li>Support prioritaire</li>
                     </ul>
                     <button class="plan-button" id="daily-plan-btn">
@@ -3345,6 +3419,8 @@
                         <li>Économisez 10 sats par semaine</li>
                         <li>Accès aux analyses avancées</li>
                         <li>Historique complet des pronostics</li>
+                        <li>Badge Premium permanent</li>
+                        <li>Accès prioritaire aux nouveautés</li>
                     </ul>
                     <button class="plan-button" id="weekly-plan-btn">
                         S'abonner au plan hebdomadaire
@@ -3389,6 +3465,25 @@
                         <div class="tutorial-duration">
                             <i class="far fa-clock"></i>
                             3 minutes
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-item">
+                    <div class="tutorial-thumbnail" data-video="understand-predictions">
+                        <div class="tutorial-play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="tutorial-badge">Éducatif</div>
+                    </div>
+                    <div class="tutorial-content">
+                        <div class="tutorial-title">Comment comprendre nos prédictions</div>
+                        <div class="tutorial-description">
+                            Apprenez à interpréter nos analyses IA, comprendre les probabilités et optimiser vos choix de paris. Un guide essentiel pour maximiser vos gains avec nos pronostics.
+                        </div>
+                        <div class="tutorial-duration">
+                            <i class="far fa-clock"></i>
+                            7 minutes
                         </div>
                     </div>
                 </div>
@@ -3458,6 +3553,7 @@
                         <div class="profile-name" id="profile-name">
                             <span id="profile-name-text">Utilisateur</span>
                             <span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
+                            <span class="premium-badge" id="premium-badge" style="display: none;">Premium</span>
                         </div>
                         <div class="profile-email" id="profile-email">user@example.com</div>
                         <div class="profile-status">En ligne</div>
@@ -3581,39 +3677,58 @@
             <div class="about-section">
                 <div class="about-section-title">Description</div>
                 <div class="about-section-content">
-                    Pari Alliance est une application de prédictions sportives basée sur l'intelligence artificielle qui fournit des pronostics précis et fiables.
+                    Pari Alliance est une application de prédictions sportives révolutionnaire qui combine l'intelligence artificielle avancée avec des analyses de données en temps réel pour fournir des pronostics précis et fiables dans le domaine sportif.
                 </div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">Fonctionnalités</div>
                 <div class="about-section-content">
+                    <strong>Plan Gratuit :</strong><br>
+                    • Pronostics simples quotidiens<br>
+                    • Accès aux événements et notifications<br>
+                    • Personnalisation de l'interface<br><br>
+                    
+                    <strong>Plans Premium :</strong><br>
                     • Prédictions IA avancées<br>
-                    • Combinés intelligents<br>
-                    • Pronostics sûrs<br>
-                    • Analyses simples<br>
-                    • Mode sombre personnalisable<br>
-                    • Thèmes de couleurs multiples<br>
-                    • Plans d'abonnement flexibles
+                    • Combinés intelligents optimisés<br>
+                    • Pronostics sûrs premium<br>
+                    • Analyses safes avancées<br>
+                    • Badge Premium distinctif<br>
+                    • Support prioritaire<br>
+                    • Accès prioritaire aux nouveautés
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">À propos de l'application</div>
+                <div class="about-section-title">Système d'abonnement</div>
                 <div class="about-section-content">
-                    Le logo de l'application représente un ballon de football symbolisant notre expertise dans le domaine sportif. L'application a été créée par Pronosoft AI.
+                    Nos abonnements fonctionnent avec des satoshis (sats), la plus petite unité du Bitcoin, permettant des micro-paiements rapides et sécurisés via le Lightning Network.<br><br>
+                    
+                    <strong>Plans disponibles :</strong><br>
+                    • Plan Quotidien : 10 sats/jour<br>
+                    • Plan Hebdomadaire : 60 sats/semaine (économie de 10 sats)<br><br>
+                    
+                    Les abonnements se renouvellent automatiquement à minuit (00h00) et donnent accès à toutes les fonctionnalités premium pendant la durée active.
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Confidentialité</div>
+                <div class="about-section-title">Technologie</div>
                 <div class="about-section-content">
-                    Pari Alliance respecte votre vie privée. Vos données personnelles ne sont utilisées que pour le fonctionnement de l'application et ne sont jamais partagées avec des tiers.
+                    Notre plateforme utilise des algorithmes d'intelligence artificielle sophistiqués pour analyser des milliers de données sportives, statistiques d'équipes, performances historiques et tendances actuelles afin de générer des prédictions avec un taux de précision optimal.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Confidentialité et sécurité</div>
+                <div class="about-section-content">
+                    Pari Alliance respecte strictement votre vie privée. Vos données personnelles sont protégées par des protocoles de sécurité avancés et ne sont jamais partagées avec des tiers. Tous les paiements sont sécurisés via le Lightning Network Bitcoin.
                 </div>
             </div>
             
             <div class="about-footer">
-                © 2025-2026 Pari Alliance. Tous droits réservés.
+                © 2025-2026 Pari Alliance - Pronosoft AI. Tous droits réservés.
             </div>
         </div>
     </div>
@@ -3627,48 +3742,84 @@
         </div>
         <div class="terms-content">
             <div class="about-section">
-                <div class="about-section-title">Conditions générales</div>
+                <div class="about-section-title">Conditions générales d'utilisation</div>
                 <div class="about-section-content">
-                    En utilisant l'application Pari Alliance, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions.
+                    En utilisant l'application Pari Alliance, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions. Toute violation de ces termes peut entraîner la suspension ou la résiliation de votre compte.
                 </div>
             </div>
             
             <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i> <strong>AVERTISSEMENT :</strong> Les pronostics sont fournis à titre informatif uniquement. La vente ou revente de ces pronostics est strictement interdite et passible de bannissement à vie et de poursuites judiciaires.
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>AVERTISSEMENT IMPORTANT :</strong> Les pronostics fournis par Pari Alliance sont destinés uniquement à des fins d'information et de divertissement. La revente, redistribution ou commercialisation de ces pronostics est strictement interdite et passible de bannissement définitif et de poursuites judiciaires.
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Utilisation des pronostics</div>
+                <div class="about-section-title">Utilisation des pronostics et responsabilité</div>
                 <div class="about-section-content">
-                    Les pronostics sportifs fournis dans cette application sont destinés uniquement à des fins d'information et de divertissement. Ils peuvent être utilisés pour effectuer des paris réels, mais il est recommandé de le faire avec responsabilité.<br><br>
+                    <strong>Nature des pronostics :</strong><br>
+                    Les prédictions sportives générées par notre intelligence artificielle sont basées sur des analyses statistiques et des algorithmes avancés. Cependant, le sport reste imprévisible par nature.<br><br>
                     
-                    Nous ne sommes pas responsables de leurs pertes éventuelles. Les pronostics ne constituent en aucun cas une incitation au jeu ou un conseil d'investissement.<br><br>
+                    <strong>Limitation de responsabilité :</strong><br>
+                    Pari Alliance ne peut être tenu responsable des pertes financières résultant de l'utilisation de nos pronostics. Des événements imprévisibles (cartons rouges, pénaltys, blessures, conditions météorologiques, décisions arbitrales, etc.) peuvent influencer l'issue des matchs indépendamment de nos analyses.<br><br>
                     
-                    Il est strictement interdit de:<br>
-                    • Revendre ou commercialiser ces pronostics<br>
-                    • Partager ces informations en dehors de la plateforme<br>
-                    • Utiliser ces informations à des fins commerciales<br><br>
-                    
-                    Tout utilisateur enfreignant ces règles s'expose à une suspension immédiate de son compte et à d'éventuelles poursuites judiciaires.
+                    <strong>Recommandations d'usage :</strong><br>
+                    • Utilisez nos pronostics comme aide à la décision, non comme garantie<br>
+                    • Pariez toujours de manière responsable et dans vos moyens<br>
+                    • Ne misez jamais plus que ce que vous pouvez vous permettre de perdre<br>
+                    • Considérez le pari sportif comme un divertissement, non un investissement
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Utilisation de l'application</div>
+                <div class="about-section-title">Propriété intellectuelle et interdictions</div>
                 <div class="about-section-content">
-                    Vous vous engagez à utiliser l'application de manière légale et responsable. Il est interdit de:<br>
-                    • Publier du contenu illégal, diffamatoire, harcelant ou menaçant<br>
-                    • Usurper l'identité d'une autre personne<br>
-                    • Tenter d'accéder sans autorisation à des parties de l'application qui vous sont interdites<br>
-                    • Perturber le fonctionnement normal de l'application<br>
-                    • Publier des messages à caractère commercial non sollicités
+                    <strong>Propriété des contenus :</strong><br>
+                    Tous les pronostics, analyses et contenus générés par Pari Alliance sont la propriété exclusive de Pronosoft AI. Ils sont protégés par les droits d'auteur et la propriété intellectuelle.<br><br>
+                    
+                    <strong>Interdictions formelles :</strong><br>
+                    • Revendre ou commercialiser nos pronostics sous quelque forme que ce soit<br>
+                    • Partager ou redistribuer nos analyses premium en dehors de la plateforme<br>
+                    • Copier, reproduire ou utiliser nos contenus à des fins commerciales<br>
+                    • Créer des comptes multiples pour contourner les limitations<br>
+                    • Utiliser des méthodes automatisées pour extraire nos données<br><br>
+                    
+                    <strong>Sanctions :</strong><br>
+                    Toute violation de ces interdictions entraînera la suspension immédiate du compte et pourra donner lieu à des poursuites judiciaires pour violation de propriété intellectuelle.
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Responsabilité</div>
+                <div class="about-section-title">Abonnements et paiements</div>
                 <div class="about-section-content">
-                    Pari Alliance n'est pas responsable des pertes financières ou autres dommages qui pourraient résulter de l'utilisation des pronostics(des événements imprévus tels que les cartons rouges,les fautes pouvant causer un penalty etc...)ou des informations disponibles sur l'application. Les utilisateurs sont seuls responsables de leurs décisions et de leurs actions.
+                    <strong>Système de paiement :</strong><br>
+                    Les abonnements premium fonctionnent avec des satoshis (sats) via le Lightning Network Bitcoin, garantissant des transactions rapides et sécurisées.<br><br>
+                    
+                    <strong>Durée et renouvellement :</strong><br>
+                    • Les abonnements expirent automatiquement à minuit (00h00)<br>
+                    • Aucun renouvellement automatique n'est effectué<br>
+                    • Vous devez renouveler manuellement votre abonnement<br><br>
+                    
+                    <strong>Politique de remboursement :</strong><br>
+                    En raison de la nature numérique instantanée de nos services et des micro-paiements en cryptomonnaie, aucun remboursement n'est possible une fois l'accès premium activé.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Conduite des utilisateurs</div>
+                <div class="about-section-content">
+                    En utilisant Pari Alliance, vous vous engagez à :<br>
+                    • Respecter les autres utilisateurs et maintenir un environnement respectueux<br>
+                    • Ne pas publier de contenu illégal, diffamatoire ou offensant<br>
+                    • Ne pas usurper l'identité d'autres personnes<br>
+                    • Ne pas tenter de contourner les mesures de sécurité de l'application<br>
+                    • Signaler tout comportement suspect ou violation des conditions
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Modifications et résiliation</div>
+                <div class="about-section-content">
+                    Pari Alliance se réserve le droit de modifier ces conditions d'utilisation à tout moment. Les utilisateurs seront notifiés des changements importants. Nous nous réservons également le droit de suspendre ou résilier l'accès à l'application en cas de violation de ces conditions.
                 </div>
             </div>
         </div>
@@ -3692,15 +3843,6 @@
         </div>
     </div>
 
-    <div id="plan-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Confirmer l'abonnement</div>
-        <div class="confirmation-text" id="plan-confirmation-text">Voulez-vous vraiment souscrire à ce plan ?</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="plan-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-confirm" id="plan-confirm">Confirmer</div>
-        </div>
-    </div>
-
     <div id="overlay" class="overlay"></div>
 
     <div class="notification" id="notification"></div>
@@ -3718,13 +3860,13 @@
     </div>
 
     <div class="bottom-nav" id="bottom-nav">
-        <div class="nav-item active" data-section="ai-forecasts" style="flex: 1;">
-            <i class="nav-icon fas fa-brain"></i>
-            <span>Prédictions IA</span>
-        </div>
-        <div class="nav-item" data-section="forecasts" style="flex: 1;">
+        <div class="nav-item active" data-section="forecasts" style="flex: 1;">
             <i class="nav-icon fas fa-futbol"></i>
             <span>Simples</span>
+        </div>
+        <div class="nav-item" data-section="ai-forecasts" style="flex: 1;">
+            <i class="nav-icon fas fa-brain"></i>
+            <span>Prédictions IA</span>
         </div>
     </div>
 
@@ -3843,19 +3985,9 @@
             return errorMessage;
         }
 
-        // Lightning payment functions
-        function lightningLog(message) {
-            const now = new Date().toISOString();
-            const logs = document.getElementById('lightning-logs');
-            logs.textContent += `[${now}] ${message}\n`;
-            logs.scrollTop = logs.scrollHeight;
-            console.log(`[Lightning] ${message}`);
-            addDebugLog(`[Lightning] ${message}`, 'info');
-        }
-
+        // Lightning payment functions (simplifiées)
         async function generateLightningInvoice(amount, planType) {
-            lightningLog(`📌 Démarrage de la création de l'invoice`);
-            lightningLog(`💰 Montant saisi : ${amount} sats`);
+            addDebugLog(`Génération d'invoice pour ${amount} sats`, 'info');
 
             const mutation = `
                 mutation CreateInvoice {
@@ -3885,11 +4017,8 @@
                 });
 
                 const result = await response.json();
-                lightningLog(`⬅️ Réponse reçue : ${JSON.stringify(result)}`);
 
                 if (result.data?.lnInvoiceCreate?.errors?.length) {
-                    lightningLog("❌ Erreurs API :");
-                    result.data.lnInvoiceCreate.errors.forEach(err => lightningLog(` - ${err.message}`));
                     throw new Error("Erreur lors de la création de l'invoice");
                 }
 
@@ -3899,25 +4028,22 @@
                 }
 
                 currentPaymentRequest = invoice.paymentRequest;
-                lightningLog("✅ Invoice générée avec succès");
+                addDebugLog("Invoice générée avec succès", 'success');
 
                 // Start checking payment status every 3 seconds automatically
                 if (autoCheckInterval) clearInterval(autoCheckInterval);
                 autoCheckInterval = setInterval(checkLightningPaymentStatus, 3000);
-                lightningLog("🔄 Démarrage de la vérification automatique du paiement (toutes les 3 secondes)");
 
                 return currentPaymentRequest;
 
             } catch (error) {
-                lightningLog("❌ Exception : " + error.message);
+                addDebugLog("Erreur génération invoice: " + error.message, 'error');
                 throw error;
             }
         }
 
         async function checkLightningPaymentStatus() {
             if (!currentPaymentRequest) return;
-
-            lightningLog("🔍 Vérification automatique du statut de paiement...");
 
             const query = `
                 query CheckPaymentStatus {
@@ -3938,10 +4064,8 @@
                 });
 
                 const result = await response.json();
-                lightningLog(`⬅️ Statut reçu : ${JSON.stringify(result)}`);
 
                 if (result.errors) {
-                    lightningLog("❌ Erreurs retournées : " + JSON.stringify(result.errors));
                     return;
                 }
 
@@ -3954,7 +4078,7 @@
                     clearInterval(autoCheckInterval);
                     paymentStatusElement.className = 'payment-status success';
                     paymentStatusElement.innerHTML = '✅ Paiement reçu !';
-                    lightningLog("✅ Paiement confirmé !");
+                    addDebugLog("Paiement confirmé !", 'success');
                     
                     // Process subscription
                     await processSubscription(currentPlanTypeForPayment);
@@ -3968,7 +4092,7 @@
                 }
 
             } catch (error) {
-                lightningLog("❌ Exception lors de la vérification : " + error.message);
+                addDebugLog("Erreur vérification paiement: " + error.message, 'error');
             }
         }
 
@@ -3977,14 +4101,12 @@
             const modal = document.getElementById('lightning-payment-modal');
             const amountElement = document.getElementById('payment-amount-value');
             const statusElement = document.getElementById('lightning-payment-status');
-            const logsElement = document.getElementById('lightning-logs');
             const invoiceElement = document.getElementById('lightning-invoice-text');
 
             // Reset modal state
             amountElement.textContent = `${amount} sats`;
             statusElement.className = 'payment-status pending';
             statusElement.innerHTML = '⏳ Génération de l\'invoice...';
-            logsElement.textContent = '';
             invoiceElement.textContent = '';
             currentPaymentRequest = '';
 
@@ -4001,7 +4123,6 @@
                 .catch(error => {
                     statusElement.className = 'payment-status error';
                     statusElement.innerHTML = '❌ Erreur génération invoice';
-                    lightningLog('❌ Erreur: ' + error.message);
                 });
         }
 
@@ -4023,10 +4144,9 @@
             const invoiceText = document.getElementById('lightning-invoice-text').textContent;
             if (invoiceText) {
                 navigator.clipboard.writeText(invoiceText).then(() => {
-                    lightningLog("📋 Invoice copiée dans le presse-papiers.");
                     showNotification('Invoice copiée !', 'success');
                 }).catch(err => {
-                    lightningLog("❌ Erreur copie: " + err.message);
+                    addDebugLog("Erreur copie: " + err.message, 'error');
                 });
             }
         }
@@ -4035,11 +4155,24 @@
             if (!currentUser) return;
             
             try {
-                addDebugLog(`💼 Début du traitement de l'abonnement ${planType}`, 'info');
+                addDebugLog(`Début du traitement de l'abonnement ${planType}`, 'info');
                 
+                // Calculer la date d'expiration à minuit
                 const now = new Date();
-                const duration = planType === 'daily' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
-                const expiryDate = new Date(now.getTime() + duration);
+                let expiryDate;
+                
+                if (planType === 'daily') {
+                    // Expiration le lendemain à minuit
+                    expiryDate = new Date(now);
+                    expiryDate.setDate(expiryDate.getDate() + 1);
+                } else {
+                    // Expiration dans 7 jours à minuit
+                    expiryDate = new Date(now);
+                    expiryDate.setDate(expiryDate.getDate() + 7);
+                }
+                
+                // Forcer l'heure à minuit
+                expiryDate.setHours(0, 0, 0, 0);
                 
                 // Update user data
                 const userRef = doc(db, "Users", currentUser.uid);
@@ -4049,9 +4182,9 @@
                     lastPaymentDate: now
                 });
                 
-                addDebugLog(`✅ Données utilisateur mises à jour: plan=${planType}, expiration=${expiryDate.toISOString()}`, 'success');
+                addDebugLog(`Données utilisateur mises à jour: plan=${planType}, expiration=${expiryDate.toISOString()}`, 'success');
                 
-                // Add to Premium collection - Fixed collection name structure
+                // Add to Premium collection
                 const premiumCollectionName = planType === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
                 const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
                 
@@ -4065,17 +4198,15 @@
                 };
                 
                 await setDoc(premiumRef, premiumData);
-                addDebugLog(`✅ Utilisateur ajouté à la collection ${premiumCollectionName}`, 'success');
+                addDebugLog(`Utilisateur ajouté à la collection ${premiumCollectionName}`, 'success');
                 
                 currentPlanType = planType;
-                lightningLog(`✅ Abonnement ${planType} activé jusqu'au ${expiryDate.toLocaleDateString('fr-FR')} !`);
                 
                 // Update UI
                 await loadUserSubscriptionData();
                 
             } catch (error) {
                 const errorMsg = handleFirestoreError(error, 'traitement de l\'abonnement');
-                lightningLog('❌ Erreur traitement abonnement: ' + error.message);
                 showNotification('Erreur lors de l\'activation de l\'abonnement', 'error');
             }
         }
@@ -4090,17 +4221,17 @@
                     const now = new Date();
                     
                     if (now > expiryDate) {
-                        addDebugLog(`⏰ Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
+                        addDebugLog(`Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
                         
-                        // Remove from Premium collection - Fixed collection name structure
+                        // Remove from Premium collection
                         const premiumCollectionName = currentUserData.currentPlan === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
                         const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
                         
                         try {
                             await deleteDoc(premiumRef);
-                            addDebugLog(`✅ Utilisateur retiré de ${premiumCollectionName}`, 'success');
+                            addDebugLog(`Utilisateur retiré de ${premiumCollectionName}`, 'success');
                         } catch (deleteError) {
-                            addDebugLog(`⚠️ Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
+                            addDebugLog(`Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
                         }
                         
                         // Update user to free plan
@@ -4114,7 +4245,7 @@
                         currentUserData.planExpiryDate = null;
                         currentPlanType = 'free';
                         
-                        addDebugLog('✅ Utilisateur remis au plan gratuit', 'success');
+                        addDebugLog('Utilisateur remis au plan gratuit', 'success');
                         showNotification('Votre abonnement a expiré. Vous êtes maintenant sur le plan gratuit.', 'info');
                         
                         await loadUserSubscriptionData();
@@ -4125,16 +4256,21 @@
             }
         }
 
+        // Function to check if user has premium access
+        function hasPremiumAccess() {
+            return isAdmin || (currentPlanType && currentPlanType !== 'free');
+        }
+
         // Initialize or check Admin collection
         async function initializeAdminCollection() {
             try {
-                addDebugLog('🔧 Vérification de la collection Admin...', 'info');
+                addDebugLog('Vérification de la collection Admin...', 'info');
                 
                 const adminCollectionRef = collection(db, "Admin");
                 const adminSnapshot = await getDocs(adminCollectionRef);
                 
                 if (adminSnapshot.empty) {
-                    addDebugLog('📝 Collection Admin vide, création des admins par défaut...', 'info');
+                    addDebugLog('Collection Admin vide, création des admins par défaut...', 'info');
                     
                     // Create admin entries for each admin email
                     for (const email of ADMIN_EMAILS) {
@@ -4149,12 +4285,12 @@
                         const adminDocId = email.replace(/[@.]/g, '_');
                         await setDoc(doc(db, "Admin", adminDocId), adminData);
                         
-                        addDebugLog(`✅ Admin ajouté: ${email}`, 'success');
+                        addDebugLog(`Admin ajouté: ${email}`, 'success');
                     }
                     
-                    addDebugLog(`🎉 Collection Admin initialisée avec ${ADMIN_EMAILS.length} administrateurs`, 'success');
+                    addDebugLog(`Collection Admin initialisée avec ${ADMIN_EMAILS.length} administrateurs`, 'success');
                 } else {
-                    addDebugLog(`✅ Collection Admin déjà existante avec ${adminSnapshot.size} entrées`, 'info');
+                    addDebugLog(`Collection Admin déjà existante avec ${adminSnapshot.size} entrées`, 'info');
                 }
                 
             } catch (error) {
@@ -4169,7 +4305,7 @@
             try {
                 // Check if user email is in admin list
                 if (ADMIN_EMAILS.includes(currentUser.email)) {
-                    addDebugLog(`👑 Utilisateur ${currentUser.email} identifié comme administrateur`, 'success');
+                    addDebugLog(`Utilisateur ${currentUser.email} identifié comme administrateur`, 'success');
                     
                     // Also verify in Admin collection
                     const adminDocId = currentUser.email.replace(/[@.]/g, '_');
@@ -4191,7 +4327,7 @@
                         };
                         
                         await setDoc(adminRef, adminData);
-                        addDebugLog(`✅ Admin ${currentUser.email} ajouté à la collection Admin`, 'success');
+                        addDebugLog(`Admin ${currentUser.email} ajouté à la collection Admin`, 'success');
                         
                         isAdmin = true;
                         updateAdminStatus();
@@ -4212,7 +4348,7 @@
         let currentUser = null;
         let currentUserData = null;
         let isAdmin = false;
-        let currentSection = 'ai-forecasts';
+        let currentSection = 'forecasts'; // Section par défaut changée à 'forecasts'
         let isOnline = navigator.onLine;
         let eventsUnsubscribe = null;
         let profileImageFile = null;
@@ -4512,7 +4648,11 @@
                 
                 setTimeout(() => {
                     if (isLoggedIn && (currentSection === 'ai-forecasts' || currentSection === 'forecasts')) {
-                        loadForecastsData(currentForecastTab);
+                        if (currentSection === 'ai-forecasts') {
+                            loadForecastsData(currentForecastTab);
+                        } else {
+                            loadForecastsData('simple');
+                        }
                     }
                 }, 1000);
             });
@@ -4562,6 +4702,7 @@
                     await checkSubscriptionExpiry();
                     
                     updateSubscriptionDisplay();
+                    updatePremiumBadge();
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
@@ -4592,7 +4733,7 @@
                     
                     if (currentUserData?.planExpiryDate) {
                         const expiryDate = currentUserData.planExpiryDate.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
-                        planExpiryInfoElement.textContent = `Expire le ${expiryDate.toLocaleDateString('fr-FR')}`;
+                        planExpiryInfoElement.textContent = `Expire le ${expiryDate.toLocaleDateString('fr-FR')} à minuit`;
                     } else {
                         planExpiryInfoElement.textContent = 'Plan actif';
                     }
@@ -4613,6 +4754,17 @@
             });
         }
 
+        function updatePremiumBadge() {
+            const premiumBadge = document.getElementById('premium-badge');
+            if (premiumBadge) {
+                if (hasPremiumAccess() && !isAdmin) {
+                    premiumBadge.style.display = 'inline-block';
+                } else {
+                    premiumBadge.style.display = 'none';
+                }
+            }
+        }
+
         function playTutorialVideo(videoType) {
             const videoModal = document.getElementById('video-modal');
             const videoPlayer = document.getElementById('video-player');
@@ -4620,7 +4772,8 @@
             // Simulate video URLs (replace with actual video URLs)
             const videoUrls = {
                 'free-sats': 'https://example.com/free-sats-tutorial.mp4',
-                'buy-plan': 'https://example.com/buy-plan-tutorial.mp4'
+                'buy-plan': 'https://example.com/buy-plan-tutorial.mp4',
+                'understand-predictions': 'https://example.com/understand-predictions-tutorial.mp4'
             };
             
             if (videoUrls[videoType]) {
@@ -4631,7 +4784,8 @@
                 // Fallback: show notification for demo
                 const videoTitles = {
                     'free-sats': 'Comment obtenir des sats gratuitement',
-                    'buy-plan': 'Comment acheter un plan d\'abonnement'
+                    'buy-plan': 'Comment acheter un plan d\'abonnement',
+                    'understand-predictions': 'Comment comprendre nos prédictions'
                 };
                 
                 showNotification(`Vidéo "${videoTitles[videoType]}" bientôt disponible`, 'info');
@@ -4668,6 +4822,7 @@
             // Lightning payment modal events
             document.getElementById('lightning-payment-close').addEventListener('click', hideLightningPaymentModal);
             document.getElementById('copy-lightning-invoice').addEventListener('click', copyLightningInvoice);
+            document.getElementById('cancel-lightning-payment').addEventListener('click', hideLightningPaymentModal);
 
             document.getElementById('header-menu-button').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.add('active');
@@ -4753,10 +4908,15 @@
                         e.clientY >= rect.top && e.clientY <= rect.bottom) {
                         
                         const section = item.getAttribute('data-section');
-                        if (section === 'ai-forecasts') {
-                            showAIForecastsSection();
-                        } else if (section === 'forecasts') {
+                        if (section === 'forecasts') {
                             showForecastsSection();
+                        } else if (section === 'ai-forecasts') {
+                            // Vérifier l'accès premium
+                            if (hasPremiumAccess()) {
+                                showAIForecastsSection();
+                            } else {
+                                showPremiumRequiredMessage();
+                            }
                         }
                         
                         break;
@@ -4785,13 +4945,6 @@
                 if (currentPlanType !== 'weekly') {
                     showLightningPaymentModal(60, 'weekly');
                 }
-            });
-
-            document.getElementById('plan-cancel').addEventListener('click', hidePlanConfirmation);
-            document.getElementById('plan-confirm').addEventListener('click', function() {
-                const planType = this.getAttribute('data-plan');
-                hidePlanConfirmation();
-                subscribeToPlan(planType);
             });
             
             document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
@@ -4943,8 +5096,8 @@
                 return;
             }
             
-            if (currentSection !== 'ai-forecasts') {
-                showAIForecastsSection();
+            if (currentSection !== 'forecasts') {
+                showForecastsSection();
                 history.pushState({ page: 'main' }, '');
                 return;
             }
@@ -4964,7 +5117,7 @@
                 }
             }
             
-            if (currentSection === 'ai-forecasts') {
+            if (currentSection === 'forecasts') {
                 history.pushState({ page: 'main' }, '');
             }
         }
@@ -5116,7 +5269,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5146,7 +5299,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5176,8 +5329,53 @@
             
             loadForecastsData(tabId);
         }
+
+        function showPremiumRequiredMessage() {
+            const aiSection = document.getElementById('ai-forecasts-section');
+            aiSection.innerHTML = `
+                <div class="restricted-message">
+                    <i class="fas fa-crown"></i>
+                    <strong>Contenu Premium</strong><br>
+                    Accédez aux prédictions IA avancées avec un abonnement premium !
+                    <button class="subscribe-button" onclick="showSubscriptionFromRestricted()">
+                        Voir les abonnements
+                    </button>
+                </div>
+            `;
+        }
+
+        // Make this function global for the onclick
+        window.showSubscriptionFromRestricted = function() {
+            showSubscriptionSection();
+        };
         
         function showAIForecastsSection() {
+            // Vérifier l'accès premium
+            if (!hasPremiumAccess()) {
+                showPremiumRequiredMessage();
+                
+                // Update nav to show AI forecasts section is selected
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    if (item.getAttribute('data-section') === 'ai-forecasts') {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+                
+                currentSection = 'ai-forecasts';
+                
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById('ai-forecasts-section').classList.add('active');
+                
+                document.getElementById('header-title').textContent = 'Prédictions IA';
+                
+                return;
+            }
+
             hideSearchBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -5198,6 +5396,38 @@
             });
             
             document.getElementById('ai-forecasts-section').classList.add('active');
+            
+            // Restore normal AI section structure
+            document.getElementById('ai-forecasts-section').innerHTML = `
+                <div class="ai-forecasts-tabs">
+                    <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
+                    <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
+                    <div class="ai-forecast-tab" data-tab="safes">Safes</div>
+                </div>
+                
+                <div class="ai-forecasts-content active" id="combines-content">
+                    <div class="ai-forecasts-list" id="combines-list">
+                    </div>
+                </div>
+                
+                <div class="ai-forecasts-content" id="sures-content">
+                    <div class="ai-forecasts-list" id="sures-list">
+                    </div>
+                </div>
+
+                <div class="ai-forecasts-content" id="safes-content">
+                    <div class="ai-forecasts-list" id="safes-list">
+                    </div>
+                </div>
+            `;
+            
+            // Re-bind tab events
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchAIForecastTab(tabId);
+                });
+            });
             
             document.getElementById('header-title').textContent = 'Prédictions IA';
             
@@ -5247,7 +5477,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5648,7 +5878,7 @@
             document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
             
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5678,7 +5908,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -6152,6 +6382,8 @@
                     adminBadge.style.display = 'none';
                 }
             }
+
+            updatePremiumBadge();
         }
 
         function updateAdminStatus() {
@@ -6175,15 +6407,6 @@
                 if (loader) loader.style.display = 'none';
                 button.disabled = false;
             }
-        }
-
-        // Legacy functions for backward compatibility (not used anymore)
-        function hidePlanConfirmation() {
-            // Legacy function - no longer needed with direct Lightning payment
-        }
-
-        async function subscribeToPlan(planType) {
-            // Legacy function - replaced by Lightning payment
         }
 
         // Make deleteEvent globally accessible
@@ -6246,7 +6469,8 @@
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
                         
-                        showAIForecastsSection();
+                        // Par défaut, commencer par la section "Simples"
+                        showForecastsSection();
                         
                     } catch (error) {
                         addDebugLog(`Erreur lors de la récupération des données utilisateur: ${error.message}`, 'error');
