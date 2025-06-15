@@ -1662,75 +1662,91 @@
             flex: 1;
         }
         
-        .forecasts-section {
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        
+        /* Section Prédictions IA - Structure corrigée */
         .ai-forecasts-section {
-            padding: 0;
             height: 100%;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
-        .forecasts-tabs, .ai-forecasts-tabs {
+        /* Navigation des onglets */
+        .ai-forecasts-tabs {
             display: flex;
-            border-bottom: 1px solid var(--border-color);
-            margin: 0;
             background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
             position: sticky;
             top: 0;
             z-index: 5;
-            flex-shrink: 0;
         }
         
-        .forecast-tab, .ai-forecast-tab {
+        .ai-forecast-tab {
             flex: 1;
             text-align: center;
-            padding: 12px 0;
+            padding: 15px 8px;
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
             position: relative;
             color: var(--inactive-text);
-            transition: color 0.3s, background-color 0.2s ease;
+            transition: color 0.3s ease;
+            border-bottom: 3px solid transparent;
         }
         
-        .forecast-tab.active, .ai-forecast-tab.active {
+        .ai-forecast-tab.active {
             color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
         
-        .forecast-tab.active::after, .ai-forecast-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 20%;
-            width: 60%;
-            height: 3px;
-            background-color: var(--primary-color);
-            border-radius: 3px 3px 0 0;
-            animation: slideIn 0.3s ease;
+        /* Conteneur principal pour le contenu AI */
+        .ai-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         
-        .forecasts-content, .ai-forecasts-content {
-            display: none;
+        /* Contenus individuels des onglets */
+        .ai-tab-content {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 0;
+            display: none;
         }
         
-        .forecasts-content.active, .ai-forecasts-content.active {
+        .ai-tab-content.active {
             display: flex;
             flex-direction: column;
         }
         
-        .forecasts-list, .ai-forecasts-list {
+        /* Listes des prédictions */
+        .ai-forecasts-list {
+            padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            min-height: 100%;
+        }
+        
+        /* Section des pronostics simples */
+        .forecasts-section {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .forecasts-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .forecasts-list {
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             min-height: 100%;
         }
         
@@ -3359,14 +3375,14 @@
     <div class="content">
         <!-- Section des pronostics simples maintenant par défaut -->
         <div id="forecasts-section" class="section active">
-            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
+            <div class="forecasts-content" style="height: 100%; overflow-y: auto;">
                 <div class="forecasts-list" id="simple-forecasts-list">
                 </div>
             </div>
         </div>
 
-        <!-- Section Prédictions IA - Différent contenu selon le statut utilisateur -->
-        <div id="ai-forecasts-section" class="section">
+        <!-- Section Prédictions IA - Structure corrigée -->
+        <div id="ai-forecasts-section" class="section ai-forecasts-section">
             <!-- Page d'abonnement requis (par défaut) -->
             <div id="ai-subscription-required" class="subscription-required-page">
                 <div class="subscription-required-icon">
@@ -3381,25 +3397,27 @@
                 </button>
             </div>
 
-            <!-- Contenu Premium réel (masqué par défaut) -->
-            <div id="ai-premium-content" class="ai-forecasts-content" style="display: none; height: 100%;">
+            <!-- Contenu Premium réel -->
+            <div id="ai-premium-content" class="ai-content-wrapper" style="display: none;">
+                <!-- Navigation des onglets -->
                 <div class="ai-forecasts-tabs">
                     <div class="ai-forecast-tab active" data-tab="combines">Combinés IA</div>
                     <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
                     <div class="ai-forecast-tab" data-tab="safes">Safes</div>
                 </div>
                 
-                <div class="ai-forecasts-content active" id="combines-content">
+                <!-- Contenu des onglets -->
+                <div class="ai-tab-content active" id="combines-content">
                     <div class="ai-forecasts-list" id="combines-list">
                     </div>
                 </div>
                 
-                <div class="ai-forecasts-content" id="sures-content">
+                <div class="ai-tab-content" id="sures-content">
                     <div class="ai-forecasts-list" id="sures-list">
                     </div>
                 </div>
                 
-                <div class="ai-forecasts-content" id="safes-content">
+                <div class="ai-tab-content" id="safes-content">
                     <div class="ai-forecasts-list" id="safes-list">
                     </div>
                 </div>
@@ -5013,15 +5031,13 @@
                     this.classList.add('active');
                     
                     // Update active content
-                    document.querySelectorAll('.ai-forecasts-content').forEach(content => {
+                    document.querySelectorAll('.ai-tab-content').forEach(content => {
                         content.classList.remove('active');
-                        content.style.display = 'none';
                     });
                     
                     const targetContent = document.getElementById(`${tabType}-content`);
                     if (targetContent) {
                         targetContent.classList.add('active');
-                        targetContent.style.display = 'flex';
                     }
                     
                     currentForecastTab = tabType;
