@@ -1500,36 +1500,118 @@
 
         .restricted-message {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             margin: 20px;
-            background-color: rgba(255, 193, 7, 0.1);
-            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.15));
+            border-radius: 20px;
             font-size: 16px;
             color: var(--text-color);
             border: 2px solid var(--restricted-badge-bg);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
         }
 
         .restricted-message i {
-            font-size: 30px;
+            font-size: 60px;
             color: var(--restricted-badge-bg);
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             display: block;
+            animation: pulse 2s infinite;
         }
 
         .restricted-message .subscribe-button {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #4a49c0);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 12px 24px;
+            border-radius: 15px;
+            padding: 15px 30px;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(93, 92, 222, 0.3);
+            font-size: 16px;
         }
 
         .restricted-message .subscribe-button:hover {
-            background-color: #4a49c0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(93, 92, 222, 0.4);
+        }
+
+        .premium-access-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .premium-access-modal.active {
+            display: flex;
+        }
+
+        .premium-access-content {
+            background-color: var(--bg-color);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .premium-access-icon {
+            font-size: 80px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        .premium-access-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .premium-access-text {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: var(--text-color);
+        }
+
+        .premium-access-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .premium-access-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .premium-access-subscribe {
+            background: linear-gradient(135deg, var(--primary-color), #4a49c0);
+            color: white;
+        }
+
+        .premium-access-cancel {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .premium-access-btn:hover {
             transform: translateY(-2px);
         }
         
@@ -2192,18 +2274,17 @@
         .social-button {
             flex: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 15px 10px;
             border-radius: 10px;
-            background-color: var(--secondary-color);
             text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
+            color: white;
         }
         
         .social-button:active {
@@ -2216,15 +2297,15 @@
         }
         
         .social-button.whatsapp {
-            color: var(--social-whatsapp);
+            background-color: var(--social-whatsapp);
         }
         
         .social-button.telegram {
-            color: var(--social-telegram);
+            background-color: var(--social-telegram);
         }
         
         .social-button.youtube {
-            color: var(--social-youtube);
+            background-color: var(--social-youtube);
         }
 
         .about-dialog {
@@ -3056,33 +3137,6 @@
         .video-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
-
-        .fab {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 100;
-            transition: all 0.3s ease;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-        }
-
-        .fab:active {
-            transform: scale(0.95);
-        }
         
         @media (max-height: 640px) {
             .fab {
@@ -3141,6 +3195,27 @@
 
     <div id="debug-toggle-btn" class="debug-toggle-btn">
         <i class="fas fa-bug"></i>
+    </div>
+
+    <!-- Premium Access Modal -->
+    <div id="premium-access-modal" class="premium-access-modal">
+        <div class="premium-access-content">
+            <div class="premium-access-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="premium-access-title">Contenu Premium</div>
+            <div class="premium-access-text">
+                Accédez aux prédictions IA avancées, aux combinés intelligents et aux analyses safes avec un abonnement premium !
+            </div>
+            <div class="premium-access-buttons">
+                <button class="premium-access-btn premium-access-cancel" id="premium-access-cancel">
+                    Annuler
+                </button>
+                <button class="premium-access-btn premium-access-subscribe" id="premium-access-subscribe">
+                    S'abonner
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Lightning Payment Modal -->
@@ -3432,7 +3507,7 @@
         <div id="tutorials-section" class="section">
             <div style="height: 100%; overflow-y: auto;">
                 <div class="tutorial-item">
-                    <div class="tutorial-thumbnail" data-video="free-sats">
+                    <div class="tutorial-thumbnail" data-video="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                         <div class="tutorial-play-button">
                             <i class="fas fa-play"></i>
                         </div>
@@ -3451,7 +3526,7 @@
                 </div>
 
                 <div class="tutorial-item">
-                    <div class="tutorial-thumbnail" data-video="buy-plan">
+                    <div class="tutorial-thumbnail" data-video="https://www.youtube.com/watch?v=oHg5SJYRHA0">
                         <div class="tutorial-play-button">
                             <i class="fas fa-play"></i>
                         </div>
@@ -3470,7 +3545,7 @@
                 </div>
 
                 <div class="tutorial-item">
-                    <div class="tutorial-thumbnail" data-video="understand-predictions">
+                    <div class="tutorial-thumbnail" data-video="https://www.youtube.com/watch?v=jNQXAC9IVRw">
                         <div class="tutorial-play-button">
                             <i class="fas fa-play"></i>
                         </div>
@@ -3570,13 +3645,13 @@
                     
                     <div class="social-buttons">
                         <div class="social-button whatsapp" id="whatsapp-btn">
-                            WhatsApp
+                            <i class="fab fa-whatsapp"></i>
                         </div>
                         <div class="social-button telegram" id="telegram-btn">
-                            Telegram
+                            <i class="fab fa-telegram-plane"></i>
                         </div>
                         <div class="social-button youtube" id="youtube-btn">
-                            YouTube
+                            <i class="fab fa-youtube"></i>
                         </div>
                     </div>
                     
@@ -3852,10 +3927,8 @@
             <div class="video-close" id="video-close">
                 <i class="fas fa-times"></i>
             </div>
-            <video class="video-player" id="video-player" controls>
-                <source src="" type="video/mp4">
-                Votre navigateur ne supporte pas la lecture vidéo.
-            </video>
+            <iframe class="video-player" id="video-player" frameborder="0" allowfullscreen>
+            </iframe>
         </div>
     </div>
 
@@ -4765,31 +4838,25 @@
             }
         }
 
-        function playTutorialVideo(videoType) {
+        function playTutorialVideo(videoUrl) {
+            if (!videoUrl) return;
+            
             const videoModal = document.getElementById('video-modal');
             const videoPlayer = document.getElementById('video-player');
             
-            // Simulate video URLs (replace with actual video URLs)
-            const videoUrls = {
-                'free-sats': 'https://example.com/free-sats-tutorial.mp4',
-                'buy-plan': 'https://example.com/buy-plan-tutorial.mp4',
-                'understand-predictions': 'https://example.com/understand-predictions-tutorial.mp4'
-            };
-            
-            if (videoUrls[videoType]) {
-                videoPlayer.src = videoUrls[videoType];
-                videoModal.classList.add('active');
-                history.pushState({ page: 'video-tutorial' }, '');
-            } else {
-                // Fallback: show notification for demo
-                const videoTitles = {
-                    'free-sats': 'Comment obtenir des sats gratuitement',
-                    'buy-plan': 'Comment acheter un plan d\'abonnement',
-                    'understand-predictions': 'Comment comprendre nos prédictions'
-                };
-                
-                showNotification(`Vidéo "${videoTitles[videoType]}" bientôt disponible`, 'info');
+            // Convert YouTube URL to embed format
+            let embedUrl = videoUrl;
+            if (videoUrl.includes('youtube.com/watch?v=')) {
+                const videoId = videoUrl.split('v=')[1].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else if (videoUrl.includes('youtu.be/')) {
+                const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
             }
+            
+            videoPlayer.src = embedUrl;
+            videoModal.classList.add('active');
+            history.pushState({ page: 'video-tutorial' }, '');
         }
 
         function closeVideoModal() {
@@ -4797,8 +4864,16 @@
             const videoPlayer = document.getElementById('video-player');
             
             videoModal.classList.remove('active');
-            videoPlayer.pause();
             videoPlayer.src = '';
+        }
+
+        function showPremiumAccessModal() {
+            document.getElementById('premium-access-modal').classList.add('active');
+            history.pushState({ page: 'premium-access' }, '');
+        }
+
+        function hidePremiumAccessModal() {
+            document.getElementById('premium-access-modal').classList.remove('active');
         }
         
         function setupUIEvents() {
@@ -4817,6 +4892,13 @@
             document.getElementById('debug-log-close').addEventListener('click', function() {
                 debugPanelVisible = false;
                 document.getElementById('debug-log-panel').classList.remove('active');
+            });
+
+            // Premium access modal events
+            document.getElementById('premium-access-cancel').addEventListener('click', hidePremiumAccessModal);
+            document.getElementById('premium-access-subscribe').addEventListener('click', function() {
+                hidePremiumAccessModal();
+                showSubscriptionSection();
             });
 
             // Lightning payment modal events
@@ -4915,7 +4997,7 @@
                             if (hasPremiumAccess()) {
                                 showAIForecastsSection();
                             } else {
-                                showPremiumRequiredMessage();
+                                showPremiumAccessModal();
                             }
                         }
                         
@@ -4927,8 +5009,8 @@
             // Tutorial video events
             document.querySelectorAll('.tutorial-thumbnail').forEach(thumbnail => {
                 thumbnail.addEventListener('click', function() {
-                    const videoType = this.getAttribute('data-video');
-                    playTutorialVideo(videoType);
+                    const videoUrl = this.getAttribute('data-video');
+                    playTutorialVideo(videoUrl);
                 });
             });
 
@@ -5061,6 +5143,12 @@
         
         function handleBackButton(event) {
             event.preventDefault();
+            
+            if (document.getElementById('premium-access-modal').classList.contains('active')) {
+                hidePremiumAccessModal();
+                history.pushState({ page: 'main' }, '');
+                return;
+            }
             
             if (document.getElementById('lightning-payment-modal').classList.contains('active')) {
                 hideLightningPaymentModal();
@@ -5329,50 +5417,11 @@
             
             loadForecastsData(tabId);
         }
-
-        function showPremiumRequiredMessage() {
-            const aiSection = document.getElementById('ai-forecasts-section');
-            aiSection.innerHTML = `
-                <div class="restricted-message">
-                    <i class="fas fa-crown"></i>
-                    <strong>Contenu Premium</strong><br>
-                    Accédez aux prédictions IA avancées avec un abonnement premium !
-                    <button class="subscribe-button" onclick="showSubscriptionFromRestricted()">
-                        Voir les abonnements
-                    </button>
-                </div>
-            `;
-        }
-
-        // Make this function global for the onclick
-        window.showSubscriptionFromRestricted = function() {
-            showSubscriptionSection();
-        };
         
         function showAIForecastsSection() {
             // Vérifier l'accès premium
             if (!hasPremiumAccess()) {
-                showPremiumRequiredMessage();
-                
-                // Update nav to show AI forecasts section is selected
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    if (item.getAttribute('data-section') === 'ai-forecasts') {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-                
-                currentSection = 'ai-forecasts';
-                
-                document.querySelectorAll('.section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                document.getElementById('ai-forecasts-section').classList.add('active');
-                
-                document.getElementById('header-title').textContent = 'Prédictions IA';
-                
+                showPremiumAccessModal();
                 return;
             }
 
@@ -5396,38 +5445,6 @@
             });
             
             document.getElementById('ai-forecasts-section').classList.add('active');
-            
-            // Restore normal AI section structure
-            document.getElementById('ai-forecasts-section').innerHTML = `
-                <div class="ai-forecasts-tabs">
-                    <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
-                    <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
-                    <div class="ai-forecast-tab" data-tab="safes">Safes</div>
-                </div>
-                
-                <div class="ai-forecasts-content active" id="combines-content">
-                    <div class="ai-forecasts-list" id="combines-list">
-                    </div>
-                </div>
-                
-                <div class="ai-forecasts-content" id="sures-content">
-                    <div class="ai-forecasts-list" id="sures-list">
-                    </div>
-                </div>
-
-                <div class="ai-forecasts-content" id="safes-content">
-                    <div class="ai-forecasts-list" id="safes-list">
-                    </div>
-                </div>
-            `;
-            
-            // Re-bind tab events
-            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    switchAIForecastTab(tabId);
-                });
-            });
             
             document.getElementById('header-title').textContent = 'Prédictions IA';
             
@@ -6460,11 +6477,13 @@
                             addDebugLog('Nouveau profil utilisateur créé dans Firestore', 'success');
                         }
                         
-                        // Check admin status after user data is loaded
+                        // Check admin status and premium status during app loading
                         await checkAdminStatus();
                         
+                        // Load subscription data and check expiry
+                        await loadUserSubscriptionData();
+                        
                         updateProfileInfo();
-                        await checkSubscriptionExpiry(); // Vérifier l'expiration de l'abonnement
                         
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
@@ -6578,10 +6597,6 @@
                 document.getElementById('register-email-error').style.display = 'block';
                 hasError = true;
             } else {
-                document.getElementById('register-email-error').style.display = 'none';
-            }
-            
-            if (!password || password.length < 6) {
                 document.getElementById('register-password-error').style.display = 'block';
                 hasError = true;
             } else {
