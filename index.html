@@ -1662,7 +1662,7 @@
             flex: 1;
         }
         
-        /* Section Prédictions IA - Structure corrigée */
+        /* Section Prédictions IA - Structure simplifiée */
         .ai-forecasts-section {
             height: 100%;
             display: flex;
@@ -3094,57 +3094,116 @@
             }
         }
 
-        /* Page Abonnement requis */
-        .subscription-required-page {
-            display: flex;
-            flex-direction: column;
+        /* Pop-up d'abonnement requis pour AI */
+        .subscription-required-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
-            text-align: center;
-            height: 100%;
-            background-color: var(--bg-color);
+            padding: 20px;
         }
 
-        .subscription-required-icon {
-            font-size: 80px;
+        .subscription-required-modal.active {
+            display: flex;
+        }
+
+        .subscription-required-content {
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .subscription-required-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+
+        .subscription-required-modal-close:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .subscription-required-modal-icon {
+            font-size: 60px;
             color: var(--primary-color);
             margin-bottom: 20px;
             animation: pulse 2s infinite;
         }
 
-        .subscription-required-title {
-            font-size: 24px;
+        .subscription-required-modal-title {
+            font-size: 22px;
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 15px;
         }
 
-        .subscription-required-text {
+        .subscription-required-modal-text {
             font-size: 16px;
             color: var(--text-color);
             line-height: 1.6;
-            margin-bottom: 30px;
-            max-width: 400px;
+            margin-bottom: 25px;
         }
 
-        .subscription-required-button {
+        .subscription-required-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .subscription-required-modal-button {
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 25px;
-            padding: 15px 30px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(93, 92, 222, 0.3);
+            flex: 1;
+            max-width: 150px;
         }
 
-        .subscription-required-button:hover {
+        .subscription-required-modal-button:hover {
             background-color: #4a49c0;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(93, 92, 222, 0.4);
+        }
+
+        .subscription-required-modal-button.secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .subscription-required-modal-button.secondary:hover {
+            background-color: var(--border-color);
         }
 
         /* Scrollbar styling */
@@ -3187,6 +3246,30 @@
 
     <div id="debug-toggle-btn" class="debug-toggle-btn">
         <i class="fas fa-bug"></i>
+    </div>
+
+    <!-- Pop-up d'abonnement requis -->
+    <div id="subscription-required-modal" class="subscription-required-modal">
+        <div class="subscription-required-content">
+            <div class="subscription-required-modal-close" id="subscription-required-modal-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="subscription-required-modal-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="subscription-required-modal-title">Abonnement Premium requis</div>
+            <div class="subscription-required-modal-text">
+                Accédez aux prédictions IA avancées, aux combinés intelligents et aux analyses premium avec un abonnement Pari Alliance !
+            </div>
+            <div class="subscription-required-modal-buttons">
+                <button class="subscription-required-modal-button secondary" id="subscription-modal-cancel">
+                    Annuler
+                </button>
+                <button class="subscription-required-modal-button" id="subscription-modal-subscribe">
+                    Voir les plans
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Lightning Payment Modal -->
@@ -3381,31 +3464,17 @@
             </div>
         </div>
 
-        <!-- Section Prédictions IA - Structure corrigée -->
+        <!-- Section Prédictions IA - Structure simplifiée -->
         <div id="ai-forecasts-section" class="section ai-forecasts-section">
-            <!-- Page d'abonnement requis (par défaut) -->
-            <div id="ai-subscription-required" class="subscription-required-page">
-                <div class="subscription-required-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="subscription-required-title">Abonnement requis</div>
-                <div class="subscription-required-text">
-                    Accédez aux prédictions IA avancées, aux combinés intelligents et aux analyses premium avec un abonnement Pari Alliance !
-                </div>
-                <button class="subscription-required-button" onclick="showSubscriptionFromAI()">
-                    Voir les abonnements
-                </button>
+            <!-- Navigation des onglets -->
+            <div class="ai-forecasts-tabs">
+                <div class="ai-forecast-tab active" data-tab="combines">Combinés IA</div>
+                <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
+                <div class="ai-forecast-tab" data-tab="safes">Safes</div>
             </div>
-
-            <!-- Contenu Premium réel -->
-            <div id="ai-premium-content" class="ai-content-wrapper" style="display: none;">
-                <!-- Navigation des onglets -->
-                <div class="ai-forecasts-tabs">
-                    <div class="ai-forecast-tab active" data-tab="combines">Combinés IA</div>
-                    <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
-                    <div class="ai-forecast-tab" data-tab="safes">Safes</div>
-                </div>
-                
+            
+            <!-- Conteneur principal pour le contenu AI -->
+            <div class="ai-content-wrapper">
                 <!-- Contenu des onglets -->
                 <div class="ai-tab-content active" id="combines-content">
                     <div class="ai-forecasts-list" id="combines-list">
@@ -4331,6 +4400,18 @@
             return isAdmin || (currentPlanType && currentPlanType !== 'free');
         }
 
+        // Function to show subscription required modal
+        function showSubscriptionRequiredModal() {
+            const modal = document.getElementById('subscription-required-modal');
+            modal.classList.add('active');
+            addDebugLog('Affichage du modal d\'abonnement requis', 'info');
+        }
+
+        function hideSubscriptionRequiredModal() {
+            const modal = document.getElementById('subscription-required-modal');
+            modal.classList.remove('active');
+        }
+
         // Initialize or check Admin collection
         async function initializeAdminCollection() {
             try {
@@ -4436,11 +4517,6 @@
         let usersCache = {};
         let userSatsBalance = 0;
         let currentPlanType = '';
-
-        // Make global functions for onclick
-        window.showSubscriptionFromAI = function() {
-            showSubscriptionSection();
-        };
 
         // Function to get current date in YYYY-MM-DD format
         function getCurrentDateString() {
@@ -4778,7 +4854,6 @@
                     
                     updateSubscriptionDisplay();
                     updatePremiumBadge();
-                    updateAIForecastsAccess(); // Nouveau: mise à jour de l'accès AI
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
@@ -4841,24 +4916,6 @@
             }
         }
 
-        // Nouvelle fonction pour gérer l'accès aux prédictions IA
-        function updateAIForecastsAccess() {
-            const subscriptionRequiredDiv = document.getElementById('ai-subscription-required');
-            const premiumContentDiv = document.getElementById('ai-premium-content');
-            
-            if (hasPremiumAccess()) {
-                // L'utilisateur a accès premium (admin ou abonné)
-                subscriptionRequiredDiv.style.display = 'none';
-                premiumContentDiv.style.display = 'flex';
-                addDebugLog('Accès premium accordé - Affichage du contenu IA', 'success');
-            } else {
-                // L'utilisateur n'a pas accès premium
-                subscriptionRequiredDiv.style.display = 'flex';
-                premiumContentDiv.style.display = 'none';
-                addDebugLog('Accès premium requis - Affichage de la page d\'abonnement', 'info');
-            }
-        }
-
         function playTutorialVideo(videoType) {
             const videoModal = document.getElementById('video-modal');
             const videoPlayer = document.getElementById('video-player');
@@ -4896,6 +4953,14 @@
             document.getElementById('debug-log-close').addEventListener('click', function() {
                 debugPanelVisible = false;
                 document.getElementById('debug-log-panel').classList.remove('active');
+            });
+
+            // Subscription required modal events
+            document.getElementById('subscription-required-modal-close').addEventListener('click', hideSubscriptionRequiredModal);
+            document.getElementById('subscription-modal-cancel').addEventListener('click', hideSubscriptionRequiredModal);
+            document.getElementById('subscription-modal-subscribe').addEventListener('click', function() {
+                hideSubscriptionRequiredModal();
+                showSubscriptionSection();
             });
 
             // Lightning payment modal events
@@ -4991,7 +5056,12 @@
                         if (section === 'forecasts') {
                             showForecastsSection();
                         } else if (section === 'ai-forecasts') {
-                            showAIForecastsSection();
+                            // Vérifier l'accès premium avant d'afficher la section
+                            if (hasPremiumAccess()) {
+                                showAIForecastsSection();
+                            } else {
+                                showSubscriptionRequiredModal();
+                            }
                         }
                         
                         break;
@@ -5157,6 +5227,12 @@
         
         function handleBackButton(event) {
             event.preventDefault();
+            
+            if (document.getElementById('subscription-required-modal').classList.contains('active')) {
+                hideSubscriptionRequiredModal();
+                history.pushState({ page: 'main' }, '');
+                return;
+            }
             
             if (document.getElementById('lightning-payment-modal').classList.contains('active')) {
                 hideLightningPaymentModal();
@@ -5410,6 +5486,12 @@
         function showAIForecastsSection() {
             hideSearchBar();
             
+            // Vérifier l'accès premium
+            if (!hasPremiumAccess()) {
+                showSubscriptionRequiredModal();
+                return;
+            }
+            
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'ai-forecasts') {
                     item.classList.add('active');
@@ -5455,13 +5537,8 @@
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
 
-            // Mise à jour de l'accès en fonction du statut utilisateur
-            updateAIForecastsAccess();
-
-            // Si l'utilisateur a accès premium, charger les données
-            if (hasPremiumAccess()) {
-                loadForecastsData(currentForecastTab);
-            }
+            // Charger les données de l'onglet actuel
+            loadForecastsData(currentForecastTab);
         }
         
         function showInterfaceSection() {
@@ -6404,7 +6481,6 @@
         function updateAdminStatus() {
             // Mettre à jour l'interface pour refléter le statut d'admin
             updateProfileInfo();
-            updateAIForecastsAccess(); // Mise à jour de l'accès AI quand le statut admin change
         }
         
         function setButtonLoading(buttonId, loading) {
@@ -6556,8 +6632,7 @@
             setButtonLoading('loginBtn', true);
             addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
             
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, email, password);
                 addDebugLog('Connexion réussie', 'success');
             } catch (error) {
                 console.error('Erreur de connexion:', error);
