@@ -3748,6 +3748,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Admin configuration
+        const ADMIN_EMAILS = ['billionsjonnhy@gmail.com', 'louis210bn@gmail.com'];
+
         // Lightning payment configuration
         const BLINK_API_KEY = "blink_GfLbFm7LuO6kWCee61eDGbHreslJIAj9WvkJ5INk3NfmuG8LewqYmwCmeu5i1P9D";
         const BLINK_WALLET_ID = "152f6bb5-fe7a-491c-b5d8-99bfd1853940";
@@ -4119,6 +4122,89 @@
                 }
             } catch (error) {
                 handleFirestoreError(error, 'vérification de l\'expiration de l\'abonnement');
+            }
+        }
+
+        // Initialize or check Admin collection
+        async function initializeAdminCollection() {
+            try {
+                addDebugLog('🔧 Vérification de la collection Admin...', 'info');
+                
+                const adminCollectionRef = collection(db, "Admin");
+                const adminSnapshot = await getDocs(adminCollectionRef);
+                
+                if (adminSnapshot.empty) {
+                    addDebugLog('📝 Collection Admin vide, création des admins par défaut...', 'info');
+                    
+                    // Create admin entries for each admin email
+                    for (const email of ADMIN_EMAILS) {
+                        const adminData = {
+                            email: email,
+                            isAdmin: true,
+                            createdAt: serverTimestamp(),
+                            addedBy: 'system'
+                        };
+                        
+                        // Use email as document ID (replace dots and @ with underscores for valid doc ID)
+                        const adminDocId = email.replace(/[@.]/g, '_');
+                        await setDoc(doc(db, "Admin", adminDocId), adminData);
+                        
+                        addDebugLog(`✅ Admin ajouté: ${email}`, 'success');
+                    }
+                    
+                    addDebugLog(`🎉 Collection Admin initialisée avec ${ADMIN_EMAILS.length} administrateurs`, 'success');
+                } else {
+                    addDebugLog(`✅ Collection Admin déjà existante avec ${adminSnapshot.size} entrées`, 'info');
+                }
+                
+            } catch (error) {
+                handleFirestoreError(error, 'initialisation de la collection Admin');
+            }
+        }
+
+        // Check if current user is admin
+        async function checkAdminStatus() {
+            if (!currentUser) return false;
+            
+            try {
+                // Check if user email is in admin list
+                if (ADMIN_EMAILS.includes(currentUser.email)) {
+                    addDebugLog(`👑 Utilisateur ${currentUser.email} identifié comme administrateur`, 'success');
+                    
+                    // Also verify in Admin collection
+                    const adminDocId = currentUser.email.replace(/[@.]/g, '_');
+                    const adminRef = doc(db, "Admin", adminDocId);
+                    const adminDoc = await getDoc(adminRef);
+                    
+                    if (adminDoc.exists() && adminDoc.data().isAdmin) {
+                        isAdmin = true;
+                        updateAdminStatus();
+                        return true;
+                    } else {
+                        // If not in collection but in the email list, add them
+                        const adminData = {
+                            email: currentUser.email,
+                            isAdmin: true,
+                            createdAt: serverTimestamp(),
+                            addedBy: 'system',
+                            userId: currentUser.uid
+                        };
+                        
+                        await setDoc(adminRef, adminData);
+                        addDebugLog(`✅ Admin ${currentUser.email} ajouté à la collection Admin`, 'success');
+                        
+                        isAdmin = true;
+                        updateAdminStatus();
+                        return true;
+                    }
+                } else {
+                    isAdmin = false;
+                    return false;
+                }
+                
+            } catch (error) {
+                handleFirestoreError(error, 'vérification du statut admin');
+                return false;
             }
         }
 
@@ -6068,41 +6154,6 @@
             }
         }
 
-        async function loadUsers() {
-            try {
-                const usersRef = collection(db, "Users");
-                const q = query(usersRef, orderBy("createdAt", "asc"));
-                
-                const snapshot = await getDocs(q);
-                usersCache = {};
-                const users = [];
-                
-                snapshot.forEach(doc => {
-                    const userData = doc.data();
-                    usersCache[doc.id] = userData;
-                    users.push({
-                        id: doc.id,
-                        ...userData
-                    });
-                });
-                
-                // Déterminer qui est admin (compte le plus ancien)
-                if (users.length > 0) {
-                    const oldestUser = users[0];
-                    if (oldestUser.id === currentUser.uid) {
-                        isAdmin = true;
-                        updateAdminStatus();
-                        addDebugLog('Utilisateur identifié comme administrateur', 'info');
-                    }
-                }
-                
-                addDebugLog(`${users.length} utilisateurs chargés depuis Firestore`, 'success');
-                
-            } catch (error) {
-                handleFirestoreError(error, 'chargement des utilisateurs');
-            }
-        }
-        
         function updateAdminStatus() {
             // Mettre à jour l'interface pour refléter le statut d'admin
             updateProfileInfo();
@@ -6163,6 +6214,9 @@
                     isLoggedIn = true;
                     
                     try {
+                        // Initialize Admin collection first
+                        await initializeAdminCollection();
+                        
                         const userRef = doc(db, "Users", user.uid);
                         const userDoc = await getDoc(userRef);
                         
@@ -6183,8 +6237,10 @@
                             addDebugLog('Nouveau profil utilisateur créé dans Firestore', 'success');
                         }
                         
+                        // Check admin status after user data is loaded
+                        await checkAdminStatus();
+                        
                         updateProfileInfo();
-                        await loadUsers(); // Charger les utilisateurs pour déterminer qui est admin
                         await checkSubscriptionExpiry(); // Vérifier l'expiration de l'abonnement
                         
                         document.getElementById('auth-screen').style.display = 'none';
