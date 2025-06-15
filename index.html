@@ -4918,6 +4918,7 @@
                 document.getElementById('side-menu-overlay').classList.remove('active');
             });
             
+            // Menu items fixed - removed the direct section switching
             document.getElementById('menu-profile').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
@@ -5360,7 +5361,10 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            document.getElementById('header-back-button').addEventListener('click', function() {
+            // Reset back button event listener
+            const backButton = document.getElementById('header-back-button');
+            backButton.onclick = null;
+            backButton.addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5390,7 +5394,10 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            document.getElementById('header-back-button').addEventListener('click', function() {
+            // Reset back button event listener
+            const backButton = document.getElementById('header-back-button');
+            backButton.onclick = null;
+            backButton.addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5475,7 +5482,10 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            document.getElementById('header-back-button').addEventListener('click', function() {
+            // Reset back button event listener
+            const backButton = document.getElementById('header-back-button');
+            backButton.onclick = null;
+            backButton.addEventListener('click', function() {
                 showForecastsSection();
             });
 
@@ -5876,7 +5886,10 @@
             
             document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
-            document.getElementById('header-back-button').addEventListener('click', function() {
+            // Reset back button event listener
+            const backButton = document.getElementById('header-back-button');
+            backButton.onclick = null;
+            backButton.addEventListener('click', function() {
                 showForecastsSection();
             });
             
@@ -5906,7 +5919,10 @@
             
             document.getElementById('header-action').innerHTML = '';
             
-            document.getElementById('header-back-button').addEventListener('click', function() {
+            // Reset back button event listener
+            const backButton = document.getElementById('header-back-button');
+            backButton.onclick = null;
+            backButton.addEventListener('click', function() {
                 showForecastsSection();
             });
 
