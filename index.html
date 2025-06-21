@@ -3930,7 +3930,7 @@
                     • Plan Quotidien : 10 sats/jour<br>
                     • Plan Hebdomadaire : 60 sats/semaine (économie de 10 sats)<br><br>
                     
-                    <strong>Attention :</strong> Aucun renouvellement automatique. Vous devez renouveler manuellement votre abonnement avant qu'il expire à minuit (00h00).
+                    Les abonnements se renouvellent automatiquement à minuit (00h00) et donnent accès à toutes les fonctionnalités premium pendant la durée active.
                 </div>
             </div>
             
@@ -4015,11 +4015,10 @@
                     <strong>Système de paiement :</strong><br>
                     Les abonnements premium fonctionnent avec des satoshis (sats) via le Lightning Network Bitcoin, garantissant des transactions rapides et sécurisées.<br><br>
                     
-                    <strong>Durée et expiration :</strong><br>
+                    <strong>Durée et renouvellement :</strong><br>
                     • Les abonnements expirent automatiquement à minuit (00h00)<br>
-                    • AUCUN renouvellement automatique n'est effectué<br>
-                    • Vous devez renouveler manuellement votre abonnement avant expiration<br>
-                    • Une fois expiré, l'accès aux fonctionnalités premium est immédiatement supprimé<br><br>
+                    • Aucun renouvellement automatique n'est effectué<br>
+                    • Vous devez renouveler manuellement votre abonnement<br><br>
                     
                     <strong>Politique de remboursement :</strong><br>
                     En raison de la nature numérique instantanée de nos services et des micro-paiements en cryptomonnaie, aucun remboursement n'est possible une fois l'accès premium activé.
@@ -4449,102 +4448,79 @@
             }
         }
 
-        // 🔥 FONCTION CORRIGÉE - Check subscription expiry with robust verification
+        // Check if user's subscription has expired and remove from Premium collection
         async function checkSubscriptionExpiry() {
-            if (!currentUser || !currentUserData) {
-                addDebugLog('Vérification expiration ignorée - utilisateur ou données manquants', 'warning');
-                return;
-            }
-            
-            try {
-                // Vérifier si l'utilisateur a un plan premium
-                if (!currentUserData.currentPlan || currentUserData.currentPlan === 'free') {
-                    addDebugLog('Utilisateur sur plan gratuit - aucune vérification d\'expiration nécessaire', 'info');
-                    return;
-                }
-                
-                // Vérifier la date d'expiration
-                if (!currentUserData.planExpiryDate) {
-                    addDebugLog('Date d\'expiration manquante - passage au plan gratuit', 'warning');
-                    await resetToFreeAccount('Date d\'expiration manquante');
-                    return;
-                }
-                
-                // Convertir la date d'expiration
-                let expiryDate;
-                if (currentUserData.planExpiryDate.toDate) {
-                    // Timestamp Firestore
-                    expiryDate = currentUserData.planExpiryDate.toDate();
-                } else if (currentUserData.planExpiryDate instanceof Date) {
-                    // Date JavaScript
-                    expiryDate = currentUserData.planExpiryDate;
-                } else {
-                    // String ou autre format
-                    expiryDate = new Date(currentUserData.planExpiryDate);
-                }
-                
-                const now = new Date();
-                
-                addDebugLog(`Vérification expiration: plan=${currentUserData.currentPlan}, expire=${expiryDate.toISOString()}, maintenant=${now.toISOString()}`, 'info');
-                
-                // Comparer les dates
-                if (now >= expiryDate) {
-                    addDebugLog(`Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
-                    await resetToFreeAccount('Abonnement expiré');
-                } else {
-                    const timeLeft = Math.round((expiryDate - now) / (1000 * 60 * 60)); // heures restantes
-                    addDebugLog(`Abonnement valide - expire dans ${timeLeft}h`, 'success');
-                }
-                
-            } catch (error) {
-                handleFirestoreError(error, 'vérification de l\'expiration de l\'abonnement');
-                // En cas d'erreur, on ne fait rien plutôt que de supprimer l'abonnement
-            }
-        }
-
-        // 🔥 NOUVELLE FONCTION - Reset to free account
-        async function resetToFreeAccount(reason) {
             if (!currentUser || !currentUserData) return;
             
             try {
-                addDebugLog(`Remise à zéro du compte: ${reason}`, 'warning');
-                
-                // Remove from Premium collections
-                const currentPlan = currentUserData.currentPlan;
-                if (currentPlan && currentPlan !== 'free') {
-                    const premiumCollectionName = currentPlan === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
-                    const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
+                if (currentUserData.currentPlan && currentUserData.currentPlan !== 'free') {
+                    // Améliorer la gestion des dates d'expiration
+                    let expiryDate;
+                    if (currentUserData.planExpiryDate) {
+                        if (currentUserData.planExpiryDate.toDate) {
+                            // Firestore Timestamp
+                            expiryDate = currentUserData.planExpiryDate.toDate();
+                        } else if (currentUserData.planExpiryDate instanceof Date) {
+                            // JavaScript Date
+                            expiryDate = currentUserData.planExpiryDate;
+                        } else if (typeof currentUserData.planExpiryDate === 'string') {
+                            // String ISO
+                            expiryDate = new Date(currentUserData.planExpiryDate);
+                        } else {
+                            // Fallback: considérer comme expiré
+                            expiryDate = new Date(0);
+                        }
+                    } else {
+                        // Pas de date d'expiration définie, considérer comme expiré
+                        expiryDate = new Date(0);
+                    }
                     
-                    try {
-                        await deleteDoc(premiumRef);
-                        addDebugLog(`Utilisateur retiré de ${premiumCollectionName}`, 'success');
-                    } catch (deleteError) {
-                        addDebugLog(`Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
+                    const now = new Date();
+                    
+                    addDebugLog(`Vérification expiration: maintenant=${now.toISOString()}, expiration=${expiryDate.toISOString()}`, 'info');
+                    
+                    if (now >= expiryDate) {
+                        addDebugLog(`Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
+                        
+                        // Remove from Premium collection
+                        const premiumCollectionName = currentUserData.currentPlan === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
+                        const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
+                        
+                        try {
+                            await deleteDoc(premiumRef);
+                            addDebugLog(`Utilisateur retiré de ${premiumCollectionName}`, 'success');
+                        } catch (deleteError) {
+                            addDebugLog(`Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
+                        }
+                        
+                        // Update user to free plan
+                        const userRef = doc(db, "Users", currentUser.uid);
+                        await updateDoc(userRef, {
+                            currentPlan: 'free',
+                            planExpiryDate: null
+                        });
+                        
+                        currentUserData.currentPlan = 'free';
+                        currentUserData.planExpiryDate = null;
+                        currentPlanType = 'free';
+                        
+                        addDebugLog('Utilisateur remis au plan gratuit', 'success');
+                        showNotification('Votre abonnement a expiré. Vous êtes maintenant sur le plan gratuit.', 'info');
+                        
+                        await loadUserSubscriptionData();
+                        updateBadges();
+                        
+                        return true; // Abonnement expiré
+                    } else {
+                        addDebugLog(`Abonnement encore valide jusqu'au ${expiryDate.toLocaleString('fr-FR')}`, 'success');
+                        return false; // Abonnement encore valide
                     }
                 }
-                
-                // Update user to free plan
-                const userRef = doc(db, "Users", currentUser.uid);
-                await updateDoc(userRef, {
-                    currentPlan: 'free',
-                    planExpiryDate: null
-                });
-                
-                // Update local data
-                currentUserData.currentPlan = 'free';
-                currentUserData.planExpiryDate = null;
-                currentPlanType = 'free';
-                
-                addDebugLog('Utilisateur remis au plan gratuit avec succès', 'success');
-                showNotification('Votre abonnement a expiré. Vous êtes maintenant sur le plan gratuit.', 'info');
-                
-                // Update UI
-                await loadUserSubscriptionData();
-                updateBadges();
-                
             } catch (error) {
-                handleFirestoreError(error, 'remise à zéro du compte');
+                handleFirestoreError(error, 'vérification de l\'expiration de l\'abonnement');
             }
+            
+            return false;
         }
 
         // Function to check if user has premium access
@@ -4985,13 +4961,10 @@
             }, 100);
         }
 
-        // 🔥 FONCTION CORRIGÉE - Load user subscription data
         async function loadUserSubscriptionData() {
             if (!currentUser) return;
             
             try {
-                addDebugLog('Chargement des données d\'abonnement...', 'info');
-                
                 const userRef = doc(db, "Users", currentUser.uid);
                 const userDoc = await getDoc(userRef);
                 
@@ -5000,18 +4973,14 @@
                     userSatsBalance = userData.satsBalance || 0;
                     currentPlanType = userData.currentPlan || 'free';
                     
-                    // 🔥 CORRECTION CRITIQUE - Mettre à jour currentUserData
-                    currentUserData = userData;
-                    
-                    addDebugLog(`Données chargées: plan=${currentPlanType}, sats=${userSatsBalance}`, 'success');
+                    // Update currentUserData with fresh data
+                    currentUserData = { ...currentUserData, ...userData };
                     
                     // Check if subscription has expired
                     await checkSubscriptionExpiry();
                     
                     updateSubscriptionDisplay();
                     updateBadges();
-                } else {
-                    addDebugLog('Document utilisateur non trouvé', 'warning');
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
@@ -5041,7 +5010,12 @@
                     currentPlanNameElement.textContent = planNames[currentPlanType] || 'Plan Premium';
                     
                     if (currentUserData?.planExpiryDate) {
-                        const expiryDate = currentUserData.planExpiryDate.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
+                        let expiryDate;
+                        if (currentUserData.planExpiryDate.toDate) {
+                            expiryDate = currentUserData.planExpiryDate.toDate();
+                        } else {
+                            expiryDate = new Date(currentUserData.planExpiryDate);
+                        }
                         planExpiryInfoElement.textContent = `Expire le ${expiryDate.toLocaleDateString('fr-FR')} à minuit`;
                     } else {
                         planExpiryInfoElement.textContent = 'Plan actif';
@@ -5663,21 +5637,22 @@
             `;
 
             try {
-                const today = getCurrentDateString();
+                // Charger seulement les données d'hier et d'avant-hier (pas d'aujourd'hui)
                 const yesterday = getDateString(1);
+                const dayBeforeYesterday = getDateString(2);
                 
-                // Fetch data for today and yesterday
-                const [todayData, yesterdayData] = await Promise.all([
-                    fetchForecastsFromGitHub(today),
-                    fetchForecastsFromGitHub(yesterday)
+                // Fetch data for yesterday and day before yesterday
+                const [yesterdayData, dayBeforeYesterdayData] = await Promise.all([
+                    fetchForecastsFromGitHub(yesterday),
+                    fetchForecastsFromGitHub(dayBeforeYesterday)
                 ]);
 
                 // Process the data
-                const todayProcessed = processForecastData(todayData);
                 const yesterdayProcessed = processForecastData(yesterdayData);
+                const dayBeforeYesterdayProcessed = processForecastData(dayBeforeYesterdayData);
 
                 // Display the history
-                displayHistoryData(todayProcessed, yesterdayProcessed);
+                displayHistoryData(yesterdayProcessed, dayBeforeYesterdayProcessed);
 
             } catch (error) {
                 addDebugLog(`Erreur chargement historique: ${error.message}`, 'error');
@@ -5691,22 +5666,24 @@
             }
         }
 
-        function displayHistoryData(todayData, yesterdayData) {
+        function displayHistoryData(yesterdayData, dayBeforeYesterdayData) {
             const historyContent = document.getElementById('history-content');
             historyContent.innerHTML = '';
 
-            const today = new Date();
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-
-            // Display today's data
-            if (todayData && Object.values(todayData).some(arr => arr.length > 0)) {
-                historyContent.appendChild(createHistoryDateSection(today, todayData));
-            }
+            
+            const dayBeforeYesterday = new Date();
+            dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
 
             // Display yesterday's data
             if (yesterdayData && Object.values(yesterdayData).some(arr => arr.length > 0)) {
                 historyContent.appendChild(createHistoryDateSection(yesterday, yesterdayData));
+            }
+
+            // Display day before yesterday's data
+            if (dayBeforeYesterdayData && Object.values(dayBeforeYesterdayData).some(arr => arr.length > 0)) {
+                historyContent.appendChild(createHistoryDateSection(dayBeforeYesterday, dayBeforeYesterdayData));
             }
 
             // If no data available
@@ -6572,7 +6549,6 @@
             }
             
             document.getElementById('save-display-name-btn').disabled = true;
-            
             try {
                 const userRef = doc(db, "Users", currentUser.uid);
                 await updateDoc(userRef, {
@@ -6820,7 +6796,6 @@
         }
 
         function updateAdminStatus() {
-            // Mettre à jour l'interface pour refléter le statut d'admin
             updateProfileInfo();
         }
         
@@ -6898,8 +6873,9 @@
                         await checkAdminStatus();
                         
                         // Check subscription status and update badges
-                        await loadUserSubscriptionData();
+                        await checkSubscriptionExpiry();
                         updateProfileInfo();
+                        await loadUserSubscriptionData();
                         
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
@@ -7082,4 +7058,4 @@
         }
     </script>
 </body>
-</html>
+</html> 
